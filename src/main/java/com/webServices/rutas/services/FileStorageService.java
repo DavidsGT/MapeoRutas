@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -27,7 +28,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,26 +50,45 @@ public class FileStorageService {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
-    public List<Punto> processFile(MultipartFile file) throws IllegalStateException, IOException {
+    @SuppressWarnings({ "unchecked", "unused" })
+	public Map<String, Object> processFile(MultipartFile file) throws IllegalStateException, IOException, ParserConfigurationException{
     	List<Punto> puntosSinReducir = new ArrayList<Punto>();
-    	File convFile = new File( file.getOriginalFilename());
-    	file.transferTo(convFile);
-    	File archivo = convFile;
-    	List<String> gpxList = decodeGPX(archivo);
+    	List<Punto> paradas = new ArrayList<Punto>();
+    	File convFile = new File(file.getOriginalFilename());
+        convFile.createNewFile(); 
+        FileOutputStream fos = new FileOutputStream(convFile); 
+        fos.write(file.getBytes());
+        fos.close();
+        Map<String, Object> x = decodeGPX(convFile);
+        
+    	List<String> gpxRuta = (List<String>) x.get("ruta");
+    	List<String> gpxParada = (List<String>) x.get("parada");
     	String info = "";
-    	for(int i = 0; i < gpxList.size(); i++){
-            info = gpxList.get(i).toString();
+    	for(int i = 0; i < gpxRuta.size(); i++){
+    		System.out.println(gpxRuta.get(i).toString());
+            info = gpxRuta.get(i).toString();
             String[] latlong = info.split(":");
             double latitude = Double.parseDouble(latlong[0]);
             double longitude = Double.parseDouble(latlong[1]);
-            
             Punto q = new Punto(latitude,longitude);
             puntosSinReducir.add(q);
+        }
+    	for(int i = 0; i < gpxParada.size(); i++){
+    		System.out.println(gpxParada.get(i).toString());
+            info = gpxParada.get(i).toString();
+            String[] latlong = info.split(":");
+            double latitude = Double.parseDouble(latlong[0]);
+            double longitude = Double.parseDouble(latlong[1]);
+            Punto q = new Punto(latitude,longitude);
+            paradas.add(q);
         }
     	List<Punto> dp = douglasPeucker(puntosSinReducir,0.000025);
     	Gpx gpx = new Gpx();
         gpx.generarGpx(dp);
-        return dp;
+        Map<String, Object> result = new HashMap<>();
+        result.put("ruta", dp);
+        result.put("parada", paradas);
+        return result;
     }
     public String storeFile(MultipartFile file) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -96,9 +118,10 @@ public class FileStorageService {
         }
     }
     
-    private static List<String> decodeGPX(File is){
-        List<String> list = new ArrayList<>();
-
+    private static Map<String, Object> decodeGPX(File is){
+    	Map<String, Object> x = new HashMap<>();
+        List<String> listRuta = new ArrayList<>();
+        List<String> listParada = new ArrayList<>();
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -106,7 +129,7 @@ public class FileStorageService {
         Document document = documentBuilder.parse(is);
 
             NodeList nodelist_trkpt = document.getElementsByTagName("trkpt");
-
+            NodeList nodelist_wpt = document.getElementsByTagName("wpt");
             for(int i = 0; i < nodelist_trkpt.getLength(); i++){
 
                 Node node = nodelist_trkpt.item(i);
@@ -118,10 +141,24 @@ public class FileStorageService {
 
                 String newLocationName = newLatitude + ":" + newLongitude;
 
-                list.add(newLocationName);
+                listRuta.add(newLocationName);
 
             }
+            for(int i = 0; i < nodelist_wpt.getLength(); i++){
 
+                Node node = nodelist_wpt.item(i);
+                NamedNodeMap attributes = node.getAttributes();
+
+                String newLatitude = attributes.getNamedItem("lat").getTextContent();
+
+                String newLongitude = attributes.getNamedItem("lon").getTextContent();
+
+                String newLocationName = newLatitude + ":" + newLongitude;
+
+                listParada.add(newLocationName);
+            }
+            x.put("ruta", listRuta);
+            x.put("parada", listParada);
   //          is.close();
 
         } catch (ParserConfigurationException e) {
@@ -137,7 +174,7 @@ public class FileStorageService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return list;
+        return x;
     }
     @SuppressWarnings("unused")
 	public static List<Punto> douglasPeucker(List<Punto> puntos,double epsilon){

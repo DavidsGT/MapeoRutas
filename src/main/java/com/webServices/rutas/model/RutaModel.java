@@ -19,19 +19,33 @@ public class RutaModel {
 	@Field
     private List<Punto> listasPuntos;
 	@Field
+    private List<Punto> listasParadas;
+	@Field
 	private String type;
     public RutaModel() {
     	this.type = "RutaModel";
     }
-	public RutaModel(String id, String numRuta, String nombreCooperativa, List<Punto> listasPuntos, String type) {
+    public RutaModel(String id, String numRuta, String nombreCooperativa, List<Punto> listasPuntos,
+			List<Punto> listasParadas, String type) {
 		super();
 		this.id = id;
 		this.numRuta = numRuta;
 		this.nombreCooperativa = nombreCooperativa;
 		this.listasPuntos = listasPuntos;
+		this.listasParadas = listasParadas;
 		this.type = "RutaModel";
 	}
-    public String getId() {
+
+	public List<Punto> getListasParadas() {
+		return listasParadas;
+	}
+	public void setListasParadas(List<Punto> listasParadas) {
+		this.listasParadas = listasParadas;
+	}
+	public void setNombreCooperativa(String nombreCooperativa) {
+		this.nombreCooperativa = nombreCooperativa;
+	}
+	public String getId() {
 		return id;
 	}
 	public void setId(String id) {

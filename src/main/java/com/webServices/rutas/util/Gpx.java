@@ -13,13 +13,13 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
+import com.webServices.rutas.model.Punto;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class Gpx {
-    public static void generarGpx(List<Punto> puntosPrueba) throws IOException, ParserConfigurationException {
+    public void generarGpx(List<Punto> puntosPrueba) throws IOException, ParserConfigurationException {
         String lat=null,lon=null,URI="C:/Users/Administrador/Desktop/Para Rutas Mapeo/Transcisa7.gpx";
         Document document = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

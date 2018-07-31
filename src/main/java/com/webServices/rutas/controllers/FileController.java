@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.webServices.rutas.model.Punto;
 import com.webServices.rutas.model.UploadFileResponse;
 import com.webServices.rutas.services.FileStorageService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,8 +39,8 @@ public class FileController {
                 file.getContentType(), file.getSize());
     }
 	@RequestMapping(method=RequestMethod.POST, value="/CargarArchivoGPX")
-    public List<Punto> reducirPuntos(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
-		List<Punto> PuntosReducidos = fileStorageService.processFile(file);
+    public Map<String, Object> reducirPuntos(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException, ParserConfigurationException {
+		Map<String, Object> PuntosReducidos = fileStorageService.processFile(file);
         return PuntosReducidos;
     }
     @PostMapping("/uploadMultipleFiles")
