@@ -1,24 +1,9 @@
 package com.webServices.rutas.model;
 
-import org.springframework.data.couchbase.core.mapping.Document;
-import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
-import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
-
-import com.couchbase.client.java.repository.annotation.Field;
-import com.couchbase.client.java.repository.annotation.Id;
-
-@Document
 public class Punto {
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
-	private String id;
-	@Field
 	private String type;
-	@Field
 	private double latitud;
-	@Field
 	private double longitud;
-	@Field
-	private double epsilon;
 	public Punto() {
 		super();
 		this.type = "punto";
@@ -29,19 +14,11 @@ public class Punto {
 		this.latitud = latitud;
 		this.longitud = longitud;
 	}
-	public Punto(String id, String type, double latitud, double longitud, double epsilon) {
+	public Punto(String type, double latitud, double longitud) {
 		super();
-		this.id = id;
 		this.type = "punto";
 		this.latitud = latitud;
 		this.longitud = longitud;
-		this.epsilon = epsilon;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
 	}
 	public String getType() {
 		return type;
@@ -60,11 +37,5 @@ public class Punto {
 	}
 	public void setLongitud(double longitud) {
 		this.longitud = longitud;
-	}
-	public double getEpsilon() {
-		return epsilon;
-	}
-	public void setEpsilon(double epsilon) {
-		this.epsilon = epsilon;
 	}
 }

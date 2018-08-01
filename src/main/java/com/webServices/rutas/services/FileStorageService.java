@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,7 +51,7 @@ public class FileStorageService {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({ "unchecked"})
 	public Map<String, Object> processFile(MultipartFile file) throws IllegalStateException, IOException, ParserConfigurationException{
     	List<Punto> puntosSinReducir = new ArrayList<Punto>();
     	List<Punto> paradas = new ArrayList<Punto>();
@@ -65,7 +66,6 @@ public class FileStorageService {
     	List<String> gpxParada = (List<String>) x.get("parada");
     	String info = "";
     	for(int i = 0; i < gpxRuta.size(); i++){
-    		System.out.println(gpxRuta.get(i).toString());
             info = gpxRuta.get(i).toString();
             String[] latlong = info.split(":");
             double latitude = Double.parseDouble(latlong[0]);
@@ -74,7 +74,6 @@ public class FileStorageService {
             puntosSinReducir.add(q);
         }
     	for(int i = 0; i < gpxParada.size(); i++){
-    		System.out.println(gpxParada.get(i).toString());
             info = gpxParada.get(i).toString();
             String[] latlong = info.split(":");
             double latitude = Double.parseDouble(latlong[0]);
@@ -126,14 +125,15 @@ public class FileStorageService {
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
           //  FileInputStream fileInputStream = new FileInputStream(is);
-        Document document = documentBuilder.parse(is);
-
+            Document document = documentBuilder.parse(is);
+        	Element elementRoot = document.getDocumentElement();
             NodeList nodelist_trkpt = document.getElementsByTagName("trkpt");
             NodeList nodelist_wpt = document.getElementsByTagName("wpt");
             for(int i = 0; i < nodelist_trkpt.getLength(); i++){
 
                 Node node = nodelist_trkpt.item(i);
                 NamedNodeMap attributes = node.getAttributes();
+                
 
                 String newLatitude = attributes.getNamedItem("lat").getTextContent();
 
@@ -148,13 +148,26 @@ public class FileStorageService {
 
                 Node node = nodelist_wpt.item(i);
                 NamedNodeMap attributes = node.getAttributes();
-
+                NodeList datos = node.getChildNodes();
+                String newName = "";
+                String newImagen = "";
                 String newLatitude = attributes.getNamedItem("lat").getTextContent();
-
+                int num = 0;
                 String newLongitude = attributes.getNamedItem("lon").getTextContent();
-
-                String newLocationName = newLatitude + ":" + newLongitude;
-
+                for(int j = 0; j < datos.getLength(); j++){
+                	Node dat = datos.item(j);
+                	String etq = dat.getNodeName();
+                	if(etq.equals("name")) {
+                		newName = dat.getFirstChild().getNodeValue();
+                	}
+                	if(etq.equals("extensions")) {
+                		num = dat.getChildNodes().getLength();
+                		//Node dat = dat.getChildNodes();
+                		newImagen = dat.getFirstChild().getNextSibling().getTextContent();
+                	}
+                }
+                String newLocationName = newLatitude + ":" + newLongitude + ":" + newName + ":" + num;
+                System.out.println(newLocationName);
                 listParada.add(newLocationName);
             }
             x.put("ruta", listRuta);
