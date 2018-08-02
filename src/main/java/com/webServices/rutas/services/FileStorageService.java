@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -81,9 +80,11 @@ public class FileStorageService {
             Punto q = new Punto(latitude,longitude);
             paradas.add(q);
         }
+    	System.out.println(puntosSinReducir.size());
     	List<Punto> dp = douglasPeucker(puntosSinReducir,0.000025);
     	Gpx gpx = new Gpx();
         gpx.generarGpx(dp);
+        System.out.println(dp.size());
         Map<String, Object> result = new HashMap<>();
         result.put("ruta", dp);
         result.put("parada", paradas);
@@ -126,7 +127,6 @@ public class FileStorageService {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
           //  FileInputStream fileInputStream = new FileInputStream(is);
             Document document = documentBuilder.parse(is);
-        	Element elementRoot = document.getDocumentElement();
             NodeList nodelist_trkpt = document.getElementsByTagName("trkpt");
             NodeList nodelist_wpt = document.getElementsByTagName("wpt");
             for(int i = 0; i < nodelist_trkpt.getLength(); i++){
@@ -152,7 +152,6 @@ public class FileStorageService {
                 String newName = "";
                 String newImagen = "";
                 String newLatitude = attributes.getNamedItem("lat").getTextContent();
-                int num = 0;
                 String newLongitude = attributes.getNamedItem("lon").getTextContent();
                 for(int j = 0; j < datos.getLength(); j++){
                 	Node dat = datos.item(j);
@@ -161,30 +160,27 @@ public class FileStorageService {
                 		newName = dat.getFirstChild().getNodeValue();
                 	}
                 	if(etq.equals("extensions")) {
-                		num = dat.getChildNodes().getLength();
-                		//Node dat = dat.getChildNodes();
-                		newImagen = dat.getFirstChild().getNextSibling().getTextContent();
+                		NodeList nodelist_ext = dat.getChildNodes();
+                		NodeList nodelist_extch = nodelist_ext.item(1).getChildNodes();
+                		Node n = nodelist_extch.item(3);
+                		if(n != null) {
+                			newImagen = n.getTextContent();
+                		}
                 	}
                 }
-                String newLocationName = newLatitude + ":" + newLongitude + ":" + newName + ":" + num;
+                String newLocationName = newLatitude + ":" + newLongitude + ":" + newName + ":" + newImagen;
                 System.out.println(newLocationName);
                 listParada.add(newLocationName);
             }
             x.put("ruta", listRuta);
             x.put("parada", listParada);
-  //          is.close();
-
         } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SAXException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return x;
