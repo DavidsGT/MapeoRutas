@@ -3,6 +3,7 @@ package com.webServices.rutas.services;
 import com.webServices.rutas.exception.FileStorageException;
 import com.webServices.rutas.exception.MyFileNotFoundException;
 import com.webServices.rutas.model.FileStorageProperties;
+import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.Punto;
 import com.webServices.rutas.util.Gpx;
 
@@ -53,7 +54,7 @@ public class FileStorageService {
     @SuppressWarnings({ "unchecked"})
 	public Map<String, Object> processFile(MultipartFile file) throws IllegalStateException, IOException, ParserConfigurationException{
     	List<Punto> puntosSinReducir = new ArrayList<Punto>();
-    	List<Punto> paradas = new ArrayList<Punto>();
+    	List<Parada> paradas = new ArrayList<Parada>();
     	File convFile = new File(file.getOriginalFilename());
         convFile.createNewFile(); 
         FileOutputStream fos = new FileOutputStream(convFile); 
@@ -77,14 +78,18 @@ public class FileStorageService {
             String[] latlong = info.split(":");
             double latitude = Double.parseDouble(latlong[0]);
             double longitude = Double.parseDouble(latlong[1]);
+            String nombre = latlong[2];
+            String url = "";
+            if (latlong[3] != "0") {
+            	url= latlong[3];
+            }
             Punto q = new Punto(latitude,longitude);
-            paradas.add(q);
+            Parada parada = new Parada(nombre,url,q);
+            paradas.add(parada);
         }
-    	System.out.println(puntosSinReducir.size());
     	List<Punto> dp = douglasPeucker(puntosSinReducir,0.000025);
     	Gpx gpx = new Gpx();
         gpx.generarGpx(dp);
-        System.out.println(dp.size());
         Map<String, Object> result = new HashMap<>();
         result.put("ruta", dp);
         result.put("parada", paradas);
@@ -150,7 +155,7 @@ public class FileStorageService {
                 NamedNodeMap attributes = node.getAttributes();
                 NodeList datos = node.getChildNodes();
                 String newName = "";
-                String newImagen = "";
+                String newImagen = "0";
                 String newLatitude = attributes.getNamedItem("lat").getTextContent();
                 String newLongitude = attributes.getNamedItem("lon").getTextContent();
                 for(int j = 0; j < datos.getLength(); j++){

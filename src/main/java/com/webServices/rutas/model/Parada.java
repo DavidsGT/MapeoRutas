@@ -17,9 +17,8 @@ public class Parada {
 	private String urlFoto;
 	@Field
     private Punto coordenada;
-	public Parada(String id, String type, String nombre, String urlFoto, Punto coordenada) {
+	public Parada(String nombre, String urlFoto, Punto coordenada) {
 		super();
-		this.id = id;
 		this.type = "parada";
 		this.nombre = nombre;
 		this.urlFoto = urlFoto;
