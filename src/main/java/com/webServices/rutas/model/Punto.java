@@ -38,4 +38,9 @@ public class Punto {
 	public void setLongitud(double longitud) {
 		this.longitud = longitud;
 	}
+	@Override
+	public String toString() {
+		return "Punto [type=" + type + ", latitud=" + latitud + ", longitud=" + longitud + "]";
+	}
+	
 }

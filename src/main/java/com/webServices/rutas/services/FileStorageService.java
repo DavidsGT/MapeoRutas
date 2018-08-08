@@ -5,6 +5,7 @@ import com.webServices.rutas.exception.MyFileNotFoundException;
 import com.webServices.rutas.model.FileStorageProperties;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.Punto;
+import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.util.Gpx;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 @Service
 public class FileStorageService {
+	@Autowired
+	private ParadaRepository paradaRepository;
+	
 	private final Path fileStorageLocation;
 
     @Autowired
@@ -87,6 +91,7 @@ public class FileStorageService {
             Parada parada = new Parada(nombre,url,q);
             paradas.add(parada);
         }
+    	paradaRepository.save(paradas);
     	List<Punto> dp = douglasPeucker(puntosSinReducir,0.000025);
     	Gpx gpx = new Gpx();
         gpx.generarGpx(dp);
