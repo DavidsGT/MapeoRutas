@@ -17,7 +17,10 @@ public class GeoSpatialService {
 	private ParadaRepository paradaRepository;
 	public Iterable<Parada> getParadasCercanas(Punto punto){
 		Box cuadro = new Box(new Point(-2.2274133,-80.91111661),new Point(-2.2218443,-80.9011143));
-		Point point = new Point(Double.valueOf(punto.getLongitud()),Double.valueOf(punto.getLatitud()));
 		return paradaRepository.findByCoordenadaWithin(cuadro);
+	}
+	public Iterable<Parada> getParadasCercanasRadio(Punto punto){
+		Point cuadro = new Point(-2.2274133,-80.91111661);
+		return paradaRepository.findByCoordenadaNear(cuadro,new Distance(70, Metrics.KILOMETERS));
 	}
 }

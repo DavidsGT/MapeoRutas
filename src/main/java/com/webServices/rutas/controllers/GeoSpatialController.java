@@ -18,4 +18,8 @@ public class GeoSpatialController {
 	public Iterable<Parada> getParadasCercanas(@RequestBody Punto punto) {
 		return geoSpatialService.getParadasCercanas(punto);
 	}
+	@RequestMapping(method=RequestMethod.POST, value="/paradasCercanasRadio")
+	public Iterable<Parada> getParadasCercanasRadio(@RequestBody Punto punto) {
+		return geoSpatialService.getParadasCercanasRadio(punto);
+	}
 }
