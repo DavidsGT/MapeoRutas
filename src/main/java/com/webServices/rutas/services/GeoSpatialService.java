@@ -23,7 +23,7 @@ public class GeoSpatialService {
 	}
 	public Iterable<Parada> getParadasCercanasRadio(Punto punto){
 		Point cuadro = new Point(-2.2274133,-80.91111661);
-		Circle circle = new Circle(cuadro,new Distance(700, Metrics.MILES));
+		Circle circle = new Circle(cuadro,new Distance(7, Metrics.NEUTRAL));
 		return paradaRepository.findByCoordenadaWithin(circle);
 	}
 }

@@ -51,4 +51,9 @@ public class SegAcceso {
 	public void setType(String type) {
 		this.type = type;
 	}
+	@Override
+	public String toString() {
+		return "SegAcceso [id=" + id + ", idSegPerfil=" + idSegPerfil + ", idSegMenu=" + idSegMenu + ", type=" + type
+				+ "]";
+	}
 }

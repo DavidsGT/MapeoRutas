@@ -63,5 +63,4 @@ public class Parada {
 		return "Parada [id=" + id + ", type=" + type + ", nombre=" + nombre + ", urlFoto=" + urlFoto + ", coordenada="
 				+ coordenada + "]";
 	}
-	
 }

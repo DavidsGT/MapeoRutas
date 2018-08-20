@@ -19,8 +19,6 @@ public class RutaModel {
 	@Field
     private List<Punto> listasPuntos;
 	@Field
-    private List<Punto> listasParadas;
-	@Field
 	private String type;
     public RutaModel() {
     	this.type = "RutaModel";
@@ -32,16 +30,9 @@ public class RutaModel {
 		this.numRuta = numRuta;
 		this.nombreCooperativa = nombreCooperativa;
 		this.listasPuntos = listasPuntos;
-		this.listasParadas = listasParadas;
 		this.type = "RutaModel";
 	}
 
-	public List<Punto> getListasParadas() {
-		return listasParadas;
-	}
-	public void setListasParadas(List<Punto> listasParadas) {
-		this.listasParadas = listasParadas;
-	}
 	public void setNombreCooperativa(String nombreCooperativa) {
 		this.nombreCooperativa = nombreCooperativa;
 	}

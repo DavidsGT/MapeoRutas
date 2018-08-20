@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.SegAcceso;
+import com.webServices.rutas.model.SegMenu;
 import com.webServices.rutas.services.SegAccesoService;
 
 @RestController
@@ -17,6 +18,10 @@ public class SegAccesoController {
 	@RequestMapping("/accesos")
 	public Iterable<SegAcceso> getAllSegAcceso(){
 		return segAccesoService.getAllSegAcceso();
+	}
+	@RequestMapping("/accesos/menu/{usuario}/{clave}")
+	public Iterable<SegMenu> getMenus(@PathVariable String usuario,@PathVariable String clave) {
+		return segAccesoService.getObtenerMenus(usuario,clave);
 	}
 	@RequestMapping("/accesos/{id}")
 	public SegAcceso getSegAcceso(@PathVariable String id) {

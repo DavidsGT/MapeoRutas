@@ -1,5 +1,7 @@
 package com.webServices.rutas.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +12,7 @@ public class RutaModelService {
 	@Autowired
 	private RutaModelRepository rutaModelRepository;
 	public RutaModel getRutaModel(String id) {
-		return rutaModelRepository.findById(id);
+		return rutaModelRepository.findOne(id);
 	}
 	public RutaModel getRutaModelLinea(String linea) {
 		return rutaModelRepository.findByNumRuta(linea);

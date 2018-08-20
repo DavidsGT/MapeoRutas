@@ -11,7 +11,6 @@ import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Circle;
 
 import com.webServices.rutas.model.Parada;
-//@ViewIndexed(designDoc = "parada", viewName = "all")
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	@Dimensional(designDocument = "paradas", spatialViewName = "paradas", dimensions = 2)
 	  @Retention(RetentionPolicy.RUNTIME)

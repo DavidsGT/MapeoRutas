@@ -11,7 +11,7 @@ public class SegUsuarioService {
 	@Autowired
 	private SegUsuarioRepository segUsuarioRepository;
 	public SegUsuario getSegUsuario(String id) {
-		return segUsuarioRepository.findById(id);
+		return segUsuarioRepository.findOne(id);
 	}
 	public Iterable<SegUsuario> getAllSegUsuario(){
 		return segUsuarioRepository.findAll();
@@ -22,7 +22,7 @@ public class SegUsuarioService {
 	public void updateSegUsuario(String id,SegUsuario segUsuario) {
 	}
 	public void deleteSegUsuario(String id) {
-		segUsuarioRepository.deleteById(id);
+		segUsuarioRepository.delete(id);
 	}
 	public void deleteAllSegUsuario() {
 		segUsuarioRepository.deleteAll();

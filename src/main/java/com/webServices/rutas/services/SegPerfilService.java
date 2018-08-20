@@ -1,5 +1,7 @@
 package com.webServices.rutas.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ public class SegPerfilService{
 	@Autowired
 	private SegPerfilRepository segPerfilRepository;
 	public SegPerfil getSegPerfil(String id) {
-		return segPerfilRepository.findById(id);
+		return segPerfilRepository.findOne(id);
 	}
 	public Iterable<SegPerfil> getAllSegPerfil(){
 		return segPerfilRepository.findAll();

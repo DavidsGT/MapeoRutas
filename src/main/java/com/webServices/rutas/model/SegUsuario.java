@@ -22,7 +22,6 @@ public class SegUsuario {
 	public SegUsuario() {
 		super();
 		this.type = "segUsuario";
-		// TODO Auto-generated constructor stub
 	}
 	public SegUsuario(String id, String nombre, String clave, String type, String idSegPerfil) {
 		super();
