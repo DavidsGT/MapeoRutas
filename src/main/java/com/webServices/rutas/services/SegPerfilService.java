@@ -13,7 +13,7 @@ public class SegPerfilService{
 	@Autowired
 	private SegPerfilRepository segPerfilRepository;
 	public SegPerfil getSegPerfil(String id) {
-		return segPerfilRepository.findOne(id);
+		return segPerfilRepository.findById(id).get();
 	}
 	public Iterable<SegPerfil> getAllSegPerfil(){
 		return segPerfilRepository.findAll();

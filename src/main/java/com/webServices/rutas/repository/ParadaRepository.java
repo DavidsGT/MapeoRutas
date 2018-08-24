@@ -9,6 +9,8 @@ import org.springframework.data.couchbase.core.query.Dimensional;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
 
 import com.webServices.rutas.model.Parada;
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
@@ -18,6 +20,6 @@ public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	@IndexedByLocation
 	Iterable<Parada> findByCoordenadaWithin(Box x);
 	
-	@Dimensional(designDocument = "paradas", spatialViewName = "paradas", dimensions = 2)
-	List<Parada> findByCoordenadaWithin(Circle x);
+	@Dimensional(designDocument = "paradas", spatialViewName = "paradas")
+	Iterable<Parada> findByCoordenadaWithin(Circle p);
 }

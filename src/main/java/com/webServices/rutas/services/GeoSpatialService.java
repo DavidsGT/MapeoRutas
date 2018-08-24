@@ -1,6 +1,5 @@
 package com.webServices.rutas.services;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Circle;
@@ -22,8 +21,8 @@ public class GeoSpatialService {
 		return paradaRepository.findByCoordenadaWithin(cuadro);
 	}
 	public Iterable<Parada> getParadasCercanasRadio(Punto punto){
-		Point cuadro = new Point(-2.2274133,-80.91111661);
-		Circle circle = new Circle(cuadro,new Distance(7, Metrics.NEUTRAL));
+		Point cuadro = new Point(-2.2,-80.9);
+		Circle circle = new Circle(cuadro,new Distance(300000, Metrics.KILOMETERS));
 		return paradaRepository.findByCoordenadaWithin(circle);
 	}
 }

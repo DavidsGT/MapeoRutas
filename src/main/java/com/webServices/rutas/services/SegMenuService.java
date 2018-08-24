@@ -13,7 +13,7 @@ public class SegMenuService {
 	@Autowired
 	private SegMenuRepository segMenuRepository;
 	public SegMenu getSegMenu(String id) {
-		return segMenuRepository.findOne(id);
+		return segMenuRepository.findById(id).get();
 	}
 	public Iterable<SegMenu> getAllSegMenu(){
 		return segMenuRepository.findAll();

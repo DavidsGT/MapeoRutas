@@ -2,6 +2,7 @@ package com.webServices.rutas.model;
 
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import org.springframework.data.geo.Point;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
@@ -16,8 +17,8 @@ public class Parada {
 	@Field
 	private String urlFoto;
 	@Field
-    private Punto coordenada;
-	public Parada(String nombre, String urlFoto, Punto coordenada) {
+    private Point coordenada;
+	public Parada(String nombre, String urlFoto, Point coordenada) {
 		super();
 		this.type = "parada";
 		this.nombre = nombre;
@@ -52,10 +53,10 @@ public class Parada {
 	public void setUrlFoto(String urlFoto) {
 		this.urlFoto = urlFoto;
 	}
-	public Punto getCoordenada() {
+	public Point getCoordenada() {
 		return coordenada;
 	}
-	public void setCoordenada(Punto coordenada) {
+	public void setCoordenada(Point coordenada) {
 		this.coordenada = coordenada;
 	}
 	@Override

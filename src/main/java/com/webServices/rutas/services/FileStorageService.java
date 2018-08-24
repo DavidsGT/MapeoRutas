@@ -11,6 +11,7 @@ import com.webServices.rutas.util.Gpx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,11 +88,11 @@ public class FileStorageService {
             if (latlong[3] != "0") {
             	url= latlong[3];
             }
-            Punto q = new Punto(latitude,longitude);
+            Point q = new Point(latitude,longitude);
             Parada parada = new Parada(nombre,url,q);
             paradas.add(parada);
         }
-    	paradaRepository.save(paradas);
+    	paradaRepository.saveAll(paradas);
     	List<Punto> dp = douglasPeucker(puntosSinReducir,0.000025);
     	Gpx gpx = new Gpx();
         gpx.generarGpx(dp);

@@ -12,7 +12,7 @@ public class RutaModelService {
 	@Autowired
 	private RutaModelRepository rutaModelRepository;
 	public RutaModel getRutaModel(String id) {
-		return rutaModelRepository.findOne(id);
+		return null;//rutaModelRepository.findOne(id);
 	}
 	public RutaModel getRutaModelLinea(String linea) {
 		return rutaModelRepository.findByNumRuta(linea);

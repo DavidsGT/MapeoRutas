@@ -14,7 +14,7 @@ public class CooperativaService {
 	@Autowired
 	private CooperativaRepository cooperativaRepository;
 	public Cooperativa getCooperativa(String id) {
-		return cooperativaRepository.findOne(id);
+		return null;//cooperativaRepository.findOne(id);
 	}
 	public List<Cooperativa> getAllCooperativa(){
 		return (List<Cooperativa>) cooperativaRepository.findAll();
@@ -25,7 +25,7 @@ public class CooperativaService {
 	public void updateCooperativa(String id, Cooperativa cooperativa) {
 	}
 	public void deleteCooperativa(String id) {
-		cooperativaRepository.delete(id);
+		//cooperativaRepository.delete(id);
 	}
 	public void deleteAllCooperativa(){
 		cooperativaRepository.deleteAll();

@@ -14,7 +14,7 @@ public class BusService {
 	@Autowired
 	private BusRepository busRepository;
 	public Buses getBus(String id) {
-		return busRepository.findOne(id);
+		return null;//busRepository.findOne(id);
 	}
 	public List<Buses> getAllBus(){
 		return (List<Buses>) busRepository.findAll();
@@ -25,7 +25,7 @@ public class BusService {
 	public void updateBus(String id,Buses bus) {
 	}
 	public void deleteBus(String id) {
-		busRepository.delete(id);;
+		//busRepository.delete(id);;
 	}
 	public void deleteAllBus() {
 		busRepository.deleteAll();

@@ -23,7 +23,7 @@ public class SegAccesoService {
 	@Autowired
 	private SegMenuRepository segMenuRepository;
 	public SegAcceso getSegAcceso(String id) {
-		return segAccesoRepository.findOne(id);
+		return segAccesoRepository.findById(id).get();
 	}
 	public Iterable<SegAcceso> getAllSegAcceso(){
 		return segAccesoRepository.findAll();
@@ -44,7 +44,7 @@ public class SegAccesoService {
 		Iterable <SegAcceso> listAccesos = segAccesoRepository.findByIdSegPerfil(Usuario.getIdSegPerfil());
 		List<SegMenu> listMenu = new ArrayList<>();
 		for(SegAcceso a:listAccesos) {
-			listMenu.add(segMenuRepository.findOne(a.getIdSegMenu()));
+			listMenu.add(segMenuRepository.findById(a.getIdSegMenu()).get());
 		}
 		return listMenu;
 	}
