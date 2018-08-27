@@ -1,5 +1,7 @@
 package com.webServices.rutas.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Circle;
@@ -16,13 +18,13 @@ import com.webServices.rutas.repository.ParadaRepository;
 public class GeoSpatialService {
 	@Autowired
 	private ParadaRepository paradaRepository;
-	public Iterable<Parada> getParadasCercanas(Punto punto){
-		Box cuadro = new Box(new Point(-2.2274133,-80.91111661),new Point(-2.2218443,-80.9011143));
+	public Iterable<Parada> getParadasCercanas(List<Point> punto){
+		//Box cuadro = new Box();
+		Box cuadro = new Box(punto.get(0),punto.get(1));
 		return paradaRepository.findByCoordenadaWithin(cuadro);
 	}
-	public Iterable<Parada> getParadasCercanasRadio(Punto punto){
-		Point cuadro = new Point(-2.2,-80.9);
-		Circle circle = new Circle(cuadro,new Distance(300000, Metrics.KILOMETERS));
+	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud){
+		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));
 		return paradaRepository.findByCoordenadaWithin(circle);
 	}
 }

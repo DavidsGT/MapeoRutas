@@ -1,43 +1,47 @@
 package com.webServices.rutas.model;
 
 import org.springframework.data.couchbase.core.mapping.Document;
-import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
-import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Buses {
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
-	public String id;
-	@Field
+	@Id
 	public String placa;
 	@Field
 	public int numero;
 	@Field
 	public int capacidad;
 	@Field
-	public String cooperativa;
+	public String idCooperativa;
 	@Field
 	public String type;
+	@Field
+	public Boolean estado;
 	public Buses() {
 		super();
 		this.type = "Bus";
 	}
-	public Buses(String id, String placa, int numero, int capacidad, String cooperativa, String type) {
+	public Buses(String id, String placa, int numero, int capacidad, String cooperativa, String type,Boolean estado) {
 		super();
-		this.id = id;
 		this.placa = placa;
 		this.numero = numero;
 		this.capacidad = capacidad;
-		this.cooperativa = cooperativa;
+		this.idCooperativa = cooperativa;
 		this.type = "Bus";
+		this.estado = estado;
 	}
-	public String getId() {
-		return id;
+	public String getIdCooperativa() {
+		return idCooperativa;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setIdCooperativa(String idCooperativa) {
+		this.idCooperativa = idCooperativa;
+	}
+	public Boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
 	}
 	public String getPlaca() {
 		return placa;
@@ -58,10 +62,10 @@ public class Buses {
 		this.capacidad = capacidad;
 	}
 	public String getCooperativa() {
-		return cooperativa;
+		return idCooperativa;
 	}
 	public void setCooperativa(String cooperativa) {
-		this.cooperativa = cooperativa;
+		this.idCooperativa = cooperativa;
 	}
 	public String getType() {
 		return type;

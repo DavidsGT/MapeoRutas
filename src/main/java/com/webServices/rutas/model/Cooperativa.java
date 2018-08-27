@@ -9,7 +9,9 @@ import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Cooperativa {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
-	public String id;
+	private String id;
+	@Field
+	private String nombre;
 	@Field
 	private String descripcion;
 	@Field
@@ -20,18 +22,29 @@ public class Cooperativa {
 	private String email;
 	@Field
 	public String type;
+	@Field
+	public Boolean estado;
 	public Cooperativa() {
 		super();
 		this.type = "Cooperativa";
 	}
-	public Cooperativa(String id, String descripcion, String direccion, String telefono, String email, String type) {
+	public Cooperativa(String id, String nombre, String descripcion, String direccion, String telefono, String email,
+			String type, Boolean estado) {
 		super();
 		this.id = id;
+		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.direccion = direccion;
 		this.telefono = telefono;
 		this.email = email;
 		this.type = "Cooperativa";
+		this.estado = estado;
+	}
+	public Boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
 	}
 	public String getId() {
 		return id;
@@ -39,10 +52,16 @@ public class Cooperativa {
 	public void setId(String id) {
 		this.id = id;
 	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 	public String getDescripcion() {
 		return descripcion;
 	}
-	public void setLinea(String descripcion) {
+	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 	public String getDireccion() {
@@ -69,5 +88,4 @@ public class Cooperativa {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
 }

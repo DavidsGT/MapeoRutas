@@ -1,7 +1,6 @@
 package com.webServices.rutas.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,21 +12,29 @@ import com.webServices.rutas.repository.CooperativaRepository;
 public class CooperativaService {
 	@Autowired
 	private CooperativaRepository cooperativaRepository;
+	
+	public List<Cooperativa> getAllCooperativaEstadoTrue(){
+		return (List<Cooperativa>) cooperativaRepository.findByEstadoIsTrue();
+	}
 	public Cooperativa getCooperativa(String id) {
-		return null;//cooperativaRepository.findOne(id);
+		return cooperativaRepository.findById(id).get();
+	}
+	public Cooperativa getCooperativaByNombre(String nombre) {
+		System.out.println(nombre);
+		return cooperativaRepository.findByNombre(nombre);
 	}
 	public List<Cooperativa> getAllCooperativa(){
 		return (List<Cooperativa>) cooperativaRepository.findAll();
 	}
-	public void addCooperativa(Cooperativa cooperativa) {
+	public Cooperativa addCooperativa(Cooperativa cooperativa) {
+		return cooperativaRepository.save(cooperativa);
+	}
+	public void updateCooperativa(Cooperativa cooperativa) {
 		cooperativaRepository.save(cooperativa);
 	}
-	public void updateCooperativa(String id, Cooperativa cooperativa) {
-	}
 	public void deleteCooperativa(String id) {
-		//cooperativaRepository.delete(id);
-	}
-	public void deleteAllCooperativa(){
-		cooperativaRepository.deleteAll();
+		Cooperativa c = cooperativaRepository.findById(id).get();
+		c.setEstado(false);
+		cooperativaRepository.save(c);
 	}
 }
