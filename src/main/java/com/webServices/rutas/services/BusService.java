@@ -1,33 +1,50 @@
 package com.webServices.rutas.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.webServices.rutas.model.Buses;
+import com.webServices.rutas.model.EstadoBus;
+import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.repository.BusRepository;
+import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 
 @Service
 public class BusService {
 	@Autowired
 	private BusRepository busRepository;
+	@Autowired
+	private HistorialEstadoBusRepository historialEstadoBusRepository;
 	public Buses getBus(String id) {
-		return null;//busRepository.findOne(id);
+		return busRepository.findById(id).get();
 	}
 	public List<Buses> getAllBus(){
 		return (List<Buses>) busRepository.findAll();
 	}
-	public void addBus(Buses bus) {
+	public List<Buses> getAllBusEstadoTrue(){
+		return (List<Buses>) busRepository.findByEstadoIsTrue();
+	}
+	public Buses addBus(Buses bus) {
+		return busRepository.save(bus);
+	}
+	public void updateBus(Buses bus) {
 		busRepository.save(bus);
 	}
-	public void updateBus(String id,Buses bus) {
-	}
 	public void deleteBus(String id) {
-		//busRepository.delete(id);;
+		Buses c = busRepository.findById(id).get();
+		c.setEstado(false);
+		busRepository.save(c);
 	}
-	public void deleteAllBus() {
-		busRepository.deleteAll();
+	public Iterable<Buses> getBusesByIdCooperativa(String idCooperativa){
+		return busRepository.findByIdCooperativaAndEstadoIsTrue(idCooperativa);
+	}
+	public void updateEstadoBus(EstadoBus estadoBus,String id) {
+		Buses c = busRepository.findById(id).get();
+		c.setEstadoBus(estadoBus);
+		busRepository.save(c);
+		HistorialEstadoBus h = new HistorialEstadoBus(id, estadoBus);
+		historialEstadoBusRepository.save(h);
 	}
 }

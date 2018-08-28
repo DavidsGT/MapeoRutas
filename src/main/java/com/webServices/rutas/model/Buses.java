@@ -7,6 +7,7 @@ import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Buses {
 	@Id
+	@Field
 	public String placa;
 	@Field
 	public int numero;
@@ -15,6 +16,8 @@ public class Buses {
 	@Field
 	public String idCooperativa;
 	@Field
+	public EstadoBus estadoBus;
+	@Field
 	public String type;
 	@Field
 	public Boolean estado;
@@ -22,7 +25,7 @@ public class Buses {
 		super();
 		this.type = "Bus";
 	}
-	public Buses(String id, String placa, int numero, int capacidad, String cooperativa, String type,Boolean estado) {
+	public Buses(String id, String placa, int numero, int capacidad, String cooperativa, String type,Boolean estado,EstadoBus estadoBus) {
 		super();
 		this.placa = placa;
 		this.numero = numero;
@@ -30,6 +33,13 @@ public class Buses {
 		this.idCooperativa = cooperativa;
 		this.type = "Bus";
 		this.estado = estado;
+		this.estadoBus = estadoBus;
+	}
+	public EstadoBus getEstadoBus() {
+		return estadoBus;
+	}
+	public void setEstadoBus(EstadoBus estadoBus) {
+		this.estadoBus = estadoBus;
 	}
 	public String getIdCooperativa() {
 		return idCooperativa;
@@ -60,12 +70,6 @@ public class Buses {
 	}
 	public void setCapacidad(int capacidad) {
 		this.capacidad = capacidad;
-	}
-	public String getCooperativa() {
-		return idCooperativa;
-	}
-	public void setCooperativa(String cooperativa) {
-		this.idCooperativa = cooperativa;
 	}
 	public String getType() {
 		return type;
