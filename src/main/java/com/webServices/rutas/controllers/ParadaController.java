@@ -21,4 +21,8 @@ public class ParadaController {
 	public void addParada(@RequestBody Parada parada) {
 		paradaService.addParada(parada);
 	}
+	@RequestMapping(method=RequestMethod.PUT, value="/parada")
+	public void updateParada(@RequestBody Parada parada) {
+		paradaService.addParada(parada);
+	}
 }

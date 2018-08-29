@@ -17,6 +17,9 @@ public class BusService {
 	private BusRepository busRepository;
 	@Autowired
 	private HistorialEstadoBusRepository historialEstadoBusRepository;
+	public Iterable<HistorialEstadoBus> getHistorialEstadoBusAllByPlaca(String placa){
+		return historialEstadoBusRepository.findByIdBus(placa);
+	}
 	public Buses getBus(String id) {
 		return busRepository.findById(id).get();
 	}

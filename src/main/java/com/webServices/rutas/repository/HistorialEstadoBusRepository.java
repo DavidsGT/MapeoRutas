@@ -6,4 +6,5 @@ import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import com.webServices.rutas.model.HistorialEstadoBus;
 @ViewIndexed(designDoc = "historialEstadoBus", viewName = "all")
 public interface HistorialEstadoBusRepository extends CouchbaseRepository<HistorialEstadoBus, String>{
+	Iterable<HistorialEstadoBus> findByIdBus(String idBus);
 }

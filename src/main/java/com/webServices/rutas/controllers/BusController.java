@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Buses;
 import com.webServices.rutas.model.EstadoBus;
+import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.services.BusService;
 
 @RestController
@@ -24,6 +25,10 @@ public class BusController {
 	@RequestMapping("/busesByCooperativa/{idCooperativa}")
 	public Iterable<Buses> getAllBusesByCooperativa(@PathVariable String idCooperativa){
 		return busService.getBusesByIdCooperativa(idCooperativa);
+	}
+	@RequestMapping("/historialSeguimientoBus/{placa}")
+	public Iterable<HistorialEstadoBus> getHistorialEstadoBusAllByPlaca(@PathVariable String placa){
+		return busService.getHistorialEstadoBusAllByPlaca(placa);
 	}
 	@RequestMapping("/buses")
 	public List<Buses> getAllBusesEstadoTrue(){
