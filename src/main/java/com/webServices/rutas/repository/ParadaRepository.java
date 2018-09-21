@@ -3,14 +3,11 @@ package com.webServices.rutas.repository;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.List;
 
 import org.springframework.data.couchbase.core.query.Dimensional;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Circle;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 
 import com.webServices.rutas.model.Parada;
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{

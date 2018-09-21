@@ -22,7 +22,7 @@ public class RutaModelController {
 	public RutaModel getPunto(@PathVariable String id) {
 		return rutaModelService.getRutaModel(id);
 	}
-	@RequestMapping("/rutas/linea/{linea}")
+	@RequestMapping(method=RequestMethod.GET,value="/rutas/linea/{linea}")
 	public RutaModel getPuntoLinea(@PathVariable String linea) {
 		return rutaModelService.getRutaModelLinea(linea);
 	}

@@ -5,7 +5,9 @@ import com.webServices.rutas.exception.MyFileNotFoundException;
 import com.webServices.rutas.model.FileStorageProperties;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.Punto;
+import com.webServices.rutas.model.RutaModel;
 import com.webServices.rutas.repository.ParadaRepository;
+import com.webServices.rutas.repository.RutaModelRepository;
 import com.webServices.rutas.util.Gpx;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,8 @@ import javax.xml.parsers.ParserConfigurationException;
 public class FileStorageService {
 	@Autowired
 	private ParadaRepository paradaRepository;
-	
+	@Autowired
+	private RutaModelRepository rutaModelRepository;
 	private final Path fileStorageLocation;
 
     @Autowired
@@ -85,7 +88,7 @@ public class FileStorageService {
             double longitude = Double.parseDouble(latlong[1]);
             String nombre = latlong[2];
             String url = "";
-            if (latlong[3] != "0") {
+            if (latlong[3] != "0"){
             	url= latlong[3];
             }
             Point q = new Point(latitude,longitude);
@@ -94,6 +97,8 @@ public class FileStorageService {
         }
     	paradaRepository.saveAll(paradas);
     	List<Punto> dp = douglasPeucker(puntosSinReducir,0.000025);
+    	RutaModel rm = new RutaModel("8","C.U.P.",dp);
+    	rutaModelRepository.save(rm);
     	Gpx gpx = new Gpx();
         gpx.generarGpx(dp);
         Map<String, Object> result = new HashMap<>();

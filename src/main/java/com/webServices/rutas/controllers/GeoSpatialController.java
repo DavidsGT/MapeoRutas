@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Parada;
-import com.webServices.rutas.model.Punto;
 import com.webServices.rutas.services.GeoSpatialService;
 
 @RestController

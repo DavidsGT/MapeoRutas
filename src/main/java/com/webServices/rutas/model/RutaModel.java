@@ -23,10 +23,8 @@ public class RutaModel {
     public RutaModel() {
     	this.type = "RutaModel";
     }
-    public RutaModel(String id, String numRuta, String nombreCooperativa, List<Punto> listasPuntos,
-			List<Punto> listasParadas, String type) {
+    public RutaModel(String numRuta, String nombreCooperativa, List<Punto> listasPuntos) {
 		super();
-		this.id = id;
 		this.numRuta = numRuta;
 		this.nombreCooperativa = nombreCooperativa;
 		this.listasPuntos = listasPuntos;
