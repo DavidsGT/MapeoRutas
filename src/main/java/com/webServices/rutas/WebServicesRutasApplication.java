@@ -9,7 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.webServices.rutas.model.FileStorageProperties;
-
+/**
+ * Metodo Principal
+ * @author Davids Adrian Gonzalez Tigrero
+ *
+ */
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan

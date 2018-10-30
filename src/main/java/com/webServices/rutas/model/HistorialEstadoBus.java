@@ -1,51 +1,70 @@
 package com.webServices.rutas.model;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 
+
+/**
+ * Representa el Historial de los Estados que ha tenido un Bus en un dia
+ * @author Davids Adrian Gonzalez Tigrero
+ */
+@Document
 public class HistorialEstadoBus {
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
+	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES,delimiter = "::")
 	private String id;
-	@CreatedDate
-	private Date creationDate;
+	@Field @IdAttribute
+	private Calendar fecha;
+	@Field @IdAttribute
+	private String placa;
 	@Field
-	private String idBus;
-	@Field
-	private EstadoBus estadoBus;
-	@Field
-	private String type;
+	private List<EstadoBus> ListaEstados;
+	public HistorialEstadoBus(String id, Date fecha, String placa, List<EstadoBus> listaEstados) {
+		super();
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.HOUR_OF_DAY, -22);
+		this.id = id;
+		this.fecha = now ;
+		this.placa = placa;
+		ListaEstados = listaEstados;
+	}
 	public HistorialEstadoBus() {
 		super();
 	}
-	public HistorialEstadoBus(String idBus, EstadoBus estadoBus) {
-		super();
-		this.idBus = idBus;
-		this.estadoBus = estadoBus;
-		this.type = "historialEstadoBus";
-		this.creationDate = new Date();
+	public String getId() {
+		return id;
 	}
-	public Date getCreationDate() {
-		return creationDate;
+	public void setId(String id) {
+		this.id = id;
 	}
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public Calendar getFecha() {
+		return fecha;
 	}
-	public String getIdBus() {
-		return idBus;
+	public void setFecha(Calendar fecha) {
+		this.fecha = fecha;
 	}
-	public void setIdBus(String idBus) {
-		this.idBus = idBus;
+	public String getPlaca() {
+		return placa;
 	}
-	public EstadoBus getEstadoBus() {
-		return estadoBus;
+	public void setPlaca(String placa) {
+		this.placa = placa;
 	}
-	public void setEstadoBus(EstadoBus estadoBus) {
-		this.estadoBus = estadoBus;
+	public List<EstadoBus> getListaEstados() {
+		return ListaEstados;
 	}
+	public void setListaEstados(List<EstadoBus> listaEstados) {
+		ListaEstados = listaEstados;
+	}
+	
 }

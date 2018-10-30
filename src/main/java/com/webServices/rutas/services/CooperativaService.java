@@ -10,10 +10,11 @@ import com.webServices.rutas.repository.CooperativaRepository;
 
 @Service
 public class CooperativaService {
+	
 	@Autowired
 	private CooperativaRepository cooperativaRepository;
 	
-	public List<Cooperativa> getAllCooperativaEstadoTrue(){
+	public List<Cooperativa> getAllCooperativa(){
 		return (List<Cooperativa>) cooperativaRepository.findByEstadoIsTrue();
 	}
 	public Cooperativa getCooperativa(String id) {
@@ -23,7 +24,7 @@ public class CooperativaService {
 		System.out.println(nombre);
 		return cooperativaRepository.findByNombre(nombre);
 	}
-	public List<Cooperativa> getAllCooperativa(){
+	public List<Cooperativa> getAllCooperativaIgnoreEstado(){
 		return (List<Cooperativa>) cooperativaRepository.findAll();
 	}
 	public Cooperativa addCooperativa(Cooperativa cooperativa) {

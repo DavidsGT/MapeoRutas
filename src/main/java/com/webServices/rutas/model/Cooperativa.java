@@ -27,6 +27,7 @@ public class Cooperativa {
 	public Cooperativa() {
 		super();
 		this.type = "Cooperativa";
+		this.estado = true;
 	}
 	public Cooperativa(String id, String nombre, String descripcion, String direccion, String telefono, String email,
 			String type, Boolean estado) {
@@ -38,7 +39,7 @@ public class Cooperativa {
 		this.telefono = telefono;
 		this.email = email;
 		this.type = "Cooperativa";
-		this.estado = estado;
+		this.estado = true;
 	}
 	public Boolean getEstado() {
 		return estado;

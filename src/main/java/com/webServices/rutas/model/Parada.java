@@ -6,7 +6,10 @@ import org.springframework.data.geo.Point;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
-
+/**
+ * Representa una Parada
+ * @author Davids
+ */
 public class Parada {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
 	private String id;
