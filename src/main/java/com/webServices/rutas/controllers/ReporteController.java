@@ -11,45 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Denuncia;
+import com.webServices.rutas.model.Reporte;
 import com.webServices.rutas.services.DenunciaService;
+import com.webServices.rutas.services.ReporteService;
 
-/**
- * Contiene los requestMapping de Denuncias y los asocia a sus respectivos servicios en {@link DenunciaService}.
- * @author Davids Adrian Gonzalez Tigrero
- * @version 1.0
- * @see DenunciaService
- */
 @RestController
-@RequestMapping("/denuncias")
-public class DenunciaController {
-	
-	/**
-	 * Instancia de los servicios para Denuncias
-	 */
+@RequestMapping("reportes")
+public class ReporteController {
 	@Autowired
-	private DenunciaService denunciaService;
-	
+	private ReporteService reporteService;
 	/**
 	 * Metodo que Mapea "/denuncias", RequestMethod es GET, se enlaza al servicio {@link DenunciaService#getAllDenuncia()} y retorna datos de todos las denuncias registradas
 	 * @return Lista de Denuncias
 	 * @see {@link DenunciaService#getAllDenuncia()}
 	 */
 	@GetMapping
-	public Iterable<Denuncia> getAllDenuncia(){
-		return denunciaService.getAllDenuncia();
+	public Iterable<Reporte> getAllReporte(){
+		return reporteService.getAllReporte();
 	}
-	
-	/**
-	 * Metodo que Mapea "/denuncias/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link DenunciaService#getAllDenunciasEstadoTrue()} 
-	 * y retorna todos los denuncias incluye eliminados logicamente.
-	 * @return Denuncias incluye eliminados logicamente
-	 * @see {@link DenunciaService#getAllDenunciasEstadoTrue()}
-	 */
-	@GetMapping("/ignoreEstado")
-	public Iterable<Denuncia> getAllDenunciaIgnoreEstado(){
-		return denunciaService.getAllDenunciaIgnoreEstado();
+	@GetMapping("/{id}")
+	public Reporte getReporte(@PathVariable String id){
+		return reporteService.getReporte(id);
 	}
-	
 	/**
 	 * Metodo que Mapea "/denuncias", RequestMethod es POST, se enlaza al servicio {@link DenunciaService#addDenuncia(Denuncia)} 
 	 * y retorna Datos de una denuncia registrada
@@ -58,8 +41,8 @@ public class DenunciaController {
 	 * @see {@link DenunciaService#addDenuncia(Denuncia)}
 	 */
 	@PostMapping
-	public Denuncia addDenuncia(@RequestBody Denuncia denuncia) {
-		return denunciaService.addDenuncia(denuncia);
+	public Reporte addReporte(@RequestBody Reporte reporte) {
+		return reporteService.addDenuncia(reporte);
 	}
 	
 	/**
@@ -70,18 +53,7 @@ public class DenunciaController {
 	 * @see {@link DenunciaService#updateDenuncia(Denuncia)}
 	 */
 	@PutMapping
-	public Denuncia updateDenuncia(@RequestBody Denuncia denuncia) {
-		return denunciaService.updateDenuncia(denuncia);
-	}
-	
-	/**
-	 * Metodo que Mapea "/denuncia/{id}", RequestMethod es DELETE, se enlaza al servicio {@link DenunciaService#deleteDenuncia(String)}.
-	 * Eliminar un Denuncia.
-	 * @param id - Id de la Denuncia a Eliminar
-	 * @see {@link DenunciaService#deleteDenuncia(String)}
-	 */
-	@DeleteMapping
-	public void deleteDenuncia(@PathVariable String id) {
-		denunciaService.deleteDenuncia(id);
+	public Reporte updateReporte(@RequestBody Reporte reporte) {
+		return reporteService.updateDenuncia(reporte);
 	}
 }

@@ -21,15 +21,19 @@ public class Parada {
 	private String urlFoto;
 	@Field
     private Point coordenada;
+	@Field
+    private Boolean estado;
 	public Parada(String nombre, String urlFoto, Point coordenada) {
 		super();
 		this.type = "parada";
 		this.nombre = nombre;
 		this.urlFoto = urlFoto;
 		this.coordenada = coordenada;
+		this.estado = true;
 	}
 	public Parada() {
 		super();
+		this.estado = true;
 		this.type = "parada";
 	}
 	public String getId() {

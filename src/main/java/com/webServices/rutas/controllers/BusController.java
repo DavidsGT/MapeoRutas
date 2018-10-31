@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
@@ -25,7 +26,8 @@ import com.webServices.rutas.services.BusService;
  * @version 1.0
  * @see BusService
  */
-@RestController("/buses")
+@RestController
+@RequestMapping("buses")
 public class BusController {
 	
 	/**
@@ -145,7 +147,7 @@ public class BusController {
 	 * @deprecated Metodo que sirve de apoyo al Dispositivo Bus para facilitar su envio por ahora, pero el metodo que realmente se deberian usar es: {@link BusController#updateEstadoBus(EstadoBus, String)}
 	 * @param valor - Cadena Json de los Datos actuales del Estado Bus
 	 * @param placa - Placa del Bus que se desea setear el estado del bus.
-	 * @throws JsonParseException
+	 * @throws JsonParseException - Errores en el 
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 * @see {@link BusService#updateEstadoBusGET(String, String) , {@link BusController#getEstadoActualBus(String)}}
@@ -162,8 +164,8 @@ public class BusController {
 	 * @deprecated Metodo que sirve de apoyo al Dispositivo Bus para facilitar su envio por ahora, pero el metodo que realmente se deberian usar es: {@link BusController#updateEstadoBus(EstadoBus, String)}
 	 * @param valor - Datos actuales del Bus.
 	 * @param placa - Placa del Bus que se desea setear el estado del bus.
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
+	 * @throws JsonParseException - Solo si la cadena String no cumple el Formato Json
+	 * @throws JsonMappingException  - Solo si la cadena String no cumple el Formato Json
 	 * @throws IOException
 	 * @see {@link BusService#updateEstadoBusGETAlternative(String, String) , {@link BusController#getEstadoActualBus(String)}}
 	 */

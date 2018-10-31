@@ -1,6 +1,7 @@
 package com.webServices.rutas.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import com.webServices.rutas.model.SegPerfil;
 import com.webServices.rutas.services.SegPerfilService;
 
 @RestController
+@RequestMapping("perfiles")
 public class SegPerfilController {
 	@Autowired
 	private SegPerfilService segPerfilService;

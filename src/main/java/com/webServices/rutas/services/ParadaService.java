@@ -30,10 +30,6 @@ public class ParadaService {
 	public Iterable<Parada> getAllParadaIgnoreEstado(){
 		return paradaRepository.findAll();
 	}
-	public Iterable<Parada> getParadasCercanas(List<Point> punto){
-		Box cuadro = new Box(punto.get(0),punto.get(1));
-		return paradaRepository.findByCoordenadaWithin(cuadro);
-	}
 	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,int linea){
 		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));
 		return paradaRepository.findByCoordenadaWithin(circle);

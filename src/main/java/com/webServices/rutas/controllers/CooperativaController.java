@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Bus;
@@ -22,7 +23,8 @@ import com.webServices.rutas.services.CooperativaService;
  * @see CooperativaService
  * @version 1.0
  */
-@RestController("/cooperativas")
+@RestController
+@RequestMapping("cooperativas")
 public class CooperativaController {
 	
 	/**

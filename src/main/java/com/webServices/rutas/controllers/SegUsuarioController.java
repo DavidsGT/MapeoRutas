@@ -11,6 +11,7 @@ import com.webServices.rutas.model.SegUsuario;
 import com.webServices.rutas.services.SegUsuarioService;
 
 @RestController
+@RequestMapping("usuarios")
 public class SegUsuarioController {
 	@Autowired
 	private SegUsuarioService segUsuarioService;
