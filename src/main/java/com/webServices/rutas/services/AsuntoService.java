@@ -1,5 +1,6 @@
 package com.webServices.rutas.services;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,20 @@ import com.webServices.rutas.repository.AsuntoRepository;
 public class AsuntoService {
 	@Autowired
 	private AsuntoRepository asuntoRepository;
-	public Map<String,String> getAllAsunto() {
+	public List<String> getAllAsunto() {
 		return asuntoRepository.findById("Asuntos").get().getAsuntos();
 	}
 	public void addAsunto(String asunto) {
-		System.out.println(asuntoRepository.findById("Asuntos").get());
-		/*Integer count = asuntoRepository.findById("Asuntos").get().getAsuntos().size();
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
-		aux.getAsuntos().put(count+1, asunto);
-		asuntoRepository.save(aux);*/
-	}
-	public void updateAsunto(String id,String asunto) {
-		Asunto aux = asuntoRepository.findById("Asuntos").get();
-		aux.getAsuntos().put(id, asunto);
+		aux.getAsuntos().add(asunto);
 		asuntoRepository.save(aux);
 	}
-	public void deleteAsunto(Integer id) {
+	public void updateAsunto(int i,String asunto) {
+		Asunto aux = asuntoRepository.findById("Asuntos").get();
+		aux.getAsuntos().set(i, asunto);
+		asuntoRepository.save(aux);
+	}
+	public void deleteAsunto(int id) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
 		aux.getAsuntos().remove(id);
 		asuntoRepository.save(aux);

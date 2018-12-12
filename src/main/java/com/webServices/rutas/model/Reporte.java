@@ -36,7 +36,9 @@ public class Reporte {
 	private String linea;
 	@Field
 	private String mensaje;
-
+	@Field
+	private Boolean estado;
+	
     public Reporte() {
     }
 
@@ -52,6 +54,7 @@ public class Reporte {
 		this.fecha = fecha;
 		this.linea = linea;
 		this.mensaje = mensaje;
+		this.estado = true;
 	}
 
 	public String getId() {
@@ -126,5 +129,12 @@ public class Reporte {
 		this.mensaje = mensaje;
 	}
 
-    
+	public Boolean getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+	
 }

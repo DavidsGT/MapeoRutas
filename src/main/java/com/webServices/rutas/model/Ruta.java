@@ -22,6 +22,9 @@ public class Ruta {
     private List<String> listasParadas;
 	@Field
 	private String type;
+	@Field
+	private Boolean estado;
+	
     public Ruta() {
     	this.type = "ruta";
     }
@@ -31,6 +34,7 @@ public class Ruta {
 		this.listasPuntos = listasPuntos;
 		this.listasParadas = listasParadas;
 		this.type = "ruta";
+		this.estado = true;
 	}
 	public String getLinea() {
 		return linea;
@@ -57,4 +61,11 @@ public class Ruta {
 	public void setListasParadas(List<String> listasParadas) {
 		this.listasParadas = listasParadas;
 	}
+	public Boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+	
 }

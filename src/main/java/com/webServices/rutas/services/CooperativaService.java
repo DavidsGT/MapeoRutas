@@ -30,8 +30,8 @@ public class CooperativaService {
 	public Cooperativa addCooperativa(Cooperativa cooperativa) {
 		return cooperativaRepository.save(cooperativa);
 	}
-	public void updateCooperativa(Cooperativa cooperativa) {
-		cooperativaRepository.save(cooperativa);
+	public Cooperativa updateCooperativa(Cooperativa cooperativa) {
+		return cooperativaRepository.save(cooperativa);
 	}
 	public void deleteCooperativa(String id) {
 		Cooperativa c = cooperativaRepository.findById(id).get();

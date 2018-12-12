@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.Cooperativa;
-import com.webServices.rutas.services.BusService;
 import com.webServices.rutas.services.CooperativaService;
 
 /**
- * Clase que contiene los requestMapping de Cooperativa y los asocia a sus respectivos servicios en {@link CooperativaController}.
+ * Clase que contiene los requestMapping de Cooperativa y los asocia a sus respectivos servicios en {@link CooperativaService}.
  * @author Davids Adrian Gonzalez Tigrero 
  * @see CooperativaService
  * @version 1.0
@@ -32,7 +30,7 @@ public class CooperativaController {
 	 */
 	@Autowired
 	private CooperativaService cooperativaService;
-	
+
 	/**
 	 * Metodo que Mapea "/cooperativas", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getAllCooperativa()}
 	 * y retorna Cooperativas registrados
@@ -56,7 +54,7 @@ public class CooperativaController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/cooperativas/{placa}", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getCooperativa(String)} 
+	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getCooperativa(String)} 
 	 * y retorna la Cooperativa
 	 * @param id - Id de la cooperativa
 	 * @return Cooperativa
@@ -95,18 +93,18 @@ public class CooperativaController {
 	 * Metodo que Mapea "/cooperativas", RequestMethod es PUT, se enlaza al servicio {@link CooperativaService#updateCooperativa(Cooperativa)}.
 	 * Actualizar Cooperativa.
 	 * @param cooperativa - Cooperativa a Actualizar
-	 * @see {@link BusService#updateBus(Bus)}
+	 * @see {@link CooperativaService#updateCooperativa(Cooperativa)}
 	 */
 	@PutMapping
-	public void updateCooperativa(@RequestBody Cooperativa cooperativa) {
-		cooperativaService.updateCooperativa(cooperativa);
+	public Cooperativa updateCooperativa(@RequestBody Cooperativa cooperativa) {
+		return cooperativaService.updateCooperativa(cooperativa);
 	}
 	
 	/**
-	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativa(String))}.
-	 * Eliminar un Bus.
+	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativa(String)}.
+	 * Eliminar una Cooperativa.
 	 * @param id - Id de la Cooperativa
-	 * @see {@link CooperativaService#deleteCooperativa(String))}
+	 * @see {@link CooperativaService#deleteCooperativa(String)}
 	 */
 	@DeleteMapping("/{id}")
 	public void deleteCooperativa(@PathVariable String id) {

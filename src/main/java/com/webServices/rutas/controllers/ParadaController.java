@@ -1,16 +1,14 @@
 package com.webServices.rutas.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Parada;
@@ -41,18 +39,62 @@ public class ParadaController {
 	public Iterable<Parada> getAllParada(){
 		return paradaService.getAllParada();
 	}
+	/**
+	 * Metodo que Mapea "/paradas/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getAllParadaIgnoreEstado())} 
+	 * y retorna todos los paradas incluye eliminados logicamente.
+	 * @return Paradas incluye eliminados logicamente
+	 * @see {@link ParadaService#getAllParadaIgnoreEstado())}
+	 */
+	@GetMapping("/ignoreEstado")
+	public Iterable<Parada> getAllParadaIgnoreEstado(){
+		return paradaService.getAllParadaIgnoreEstado();
+	}
+	
+	/**
+	 * Metodo que Mapea "/paradas", RequestMethod es POST, se enlaza al servicio {@link ParadaService#addParada(Parada)} 
+	 * y retorna Datos de una parada registrada
+	 * @param parada - Datos de la Parada a Registrar
+	 * @return Parada Registrado
+	 * @see {@link ParadaService#addParada(Parada)}
+	 */
 	@PostMapping
 	public void addParada(@RequestBody Parada parada) {
 		paradaService.addParada(parada);
 	}
 	
+	/**
+	 * Metodo que Mapea "/paradas", RequestMethod es PUT, se enlaza al servicio {@link ParadaService#updateParada(Parada)}.
+	 * Actualizar Parada.
+	 * @param parada - Parada a Actualizar
+	 * @return Parada Actualizada
+	 * @see {@link ParadaService#updateParada(Parada)}
+	 */
 	@PutMapping
-	public void updateParada(@RequestBody Parada parada) {
-		paradaService.addParada(parada);
+	public Parada updateParada(@RequestBody Parada parada) {
+		return paradaService.updateParada(parada);
 	}
 	
-	@GetMapping("/{linea}/radio/{radio}")
-	public Iterable<Parada> getParadasCercanasRadio(@RequestBody Point punto,@PathVariable Double radio,@PathVariable int linea) {
-		return paradaService.getParadasCercanasRadio(punto,radio,linea);
+	/**
+	 * Metodo que Mapea "/paradas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link ParadaService#deleteParada(String)}.
+	 * Eliminar una Parada.
+	 * @param id - Id de la Parada a eliminar
+	 * @see {@link ParadaService#deleteParada(String)}
+	 */
+	@DeleteMapping("/{id}")
+	public void deleteAsunto(@PathVariable String id) {
+		paradaService.deleteParada(id);
+	}
+	
+	/**
+	 * Metodo que Mapea "/{linea}/radio/{radio}/point/{point}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParadasCercanasRadio(Point, Double, int)}
+	 * @param x - Representa la Latitud
+	 * @param y - Representa la Lotitud
+	 * @param radio - Representa el radio dado en metros a buscar
+	 * @param linea - Representa la Linea del bus a Buscar sus Paradas
+	 * @return Lista de paradas cercanas al punto y radio Dado.
+	 */
+	@GetMapping("/{linea}/radio/{radio}/point/x={x},y={y}")
+	public Iterable<Parada> getParadasCercanasRadio(@PathVariable double x,@PathVariable double y,@PathVariable Double radio,@PathVariable int linea) {
+		return paradaService.getParadasCercanasRadio(new Point(x,y),radio,linea);
 	}
 }

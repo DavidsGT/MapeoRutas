@@ -1,6 +1,6 @@
 package com.webServices.rutas.controllers;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +37,7 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#getAllAsunto()}
 	 */
 	@GetMapping
-	public Map<String,String> getAllAsunto(){
+	public List<String> getAllAsunto(){
 		return asuntoService.getAllAsunto();
 	}
 	
@@ -70,7 +70,7 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#updateAsunto(String, String)}
 	 */
 	@PutMapping("/{id}")
-	public void updeteAsunto(@RequestBody String asunto,@PathVariable String id) {
+	public void updeteAsunto(@RequestBody String asunto,@PathVariable int id) {
 		asuntoService.updateAsunto(id,asunto);
 	}
 	
@@ -80,8 +80,8 @@ public class AsuntoController {
 	 * @param id - Id del asunto a eliminar
 	 * @see {@link AsuntoService#deleteAsunto(Integer)}
 	 */
-	@DeleteMapping
-	public void deleteAsunto(@PathVariable Integer id) {
+	@DeleteMapping("/{id}")
+	public void deleteAsunto(@PathVariable int id) {
 		asuntoService.deleteAsunto(id);
 	}
 }

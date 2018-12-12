@@ -19,6 +19,7 @@ import com.webServices.rutas.model.FileStorageProperties;
 @ComponentScan
 @SpringBootApplication
 @EnableScheduling
+
 @EnableConfigurationProperties({
     FileStorageProperties.class
 })

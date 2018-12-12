@@ -21,9 +21,9 @@ public class Cooperativa {
 	@Field
 	private String email;
 	@Field
-	public String type;
+	private String type;
 	@Field
-	public Boolean estado;
+	private Boolean estado;
 	public Cooperativa() {
 		super();
 		this.type = "Cooperativa";

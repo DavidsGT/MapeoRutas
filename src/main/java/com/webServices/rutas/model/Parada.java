@@ -8,7 +8,7 @@ import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 /**
  * Representa una Parada
- * @author Davids
+ * @author Davids Adrian Gonzalez Tigrero
  */
 public class Parada {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
@@ -66,9 +66,11 @@ public class Parada {
 	public void setCoordenada(Point coordenada) {
 		this.coordenada = coordenada;
 	}
-	@Override
-	public String toString() {
-		return "Parada [id=" + id + ", type=" + type + ", nombre=" + nombre + ", urlFoto=" + urlFoto + ", coordenada="
-				+ coordenada + "]";
+	public Boolean getEstado() {
+		return estado;
 	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+	
 }

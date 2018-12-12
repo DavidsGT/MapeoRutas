@@ -1,7 +1,7 @@
 package com.webServices.rutas.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.couchbase.core.mapping.Document;
 
@@ -13,12 +13,12 @@ public class Asunto {
 	@Id
 	private String id;
 	@Field
-	private Map<String,String> asuntos = new HashMap<String,String>();
+	private List<String> asuntos = new ArrayList<String>();
 	
 	public Asunto() {
 		super();
 	}
-	public Asunto(String id, Map<String,String> asuntos) {
+	public Asunto(String id, List<String> asuntos) {
 		super();
 		this.id = id;
 		this.asuntos = asuntos;
@@ -29,10 +29,10 @@ public class Asunto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Map<String,String> getAsuntos() {
+	public List<String> getAsuntos() {
 		return asuntos;
 	}
-	public void setAsuntos(Map<String,String> asuntos) {
+	public void setAsuntos(List<String> asuntos) {
 		this.asuntos = asuntos;
 	}
 

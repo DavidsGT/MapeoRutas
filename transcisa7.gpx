@@ -3,14 +3,14 @@
 <metadata>
 <name><![CDATA[Transcisa 2017-04-27 ]]></name>
 <link href="http://www.oruxmaps.com">
-<mensaje>OruxMaps</mensaje>
+<text>OruxMaps</text>
 </link>
 <time>2017-04-27T15:59:12Z</time><bounds maxlat="-2.1978261" maxlon="-80.8565757" minlat="-2.2322206" minlon="-80.9847460"/>
 </metadata>
 <wpt lat="-2.2287993" lon="-80.8584408">
 <ele>56.33</ele>
 <time>2017-04-27T16:04:10Z</time>
-<name>Parada 1</name>
+<name><![CDATA[WPT_0000001]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -23,7 +23,7 @@
 <wpt lat="-2.2249718" lon="-80.8566733">
 <ele>64.99</ele>
 <time>2017-04-27T16:06:42Z</time>
-<name>Parada 2</name>
+<name><![CDATA[WPT_0000002]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -36,7 +36,7 @@
 <wpt lat="-2.2110517" lon="-80.8850808">
 <ele>26.37</ele>
 <time>2017-04-27T16:20:27Z</time>
-<name>Parada 3</name>
+<name><![CDATA[WPT_0000003]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -49,7 +49,7 @@
 <wpt lat="-2.2158648" lon="-80.8661625">
 <ele>33.63</ele>
 <time>2017-04-27T16:29:01Z</time>
-<name>Parada 4</name>
+<name><![CDATA[WPT_0000004]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -62,7 +62,7 @@
 <wpt lat="-2.2267168" lon="-80.8572023">
 <ele>60.49</ele>
 <time>2017-04-27T16:38:57Z</time>
-<name>Parada 5</name>
+<name><![CDATA[0000005]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -74,7 +74,7 @@
 <wpt lat="-2.2279969" lon="-80.8591828">
 <ele>51.23</ele>
 <time>2017-04-27T16:40:30Z</time>
-<name>Parada 6</name>
+<name><![CDATA[WPT_0000006]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -87,7 +87,7 @@
 <wpt lat="-2.2319656" lon="-80.8683524">
 <ele>50.26</ele>
 <time>2017-04-27T16:43:35Z</time>
-<name>Parada 7</name>
+<name><![CDATA[WPT_0000007]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -100,7 +100,7 @@
 <wpt lat="-2.2313217" lon="-80.8786034">
 <ele>46.78</ele>
 <time>2017-04-27T16:45:29Z</time>
-<name>Parada 8</name>
+<name><![CDATA[WPT_0000008]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -113,7 +113,7 @@
 <wpt lat="-2.2246722" lon="-80.9071863">
 <ele>35.20</ele>
 <time>2017-04-27T16:56:05Z</time>
-<name>Parada 9</name>
+<name><![CDATA[WPT_0000009]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -126,7 +126,7 @@
 <wpt lat="-2.2238346" lon="-80.9097643">
 <ele>32.28</ele>
 <time>2017-04-27T16:58:22Z</time>
-<name>Parada 10</name>
+<name><![CDATA[WPT_0000010]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -139,7 +139,7 @@
 <wpt lat="-2.2264502" lon="-80.9138938">
 <ele>35.20</ele>
 <time>2017-04-27T17:01:52Z</time>
-<name>Parada 11</name>
+<name><![CDATA[0000011]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -151,7 +151,7 @@
 <wpt lat="-2.2275177" lon="-80.9213313">
 <ele>29.00</ele>
 <time>2017-04-27T17:04:24Z</time>
-<name>Parada 12</name>
+<name><![CDATA[WPT_0000012]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -164,7 +164,7 @@
 <wpt lat="-2.2127385" lon="-80.9532000">
 <ele>22.30</ele>
 <time>2017-04-27T17:13:02Z</time>
-<name>Parada 13</name>
+<name><![CDATA[WPT_0000013]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -177,7 +177,7 @@
 <wpt lat="-2.2095992" lon="-80.9639987">
 <ele>8.13</ele>
 <time>2017-04-27T17:17:47Z</time>
-<name>Parada 14</name>
+<name><![CDATA[WPT_0000014]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -190,7 +190,7 @@
 <wpt lat="-2.2079383" lon="-80.9672376">
 <ele>10.22</ele>
 <time>2017-04-27T17:18:46Z</time>
-<name>Parada 15</name>
+<name><![CDATA[0000015]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -202,7 +202,7 @@
 <wpt lat="-2.2021739" lon="-80.9786850">
 <ele>18.29</ele>
 <time>2017-04-27T17:21:57Z</time>
-<name>Parada 16</name>
+<name><![CDATA[WPT_0000016]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -215,7 +215,7 @@
 <wpt lat="-2.1978396" lon="-80.9845635">
 <ele>10.11</ele>
 <time>2017-04-27T17:23:53Z</time>
-<name>Parada 17</name>
+<name><![CDATA[WPT_0000017]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -228,7 +228,7 @@
 <wpt lat="-2.2043793" lon="-80.9767766">
 <ele>-7.37</ele>
 <time>2017-04-27T17:27:47Z</time>
-<name>Parada 18</name>
+<name><![CDATA[WPT_0000018]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -241,7 +241,7 @@
 <wpt lat="-2.2097165" lon="-80.9641693">
 <ele>-5.60</ele>
 <time>2017-04-27T17:32:49Z</time>
-<name>Parada 19</name>
+<name><![CDATA[0000019]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -253,7 +253,7 @@
 <wpt lat="-2.2123404" lon="-80.9537586">
 <ele>17.51</ele>
 <time>2017-04-27T17:38:11Z</time>
-<name>Parada 20</name>
+<name><![CDATA[WPT_0000020]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -266,7 +266,7 @@
 <wpt lat="-2.2209126" lon="-80.9449193">
 <ele>11.46</ele>
 <time>2017-04-27T17:42:39Z</time>
-<name>Parada 21</name>
+<name><![CDATA[WPT_0000021]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -279,7 +279,7 @@
 <wpt lat="-2.2285719" lon="-80.9246003">
 <ele>21.63</ele>
 <time>2017-04-27T17:46:31Z</time>
-<name>Parada 22</name>
+<name><![CDATA[WPT_0000022]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -292,7 +292,7 @@
 <wpt lat="-2.2278563" lon="-80.9216114">
 <ele>26.73</ele>
 <time>2017-04-27T17:48:03Z</time>
-<name>Parada 23</name>
+<name><![CDATA[WPT_0000023]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -305,7 +305,7 @@
 <wpt lat="-2.2234133" lon="-80.9101661">
 <ele>26.44</ele>
 <time>2017-04-27T17:53:59Z</time>
-<name>Parada 24</name>
+<name><![CDATA[WPT_0000024]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -318,7 +318,7 @@
 <wpt lat="-2.2258443" lon="-80.9061143">
 <ele>36.49</ele>
 <time>2017-04-27T17:58:42Z</time>
-<name>Parada 25</name>
+<name><![CDATA[WPT_0000025]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -331,7 +331,7 @@
 <wpt lat="-2.2273481" lon="-80.8974066">
 <ele>25.86</ele>
 <time>2017-04-27T18:02:13Z</time>
-<name>Parada 26</name>
+<name><![CDATA[WPT_0000026]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -344,7 +344,7 @@
 <wpt lat="-2.2309684" lon="-80.8861578">
 <ele>49.37</ele>
 <time>2017-04-27T18:05:22Z</time>
-<name>Parada 27</name>
+<name><![CDATA[0000027]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>
@@ -356,7 +356,7 @@
 <wpt lat="-2.2314752" lon="-80.8788897">
 <ele>45.99</ele>
 <time>2017-04-27T18:08:01Z</time>
-<name>Parada 28</name>
+<name><![CDATA[WPT_0000028]]></name>
 <sym>Waypoint</sym>
 <type>Foto</type>
 <extensions>

@@ -7,4 +7,5 @@ import com.webServices.rutas.model.Reporte;
 
 @ViewIndexed(designDoc = "reporte", viewName = "all")
 public interface ReporteRepository extends CouchbaseRepository<Reporte, String>{
+	Iterable<Reporte> findByEstadoIsTrue();
 }

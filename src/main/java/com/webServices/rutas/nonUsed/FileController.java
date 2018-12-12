@@ -37,7 +37,8 @@ public class FileController {
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
     }
-	@RequestMapping(method=RequestMethod.POST, value="/CargarArchivoGPX")
+	@PostMapping("/CargarArchivoGPX")
+	//@RequestMapping(method=RequestMethod.POST, value="/CargarArchivoGPX")
     public Map<String, Object> reducirPuntos(@RequestParam("file") MultipartFile file,@RequestParam("linea") String linea) throws IllegalStateException, IOException, ParserConfigurationException {
 		Map<String, Object> PuntosReducidos = fileStorageService.processFile(file,linea);
         return PuntosReducidos;
