@@ -30,7 +30,7 @@ public class Bus {
 	private Boolean estado;
 	public Bus() {
 		super();
-		this.type = "Bus";
+		this.type = "bus";
 		this.estado = true;
 	}
 	public Bus(String id, String placa, int numero, int capacidad, String cooperativa, String type, List<EstadoBus> estadoBus) {

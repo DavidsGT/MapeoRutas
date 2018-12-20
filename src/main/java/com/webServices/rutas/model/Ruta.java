@@ -26,6 +26,7 @@ public class Ruta {
 	private Boolean estado;
 	
     public Ruta() {
+    	this.estado = true;
     	this.type = "ruta";
     }
     public Ruta(String linea, List<Point> listasPuntos, List<String> listasParadas) {

@@ -26,7 +26,7 @@ public class Cooperativa {
 	private Boolean estado;
 	public Cooperativa() {
 		super();
-		this.type = "Cooperativa";
+		this.type = "cooperativa";
 		this.estado = true;
 	}
 	public Cooperativa(String id, String nombre, String descripcion, String direccion, String telefono, String email,

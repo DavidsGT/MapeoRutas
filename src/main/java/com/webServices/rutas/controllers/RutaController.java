@@ -79,6 +79,7 @@ public class RutaController {
 	 */
 	@PostMapping("/archivoGPX")
 	public Ruta addRutaWithGPX(@RequestParam("file") MultipartFile file,@RequestParam("linea") String linea) throws IOException {
+		System.out.println("Hola");
 		return rutaService.addRutaWithGPX(file, linea);
 	}
 	
