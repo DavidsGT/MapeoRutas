@@ -8,7 +8,8 @@ import java.util.TimeZone;
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
-import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
+import org.springframework.data.couchbase.core.mapping.id.IdSuffix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
@@ -22,25 +23,30 @@ import com.couchbase.client.java.repository.annotation.Id;
 public class HistorialEstadoBus {
 	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES,delimiter = "::")
 	private String id;
-	@Field @IdAttribute
-	private Calendar fecha;
-	@Field @IdAttribute
+	@Field @IdPrefix(order=0)
+	private Date fecha;
+	@Field	@IdSuffix(order=0)
 	private String placa;
 	@Field
 	private List<EstadoBus> ListaEstados;
 	public HistorialEstadoBus(String id, Date fecha, String placa, List<EstadoBus> listaEstados) {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, -22);
+        now.set(Calendar.HOUR_OF_DAY, 0);
 		this.id = id;
-		this.fecha = now ;
+		this.fecha = now.getTime();
 		this.placa = placa;
 		ListaEstados = listaEstados;
 	}
 	public HistorialEstadoBus() {
 		super();
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        this.fecha = now.getTime() ;
 	}
 	public String getId() {
 		return id;
@@ -48,10 +54,10 @@ public class HistorialEstadoBus {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Calendar getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(Calendar fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 	public String getPlaca() {

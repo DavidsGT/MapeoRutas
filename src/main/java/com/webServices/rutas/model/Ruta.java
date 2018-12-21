@@ -21,20 +21,16 @@ public class Ruta {
 	@Field
     private List<String> listasParadas;
 	@Field
-	private String type;
-	@Field
 	private Boolean estado;
 	
     public Ruta() {
     	this.estado = true;
-    	this.type = "ruta";
     }
     public Ruta(String linea, List<Point> listasPuntos, List<String> listasParadas) {
 		super();
 		this.linea = linea;
 		this.listasPuntos = listasPuntos;
 		this.listasParadas = listasParadas;
-		this.type = "ruta";
 		this.estado = true;
 	}
 	public String getLinea() {
@@ -42,12 +38,6 @@ public class Ruta {
 	}
 	public void setLinea(String linea) {
 		this.linea = linea;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
     public List<Point> getListasPuntos() {
         return listasPuntos;

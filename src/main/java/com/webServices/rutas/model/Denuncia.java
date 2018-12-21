@@ -6,7 +6,7 @@ import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
-
+//TODO Eliminar
 @Document
 public class Denuncia {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)

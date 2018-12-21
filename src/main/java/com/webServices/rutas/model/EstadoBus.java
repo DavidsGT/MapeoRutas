@@ -1,12 +1,13 @@
 package com.webServices.rutas.model;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import org.springframework.data.geo.Point;
 
 public class EstadoBus {
-	private Calendar creationDate;
+	private Date creationDate;
 	private int velocidad;
 	private int cantidadUsuarios;
 	private Point posicionActual;
@@ -14,23 +15,20 @@ public class EstadoBus {
 	private int linea;
 	public EstadoBus(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea) {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 		this.velocidad = velocidad;
 		this.cantidadUsuarios = cantidadUsuarios;
 		this.posicionActual = posicionActual;
 		this.estadoPuerta = estadoPuerta;
-		this.creationDate = now;
+		this.creationDate = now.getTime();
 		this.linea = linea;
 	}
 	public EstadoBus() {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-		now.set(Calendar.HOUR_OF_DAY,0);
-		this.creationDate = now;
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
+		this.creationDate = now.getTime();
 	}
-	public Calendar getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
 	public int getLinea() {
@@ -39,7 +37,7 @@ public class EstadoBus {
 	public void setLinea(int linea) {
 		this.linea = linea;
 	}
-	public void setCreationDate(Calendar creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 	public Boolean getEstadoPuerta() {

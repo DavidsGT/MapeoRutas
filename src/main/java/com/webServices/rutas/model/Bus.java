@@ -25,12 +25,9 @@ public class Bus {
 	@Field
 	private String idCooperativa;
 	@Field
-	private String type;
-	@Field
 	private Boolean estado;
 	public Bus() {
 		super();
-		this.type = "bus";
 		this.estado = true;
 	}
 	public Bus(String id, String placa, int numero, int capacidad, String cooperativa, String type, List<EstadoBus> estadoBus) {
@@ -39,7 +36,6 @@ public class Bus {
 		this.numero = numero;
 		this.capacidad = capacidad;
 		this.idCooperativa = cooperativa;
-		this.type = "Bus";
 		this.estado = true;
 	}
 	public String getIdCooperativa() {
@@ -72,12 +68,5 @@ public class Bus {
 	public void setCapacidad(int capacidad) {
 		this.capacidad = capacidad;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	
 	
 }

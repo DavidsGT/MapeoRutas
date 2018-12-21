@@ -17,11 +17,8 @@ public class SegUsuario {
 	private String nombre;
 	@Field
 	private String clave;
-	@Field
-	private String type;
 	public SegUsuario() {
 		super();
-		this.type = "segUsuario";
 	}
 	public SegUsuario(String id, String nombre, String clave, String type, String idSegPerfil) {
 		super();
@@ -29,7 +26,6 @@ public class SegUsuario {
 		this.idSegPerfil = idSegPerfil;
 		this.nombre = nombre;
 		this.clave = clave;
-		this.type = "segUsuario";
 	}
 	
 	public String getIdSegPerfil() {
@@ -55,15 +51,5 @@ public class SegUsuario {
 	}
 	public void setClave(String clave) {
 		this.clave = clave;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	@Override
-	public String toString() {
-		return "SegUsuario [id=" + id + ", nombre=" + nombre + ", clave=" + clave + ", type=" + type + "]";
 	}
 }

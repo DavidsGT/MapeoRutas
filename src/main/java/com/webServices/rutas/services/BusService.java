@@ -1,7 +1,9 @@
 package com.webServices.rutas.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -106,7 +108,7 @@ public class BusService {
 	 * @param fecha - fecha del dia que se desee consultar
 	 * @return
 	 */
-	public Iterable<EstadoBus> getHistorialEstadoBusAllByPlacaByFecha(String placa,Calendar fecha){
+	public Iterable<EstadoBus> getHistorialEstadoBusAllByPlacaByFecha(String placa,Date fecha){
 		return historialEstadoBusRepository.findById(fecha+"::"+placa).get().getListaEstados();
 	}
 	
@@ -116,12 +118,12 @@ public class BusService {
 	 * @return	Estado actual del Bus
 	 */
 	public EstadoBus getEstadoActualBus(String placa) {
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, -22);
-		int idx = historialEstadoBusRepository.findById(now+"::"+placa).get().getListaEstados().size();
-		return historialEstadoBusRepository.findById(placa).get().getListaEstados().get(idx-1);
+        now.set(Calendar.HOUR_OF_DAY, 0);
+		int idx = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get().getListaEstados().size();
+		return historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get().getListaEstados().get(idx-1);
 	}
 	
 	/**
@@ -130,14 +132,22 @@ public class BusService {
 	 * @param placa - Placa del bus
 	 */
 	public void updateEstadoBus(EstadoBus estadoBus,String placa) {
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+		HistorialEstadoBus h;
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, -22);
-        historialEstadoBusRepository.findById(now+"::"+placa);
-		HistorialEstadoBus c = historialEstadoBusRepository.findById(placa).get();
-		c.getListaEstados().add(estadoBus);
-		historialEstadoBusRepository.save(c);
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
+        	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
+        	h.getListaEstados().add(estadoBus);
+        }else {
+        	List<EstadoBus> eb = new ArrayList<>();
+        	eb.add(estadoBus);
+        	h = new HistorialEstadoBus();
+        	h.setPlaca(placa);
+        	h.setListaEstados(eb);
+        }
+		historialEstadoBusRepository.save(h);
 	}
 	
 	/**
@@ -151,15 +161,24 @@ public class BusService {
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
 	public void updateEstadoBusGET(String valor, String placa) throws JsonParseException, JsonMappingException, IOException {
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+		HistorialEstadoBus h;
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, -22);
-        HistorialEstadoBus c = historialEstadoBusRepository.findById(now+"::"+placa).get();
-		Gson mapper = new Gson();
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        Gson mapper = new Gson();
 		EstadoBus obj = mapper.fromJson(valor, EstadoBus.class);
-		c.getListaEstados().add(obj);
-		historialEstadoBusRepository.save(c);
+        if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
+        	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
+        	h.getListaEstados().add(obj);
+        }else {
+        	List<EstadoBus> eb = new ArrayList<>();
+        	eb.add(obj);
+        	h = new HistorialEstadoBus();
+        	h.setPlaca(placa);
+        	h.setListaEstados(eb);
+        }
+		historialEstadoBusRepository.save(h);
 	}
 	
 	/**
@@ -170,19 +189,28 @@ public class BusService {
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
 	public void updateEstadoBusGETAlternative(String valor, String placa) {
+		HistorialEstadoBus h;
 		String[] attrib = valor.split(",");
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("ECT"));
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, -22);
-        HistorialEstadoBus c = historialEstadoBusRepository.findById(now+"::"+placa).get();
+        now.set(Calendar.HOUR_OF_DAY, 0);
 		EstadoBus obj = new EstadoBus(	Integer.parseInt(attrib[0]),
 										Integer.parseInt(attrib[1]),
 										new Point(Double.parseDouble(attrib[2]),
 										Double.parseDouble(attrib[3])),
 										Boolean.parseBoolean(attrib[4]),
 										Integer.parseInt(attrib[5]));
-		c.getListaEstados().add(obj);
-		historialEstadoBusRepository.save(c);
+		if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
+        	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
+        	h.getListaEstados().add(obj);
+        }else {
+        	List<EstadoBus> eb = new ArrayList<>();
+        	eb.add(obj);
+        	h = new HistorialEstadoBus();
+        	h.setPlaca(placa);
+        	h.setListaEstados(eb);
+        }
+		historialEstadoBusRepository.save(h);
 	}
 }
