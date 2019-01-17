@@ -1,7 +1,7 @@
 package com.webServices.rutas.controllers;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +101,7 @@ public class BusController {
 	 * @see {@link BusService#getHistorialEstadoBusAllByPlaca(String)}
 	 */
 	@GetMapping("/{placa}/historialEstado/{fecha}")
-	public Iterable<EstadoBus> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable Date fecha){
+	public Iterable<EstadoBus> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable Calendar fecha){
 		return busService.getHistorialEstadoBusAllByPlacaByFecha(placa,fecha);
 	}
 
@@ -114,10 +114,9 @@ public class BusController {
 	 */
 	@GetMapping("/{placa}/estadoActual")
 	public EstadoBus getEstadoActualBus(@PathVariable String placa) {
-		System.out.println(busService.getEstadoActualBus(placa).getCreationDate());
 		return busService.getEstadoActualBus(placa);
 	}
-
+	
 	/**
 	 * Metodo que Mapea "/buses", RequestMethod es POST, se enlaza al servicio {@link BusService#addBus(Bus)} 
 	 * y retorna Datos del Bus registrado
@@ -129,7 +128,7 @@ public class BusController {
 	public Bus addBus(@RequestBody Bus bus) {
 		return busService.addBus(bus);
 	}
-
+	
 	/**
 	 * Metodo que Mapea "/buses/{placa}/estado", RequestMethod es PUT, se enlaza al servicio {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 * @param estadoBus - Estado del Bus a Actualizar (Velocidad, Num. Pasajero, Ruta Actual)

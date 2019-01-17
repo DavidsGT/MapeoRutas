@@ -44,7 +44,7 @@ public class ReporteController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/reportes/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ReporteService#getAllReporteIgnoreEstado())} 
+	 * Metodo que Mapea "/reportes/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ReporteService#getAllReporteIgnoreEstado()} 
 	 * y retorna todos las reportes incluye eliminados logicamente.
 	 * @return Lista de reportes incluye eliminados logicamente.
 	 * @see {@link ReporteService#getAllReporteIgnoreEstado()}
@@ -73,7 +73,7 @@ public class ReporteController {
 	//TODO HACER REPORTE POR RANGO DE FECHA
 	
 	/**
-	 * Metodo que Mapea "/reporte", RequestMethod es POST, se enlaza al servicio {@link ReporteService#addReporte(Reporte))} 
+	 * Metodo que Mapea "/reporte", RequestMethod es POST, se enlaza al servicio {@link ReporteService#addReporte(Reporte)} 
 	 * y retorna Datos de una reporte registrada
 	 * @param reporte - Datos de la reporte a Registrar
 	 * @return reporte Registrado

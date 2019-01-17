@@ -14,14 +14,18 @@ public class SegPerfil {
 	private String nombre;
 	@Field
 	private String descripcion;
+	@Field
+	private String type;
 	public SegPerfil(String id, String nombre, String descripcion, String type) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.type = "segPerfil";
 	}
 	public SegPerfil() {
 		super();
+		this.type = "segPerfil";
 	}
 	public String getId() {
 		return id;
@@ -40,5 +44,11 @@ public class SegPerfil {
 	}
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }

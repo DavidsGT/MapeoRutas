@@ -40,6 +40,7 @@ public class Reporte {
 	private Boolean estado;
 	
     public Reporte() {
+    	this.estado = true;
     }
 
 	public Reporte(String id, String usuario, String movil, String asunto, String numeroDisco, Point ubicacion,

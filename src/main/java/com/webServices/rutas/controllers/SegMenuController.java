@@ -9,11 +9,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.SegMenu;
+import com.webServices.rutas.services.ReporteService;
 import com.webServices.rutas.services.SegMenuService;
 
+/**
+ * Clase que contiene los requestMapping de Menu y los asocia a sus respectivos servicios en {@link SegMenuService}.
+ * @author Davids Adrian Gonzalez Tigrero 
+ * @see SegMenuService
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("menus")
 public class SegMenuController {
+	
+	/**
+	 * Instancia de los Servicios para Menu
+	 */
 	@Autowired
 	private SegMenuService segMenuService;
 	@RequestMapping("/menus")

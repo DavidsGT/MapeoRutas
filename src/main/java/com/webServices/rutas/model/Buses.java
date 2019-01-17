@@ -1,58 +1,43 @@
 package com.webServices.rutas.model;
 
-import java.util.List;
-
-import javax.validation.constraints.Size;
-
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
-import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 @Document
-public class Bus {
-	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES)
-	private String id;
-	@Size(max=7, min=7, message = "Debe contener exactamente 7 Caracteres")
-	@Field @IdAttribute
-	private String placa;
+public class Buses {
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
+	public String id;
 	@Field
-	private int numero;
+	public String placa;
 	@Field
-	private int capacidad;
+	public int numero;
 	@Field
-	private String idCooperativa;
+	public int capacidad;
 	@Field
-	private String type;
+	public String cooperativa;
 	@Field
-	private Boolean estado;
-	public Bus() {
+	public String type;
+	public Buses() {
 		super();
 		this.type = "Bus";
-		this.estado = true;
 	}
-	public Bus(String id, String placa, int numero, int capacidad, String cooperativa, String type, List<EstadoBus> estadoBus) {
+	public Buses(String id, String placa, int numero, int capacidad, String cooperativa, String type) {
 		super();
+		this.id = id;
 		this.placa = placa;
 		this.numero = numero;
 		this.capacidad = capacidad;
-		this.idCooperativa = cooperativa;
+		this.cooperativa = cooperativa;
 		this.type = "Bus";
-		this.estado = true;
 	}
-	public String getIdCooperativa() {
-		return idCooperativa;
+	public String getId() {
+		return id;
 	}
-	public void setIdCooperativa(String idCooperativa) {
-		this.idCooperativa = idCooperativa;
-	}
-	public Boolean getEstado() {
-		return estado;
-	}
-	public void setEstado(Boolean estado) {
-		this.estado = estado;
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getPlaca() {
 		return placa;
@@ -71,6 +56,12 @@ public class Bus {
 	}
 	public void setCapacidad(int capacidad) {
 		this.capacidad = capacidad;
+	}
+	public String getCooperativa() {
+		return cooperativa;
+	}
+	public void setCooperativa(String cooperativa) {
+		this.cooperativa = cooperativa;
 	}
 	public String getType() {
 		return type;

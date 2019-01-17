@@ -52,7 +52,7 @@ public class CooperativaController {
 	public List<Cooperativa> getAllCooperativaIgnoreEstado(){
 		return cooperativaService.getAllCooperativaIgnoreEstado();
 	}
-    
+	
 	/**
 	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getCooperativa(String)} 
 	 * y retorna la Cooperativa

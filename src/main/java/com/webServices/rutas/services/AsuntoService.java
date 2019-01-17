@@ -1,7 +1,6 @@
 package com.webServices.rutas.services;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +33,4 @@ public class AsuntoService {
 	public void createAsunto(Asunto asunto) {
 		asuntoRepository.save(asunto);
 	}
-
 }

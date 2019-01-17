@@ -21,9 +21,12 @@ public class Cooperativa {
 	@Field
 	private String email;
 	@Field
+	private String type;
+	@Field
 	private Boolean estado;
 	public Cooperativa() {
 		super();
+		this.type = "Cooperativa";
 		this.estado = true;
 	}
 	public Cooperativa(String id, String nombre, String descripcion, String direccion, String telefono, String email,
@@ -35,6 +38,7 @@ public class Cooperativa {
 		this.direccion = direccion;
 		this.telefono = telefono;
 		this.email = email;
+		this.type = "Cooperativa";
 		this.estado = true;
 	}
 	public Boolean getEstado() {
@@ -78,5 +82,11 @@ public class Cooperativa {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }

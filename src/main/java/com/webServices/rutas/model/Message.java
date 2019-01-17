@@ -8,7 +8,7 @@ import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 
 @Document
-public class Denuncia {
+public class Message {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
 	private String id;
 	@Field
@@ -20,23 +20,20 @@ public class Denuncia {
 	@Field
     private String movil;
 	@Field
-	public Boolean estado;
-	@Field
 	private String type;
 
-    public Denuncia() {
-    	this.type = "denuncia";
+    public Message() {
+    	this.type = "Message";
     }
 
-    public Denuncia(String id, String usuario,String movil, String subject, String text,Boolean estado) {
+    public Message(String id, String usuario,String movil, String subject, String text) {
     	super();
     	this.id = id;
         this.asunto = subject;
         this.mensaje = text;
         this.usuario = usuario;
         this.movil = movil;
-        this.estado = estado;
-        this.type = "denuncia";
+        this.type = "Message";
     }
 
     public String getUsuario() {
@@ -79,15 +76,7 @@ public class Denuncia {
         return mensaje;
     }
     
-    public Boolean getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Boolean estado) {
-		this.estado = estado;
-	}
-
-	public String getType() {
+    public String getType() {
 		return type;
 	}
     public void setType(String type) {

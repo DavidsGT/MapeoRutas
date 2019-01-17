@@ -40,7 +40,6 @@ public class AsuntoController {
 	public List<String> getAllAsunto(){
 		return asuntoService.getAllAsunto();
 	}
-	
 	/**
 	 * Metodo que Mapea "/asuntos/create", RequestMethod es POST, se enlaza al servicio {@link AsuntoService#createAsunto(Asunto)} 
 	 * y retorna Datos del Asuntos registrado

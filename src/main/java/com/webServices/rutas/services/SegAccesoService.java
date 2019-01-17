@@ -24,13 +24,17 @@ public class SegAccesoService {
 	public SegAcceso getSegAcceso(String id) {
 		return segAccesoRepository.findById(id).get();
 	}
+	public List<SegAcceso> getAllSegAccesoIgnoreEstado(){
+		return (List<SegAcceso>)segAccesoRepository.findAll();
+	}
 	public Iterable<SegAcceso> getAllSegAcceso(){
-		return segAccesoRepository.findAll();
+		return segAccesoRepository.findByEstadoIsTrue();
 	}
-	public void addSegAcceso(SegAcceso segAcceso) {
-		segAccesoRepository.save(segAcceso);
+	public SegAcceso addSegAcceso(SegAcceso segAcceso) {
+		return segAccesoRepository.save(segAcceso);
 	}
-	public void updateSegAcceso(String id,SegAcceso segAcceso) {
+	public SegAcceso updateSegAcceso(SegAcceso segAcceso) {
+		return segAccesoRepository.save(segAcceso);
 	}
 	public void deleteSegAcceso(String id) {
 		segAccesoRepository.deleteById(id);

@@ -9,4 +9,5 @@ import com.webServices.rutas.model.SegAcceso;
 public interface SegAccesoRepository extends CouchbaseRepository<SegAcceso, String>{
 	void deleteById (String Id);
 	Iterable<SegAcceso> findByIdSegPerfil(String idSegPerfil);
+	Iterable<SegAcceso> findByEstadoIsTrue();
 }

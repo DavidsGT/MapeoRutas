@@ -60,21 +60,13 @@ public class RutaService {
     }
 	@SuppressWarnings("unchecked")
 	public Ruta addRutaWithGPX(MultipartFile file, String linea) throws IOException {
-		System.out.println("error 1");
 		File convFile = new File(file.getOriginalFilename());
-		System.out.println("error 2");
 		convFile.createNewFile();
-		System.out.println("error 3");
 		FileOutputStream fos = new FileOutputStream(convFile);
-		System.out.println("error 4");
 		fos.write(file.getBytes());
-		System.out.println("error 5");
         fos.close();
-        System.out.println("error 6");
         Map<String, Object> x = Gpx.decodeGPX(convFile);
-        System.out.println("error 7");
 		List<Point> ruta = (List<Point>) x.get("ruta");
-		System.out.println("error 8");
 		List<Parada> paradas = (List<Parada>) x.get("parada");
 		List<String> paradaId = new ArrayList<String>();
 		for(Parada p: paradaRepository.saveAll(paradas))
