@@ -53,9 +53,9 @@ public class ReporteController {
 	public List<Reporte> getAllReporteIgnoreEstado(){
 		return reporteService.getAllReporteIgnoreEstado();
 	}
-	
+
 	/**
-	 * Metodo que Mapea "/reporte/{id}", RequestMethod es GET, se enlaza al servicio {@link ReporteService#getReporte(String)} 
+	 * Metodo que Mapea "/reportes/{id}", RequestMethod es GET, se enlaza al servicio {@link ReporteService#getReporte(String)} 
 	 * y retorna el Reporte
 	 * @param id - Id del Reporte 
 	 * @return Reporte
@@ -73,7 +73,7 @@ public class ReporteController {
 	//TODO HACER REPORTE POR RANGO DE FECHA
 	
 	/**
-	 * Metodo que Mapea "/reporte", RequestMethod es POST, se enlaza al servicio {@link ReporteService#addReporte(Reporte)} 
+	 * Metodo que Mapea "/reportes", RequestMethod es POST, se enlaza al servicio {@link ReporteService#addReporte(Reporte)} 
 	 * y retorna Datos de una reporte registrada
 	 * @param reporte - Datos de la reporte a Registrar
 	 * @return reporte Registrado
@@ -85,7 +85,7 @@ public class ReporteController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/reporte", RequestMethod es PUT, se enlaza al servicio {@link ReporteService#updateReporte(Reporte)}.
+	 * Metodo que Mapea "/reportes", RequestMethod es PUT, se enlaza al servicio {@link ReporteService#updateReporte(Reporte)}.
 	 * Actualizar Reporte.
 	 * @param reporte - Reporte a Actualizar
 	 * @return Reporte Actualizada
@@ -97,7 +97,7 @@ public class ReporteController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/reporte/{id}", RequestMethod es DELETE, se enlaza al servicio {@link ReporteService#deleteReporte(String)}.
+	 * Metodo que Mapea "/reportes/{id}", RequestMethod es DELETE, se enlaza al servicio {@link ReporteService#deleteReporte(String)}.
 	 * Eliminar un Reporte.
 	 * @param id - Id del Reporte
 	 * @see {@link ReporteService#deleteReporte(String)}

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.SegAcceso;
-import com.webServices.rutas.model.SegMenu;
 import com.webServices.rutas.services.SegAccesoService;
 
 /**
@@ -99,14 +98,5 @@ public class SegAccesoController {
 	public void deleteSegAcceso(@PathVariable String id) {
 		segAccesoService.deleteSegAcceso(id);
 	}
-	/**
-	 * Metodo que Mapea "/accesos/us:{usuario}&cl:{clave}/menu", RequestMethod es DELETE, se enlaza al servicio {@link SegAccesoService#getObtenerMenus(String, String)}.
-	 * @param usuario - Nombre de Usuario
-	 * @param clave - Clave del Usuario
-	 * @return El menu a la que el usuario tiene acceso
-	 */
-	@GetMapping("/us:{usuario}&cl:{clave}/menu")
-	public Iterable<SegMenu> getMenus(@PathVariable String usuario,@PathVariable String clave) {
-		return segAccesoService.getObtenerMenus(usuario,clave);
-	}
+	
 }

@@ -14,6 +14,9 @@ public class SegPerfilService{
 		return segPerfilRepository.findById(id).get();
 	}
 	public Iterable<SegPerfil> getAllSegPerfil(){
+		return segPerfilRepository.findByEstadoIsTrue();
+	}
+	public Iterable<SegPerfil> getAllSegPerfilIgnoreEstado(){
 		return segPerfilRepository.findAll();
 	}
 	public void addSegPerfil(SegPerfil segPerfil) {
