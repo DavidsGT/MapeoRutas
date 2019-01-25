@@ -16,16 +16,20 @@ public class SegPerfil {
 	private String descripcion;
 	@Field
 	private String type;
+	@Field
+	private Boolean estado;
 	public SegPerfil(String id, String nombre, String descripcion, String type) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.type = "segPerfil";
+		this.estado = true;
 	}
 	public SegPerfil() {
 		super();
 		this.type = "segPerfil";
+		this.estado = true;
 	}
 	public String getId() {
 		return id;
@@ -51,4 +55,11 @@ public class SegPerfil {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public Boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+	
 }

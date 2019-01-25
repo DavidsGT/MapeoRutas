@@ -11,7 +11,7 @@ import com.webServices.rutas.model.Bus;
  */
 @ViewIndexed(designDoc = "buses", viewName = "all")
 public interface BusRepository extends CouchbaseRepository<Bus, String> {
-	Bus findByIdAndEstadoIsTrue(String id);
+	Bus findByPlacaAndEstadoIsTrue(String id);
 	Iterable<Bus> findByEstadoIsTrue();
 	Iterable<Bus> findByIdCooperativaAndEstadoIsTrue(String idC);
 }
