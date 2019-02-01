@@ -27,8 +27,6 @@ public class ParadaService {
 	public Parada addParada(Parada parada) {
 		return paradaRepository.save(parada);
 	}
-	
-	
 	public Parada updateParada(Parada parada) {
 		return paradaRepository.save(parada);
 	}
@@ -41,7 +39,7 @@ public class ParadaService {
 		c.setEstado(false);
 		paradaRepository.save(c);
 	}
-
+	
 	//TODO debe consultar por linea y realizar el query geografico
 	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,int linea){
 		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));

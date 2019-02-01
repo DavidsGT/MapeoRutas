@@ -15,19 +15,15 @@ public class SegAcceso {
 	@Field
 	private String idSegMenu;
 	@Field
-	private String type;
-	@Field
 	private Boolean estado;
 	public SegAcceso() {
 		super();
-		this.type = "segAcceso";
 	}
 	public SegAcceso(String id, String idSegPerfil, String idSegMenu, String type) {
 		super();
 		this.id = id;
 		this.idSegPerfil = idSegPerfil;
 		this.idSegMenu = idSegMenu;
-		this.type = "segAcceso";
 		this.estado = true;
 	}
 	public String getId() {
@@ -48,12 +44,6 @@ public class SegAcceso {
 	public void setIdSegMenu(String idSegMenu) {
 		this.idSegMenu = idSegMenu;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
 	
 	public Boolean getEstado() {
 		return estado;
@@ -63,7 +53,6 @@ public class SegAcceso {
 	}
 	@Override
 	public String toString() {
-		return "SegAcceso [id=" + id + ", idSegPerfil=" + idSegPerfil + ", idSegMenu=" + idSegMenu + ", type=" + type
-				+ "]";
+		return "SegAcceso [id=" + id + ", idSegPerfil=" + idSegPerfil + ", idSegMenu=" + idSegMenu + "]";
 	}
 }

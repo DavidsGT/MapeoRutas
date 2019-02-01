@@ -18,12 +18,9 @@ public class SegMenu {
 	@Field
 	private String url;
 	@Field
-	private String type;
-	@Field
 	private Boolean estado;
 	public SegMenu() {
 		super();
-		this.type = "segMenu";
 		this.estado = true;
 	}
 	public SegMenu(String id, String menu, String idPadre, String url, String type) {
@@ -32,7 +29,6 @@ public class SegMenu {
 		this.menu = menu;
 		this.idPadre = idPadre;
 		this.url = url;
-		this.type = "segMenu";
 		this.estado = true;
 	}
 	public String getId() {
@@ -58,12 +54,6 @@ public class SegMenu {
 	}
 	public void setUrl(String url) {
 		this.url = url;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
 	public Boolean getEstado() {
 		return estado;

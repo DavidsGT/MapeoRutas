@@ -3,6 +3,9 @@ package com.webServices.rutas.model;
 import java.util.List;
 
 import org.springframework.data.couchbase.core.mapping.Document;
+import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
+import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
 import org.springframework.data.geo.Point;
 
 import com.couchbase.client.java.repository.annotation.Field;
@@ -13,27 +16,25 @@ import com.couchbase.client.java.repository.annotation.Id;
  */
 @Document
 public class Ruta {
-	@Id
-	@Field
+	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES)
+	private String id;
+	@Field @IdAttribute
 	private String linea;
 	@Field
     private List<Point> listasPuntos;
 	@Field
     private List<String> listasParadas;
 	@Field
-	private String type;
-	@Field
-	private Boolean estado;
+	private Boolean estado; 
 	
     public Ruta() {
-    	this.type = "ruta";
+    	this.estado = true;
     }
     public Ruta(String linea, List<Point> listasPuntos, List<String> listasParadas) {
 		super();
 		this.linea = linea;
 		this.listasPuntos = listasPuntos;
 		this.listasParadas = listasParadas;
-		this.type = "ruta";
 		this.estado = true;
 	}
 	public String getLinea() {
@@ -41,12 +42,6 @@ public class Ruta {
 	}
 	public void setLinea(String linea) {
 		this.linea = linea;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
     public List<Point> getListasPuntos() {
         return listasPuntos;
