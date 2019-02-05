@@ -40,6 +40,10 @@ public class ParadaService {
 		paradaRepository.save(c);
 	}
 	
+	public Iterable<Parada> getAllParadaByLinea(String linea){
+		return paradaRepository.findAllByLinea(linea);
+	}
+	
 	//TODO debe consultar por linea y realizar el query geografico
 	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,int linea){
 		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));

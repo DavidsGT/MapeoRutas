@@ -50,6 +50,11 @@ public class ParadaController {
 		return paradaService.getAllParadaIgnoreEstado();
 	}
 	
+	@GetMapping("/byLinea/{linea}")
+	public Iterable<Parada> getAllParadaIgnoreEstado(@PathVariable String linea){
+		return paradaService.getAllParadaByLinea(linea);
+	}
+	
 	/**
 	 * Metodo que Mapea "/paradas", RequestMethod es POST, se enlaza al servicio {@link ParadaService#addParada(Parada)} 
 	 * y retorna Datos de una parada registrada
