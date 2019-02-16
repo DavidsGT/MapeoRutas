@@ -3,6 +3,7 @@ package com.webServices.rutas.repository;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 import org.springframework.data.couchbase.core.query.Dimensional;
 import org.springframework.data.couchbase.core.query.Query;
@@ -27,6 +28,9 @@ public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	@Dimensional(designDocument = "paradas", spatialViewName = "paradas")
 	Iterable<Parada> findByCoordenadaWithin(Circle p);
 	
-	@Query("SELECT t.* FROM #{#n1ql.bucket} AS p USE KEYS '7' JOIN #{#n1ql.bucket} AS t ON KEYS ARRAY paradaId FOR paradaId IN p.listasParadas END where t.#{#n1ql.filter} or p.`_class` = \"com.webServices.rutas.model.ruta\";")
+	@Dimensional(designDocument = "paradas", spatialViewName = "paradas")
+	Iterable<Parada> findByCoordenadaWithinAndIdIn(Circle p,Iterable<String> ids);
+	
+	@Query("SELECT t.*, META(t).id AS _ID, META(t).cas AS _CAS FROM #{#n1ql.bucket} AS p USE KEYS '#{#linea}' JOIN #{#n1ql.bucket} AS t ON KEYS ARRAY paradaId FOR paradaId IN p.listasParadas END where t.#{#n1ql.filter} or p.`_class` = \"com.webServices.rutas.model.ruta\";")
 	Iterable<Parada> findAllByLinea(@Param("linea") String linea);
 }

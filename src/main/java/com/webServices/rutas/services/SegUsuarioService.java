@@ -1,8 +1,11 @@
 package com.webServices.rutas.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.webServices.rutas.model.SegMenu;
 import com.webServices.rutas.model.SegUsuario;
 import com.webServices.rutas.repository.SegUsuarioRepository;
 
@@ -14,17 +17,24 @@ public class SegUsuarioService {
 		return segUsuarioRepository.findById(id).get();
 	}
 	public Iterable<SegUsuario> getAllSegUsuario(){
-		return segUsuarioRepository.findAll();
+		return segUsuarioRepository.findByEstadoIsTrue();
 	}
-	public void addSegUsuario(SegUsuario segUsuario) {
-		segUsuarioRepository.save(segUsuario);
+	public List<SegUsuario> getAllSegUsuarioIgnoreEstado(){
+		return (List<SegUsuario>)segUsuarioRepository.findAll();
 	}
-	public void updateSegUsuario(String id,SegUsuario segUsuario) {
+	public SegUsuario addSegUsuario(SegUsuario segUsuario) {
+		return segUsuarioRepository.save(segUsuario);
+	}
+	public SegUsuario updateSegUsuario(SegUsuario segUsuario) {
+		return segUsuarioRepository.save(segUsuario);
 	}
 	public void deleteSegUsuario(String id) {
 		segUsuarioRepository.deleteById(id);
 	}
 	public void deleteAllSegUsuario() {
 		segUsuarioRepository.deleteAll();
+	}
+	public SegUsuario getIdUsuario(String usuario, String clave) {
+		return segUsuarioRepository.findByNombreAndClave(usuario,clave);
 	}
 }

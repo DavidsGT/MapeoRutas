@@ -106,7 +106,7 @@ public class SegMenuController {
 	 * @param clave - Clave del Usuario
 	 * @return El menu a la que el usuario tiene acceso
 	 */
-	@GetMapping("/us:{usuario}&cl:{clave}/menu")
+	@GetMapping("/us={usuario},cl={clave}/menu")
 	public Iterable<SegMenu> getMenus(@PathVariable String usuario,@PathVariable String clave) {
 		return segMenuService.getObtenerMenus(usuario,clave);
 	}

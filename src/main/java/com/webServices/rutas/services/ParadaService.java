@@ -1,5 +1,10 @@
 package com.webServices.rutas.services;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
@@ -9,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.repository.ParadaRepository;
+import com.webServices.rutas.repository.RutaRepository;
 
 @Service
 public class ParadaService {
+	@Autowired
+	private RutaRepository rutaRepository;
 	@Autowired
 	private ParadaRepository paradaRepository;
 	public Iterable<Parada> getAllParada(){
@@ -40,13 +48,19 @@ public class ParadaService {
 		paradaRepository.save(c);
 	}
 	
-	public Iterable<Parada> getAllParadaByLinea(String linea){
-		return paradaRepository.findAllByLinea(linea);
+	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
+		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));
+		List<String> idsParadas = rutaRepository.findById(linea).get().getListasParadas();
+		List<Parada> par = (List<Parada>) paradaRepository.findByCoordenadaWithin(circle);
+		List<Parada> listOutput = par.stream()
+		            .filter(e -> idsParadas.contains(e.getId()))
+		            .collect(Collectors.toList());
+		return listOutput;
 	}
 	
 	//TODO debe consultar por linea y realizar el query geografico
-	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,int linea){
+	public Iterable<Parada> getAllParadaCercanasRadio(Point punto,Double longitud){
 		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));
-		return paradaRepository.findByCoordenadaWithin(circle);
+		return paradaRepository.findByCoordenadaWithinAndIdIn(circle,null);
 	}
 }

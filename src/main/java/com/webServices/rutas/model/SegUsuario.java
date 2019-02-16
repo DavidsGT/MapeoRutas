@@ -17,8 +17,11 @@ public class SegUsuario {
 	private String nombre;
 	@Field
 	private String clave;
+	@Field
+	private Boolean estado;
 	public SegUsuario() {
 		super();
+		this.estado = true;
 	}
 	public SegUsuario(String id, String nombre, String clave, String type, String idSegPerfil) {
 		super();
@@ -26,6 +29,7 @@ public class SegUsuario {
 		this.idSegPerfil = idSegPerfil;
 		this.nombre = nombre;
 		this.clave = clave;
+		this.estado = true;
 	}
 	
 	public String getIdSegPerfil() {
@@ -51,6 +55,12 @@ public class SegUsuario {
 	}
 	public void setClave(String clave) {
 		this.clave = clave;
+	}
+	public Boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
 	}
 	@Override
 	public String toString() {

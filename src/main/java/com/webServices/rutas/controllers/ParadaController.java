@@ -50,9 +50,9 @@ public class ParadaController {
 		return paradaService.getAllParadaIgnoreEstado();
 	}
 	
-	@GetMapping("/byLinea/{linea}")
-	public Iterable<Parada> getAllParadaIgnoreEstado(@PathVariable String linea){
-		return paradaService.getAllParadaByLinea(linea);
+	@GetMapping("/radio/{radio}/point/x={x},y={y}")
+	public Iterable<Parada> getAllParadaIgnoreEstado(@PathVariable double x,@PathVariable double y,@PathVariable Double radio){
+		return paradaService.getAllParadaCercanasRadio(new Point(x,y),radio);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class ParadaController {
 	 * @return Lista de paradas cercanas al punto y radio Dado.
 	 */
 	@GetMapping("/{linea}/radio/{radio}/point/x={x},y={y}")
-	public Iterable<Parada> getParadasCercanasRadio(@PathVariable double x,@PathVariable double y,@PathVariable Double radio,@PathVariable int linea) {
+	public Iterable<Parada> getParadasCercanasRadio(@PathVariable double x,@PathVariable double y,@PathVariable Double radio,@PathVariable String linea) {
 		return paradaService.getParadasCercanasRadio(new Point(x,y),radio,linea);
 	}
 }

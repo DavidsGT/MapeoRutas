@@ -19,10 +19,11 @@ public class SegPerfilService{
 	public Iterable<SegPerfil> getAllSegPerfilIgnoreEstado(){
 		return segPerfilRepository.findAll();
 	}
-	public void addSegPerfil(SegPerfil segPerfil) {
-		segPerfilRepository.save(segPerfil);
+	public SegPerfil addSegPerfil(SegPerfil segPerfil) {
+		return segPerfilRepository.save(segPerfil);
 	}
-	public void updateSegPerfil(String id,SegPerfil segPerfil) {
+	public SegPerfil updateSegPerfil(SegPerfil segPerfil) {
+		return segPerfilRepository.save(segPerfil);
 	}
 	public void deleteSegPerfil(String id) {
 		segPerfilRepository.deleteById(id);
