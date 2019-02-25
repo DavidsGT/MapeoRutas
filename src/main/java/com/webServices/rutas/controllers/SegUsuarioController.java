@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ import com.webServices.rutas.services.SegUsuarioService;
  * @version 1.0
  */
 @RestController
-@RequestMapping("usuarios")
+@RequestMapping("movil/usuarios")
 public class SegUsuarioController {
 	
 	/**
@@ -33,7 +34,6 @@ public class SegUsuarioController {
 	 */
 	@Autowired
 	private SegUsuarioService segUsuarioService;
-	
 	/**
 	 * Metodo que Mapea "/usuarios", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getAllSegUsuario()}
 	 * y retorna datos de todos las Usuarios registrados
