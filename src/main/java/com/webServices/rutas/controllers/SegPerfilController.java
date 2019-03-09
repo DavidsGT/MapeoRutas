@@ -1,10 +1,11 @@
 package com.webServices.rutas.controllers;
 
-import javax.annotation.security.RolesAllowed;
+import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.SegPerfil;
+import com.webServices.rutas.services.AsuntoService;
 import com.webServices.rutas.services.SegPerfilService;
 
 /**
@@ -25,6 +27,7 @@ import com.webServices.rutas.services.SegPerfilService;
  */
 @RestController
 @RequestMapping("perfiles")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SegPerfilController {
 	/**
 	 * Instancia de los Servicios para SegAcceso
@@ -33,62 +36,50 @@ public class SegPerfilController {
 	private SegPerfilService segPerfilService;
 	
 	/**
-	 * Metodo que Mapea "/perfiles", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getAllSegPerfil()}
-	 * y retorna datos de todos los perfiles registrados
+	 * Metodo que Mapea "/perfiles", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getAllSegPerfil()} y retorna datos de todos los Perfiles registrados
 	 * @return Lista de Perfiles
 	 * @see {@link SegPerfilService#getAllSegPerfil()}
 	 */
 	@GetMapping
-	@PreAuthorize("hasRole('USER_MOVIL')")
-	public Iterable<SegPerfil> getAllSegPerfil(){
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public List<String> getAllSegPerfil(){
 		return segPerfilService.getAllSegPerfil();
 	}
 	
 	/**
-	 * Metodo que Mapea "/perfiles/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getAllSegPerfilIgnoreEstado()} 
-	 * y retorna todos los Perfiles incluye eliminados logicamente.
-	 * @return Lista de Perfiles incluye eliminados logicamente.
-	 * @see {@link SegPerfilService#getAllSegPerfilIgnoreEstado()}
+	 * Metodo que Mapea "/perfiles/create", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#createPerfil(SegPerfil)} 
+	 * @param perfil - Datos de los perfiles a Registrar
+	 * @see {@link SegPerfilService#createPerfil(SegPerfil)}
 	 */
-	@GetMapping("/ignoreEstado")
-	public Iterable<SegPerfil> getAllSegPerfilIgnoreEstado(){
-		return segPerfilService.getAllSegPerfilIgnoreEstado();
-	}
-	
-	/**
-	 * Metodo que Mapea "/perfiles/{id}", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getSegPerfil(String)} 
-	 * y retorna el Perfil
-	 * @param id - Id del Perfil 
-	 * @return Perfil
-	 * @see {@link SegPerfilService#getSegPerfil(String)}
-	 */
-	@GetMapping("/{id}")
-	public SegPerfil getSegPerfil(@PathVariable String id) {
-		return segPerfilService.getSegPerfil(id);
+	@PostMapping("/create")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void createPerfiles(@RequestBody SegPerfil perfil){
+		segPerfilService.createPerfil(perfil);
 	}
 	
 	/**
 	 * Metodo que Mapea "/perfiles", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#addSegPerfil(SegPerfil)} 
 	 * y retorna Datos de una Perfil registrado
 	 * @param SegPerfil - Datos de la perfil a Registrar
-	 * @return Perfil Registrado
 	 * @see {@link SegPerfilService#addSegPerfil(SegPerfil)}
 	 */
 	@PostMapping
-	public SegPerfil addSegPerfil(@RequestBody SegPerfil segPerfil) {
-		return segPerfilService.addSegPerfil(segPerfil);
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void addSegPerfil(@RequestBody String segPerfil) {
+		segPerfilService.addSegPerfil(segPerfil);
 	}
 	
 	/**
-	 * Metodo que Mapea "/perfiles", RequestMethod es PUT, se enlaza al servicio {@link SegPerfilService#updateSegPerfil(SegPerfil)}.
-	 * Actualizar Perfil.
-	 * @param segPerfil - Perfil a Actualizar
-	 * @return Perfil Actualizada
-	 * @see {@link SegPerfilService#updateSegPerfil(SegPerfil)}
+	 * Metodo que Mapea "/asuntos", RequestMethod es PUT, se enlaza al servicio {@link AsuntoService#updateAsunto(String, String)}.
+	 * Actualizar asunto.
+	 * @param despues - nuevo asunto
+	 * @param antes - Asunto a reemplazar
+	 * @see {@link AsuntoService#updateAsunto(String, String)}
 	 */
-	@PutMapping
-	public SegPerfil updateSegPerfil(@RequestBody SegPerfil segPerfil) {
-		return segPerfilService.updateSegPerfil(segPerfil);
+	@PutMapping("/{antes}")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void updateSegPerfil(@RequestBody String despues,@PathVariable String antes) {
+		segPerfilService.updateSegPerfil(antes,despues);
 	}
 	
 	/**
@@ -97,8 +88,9 @@ public class SegPerfilController {
 	 * @param id - Id del Perfil
 	 * @see {@link SegPerfilService#deleteSegPerfil(String)}
 	 */
-	@DeleteMapping("/{id}")
-	public void deleteSegPerfil(@PathVariable String id) {
-		segPerfilService.deleteSegPerfil(id);
+	@DeleteMapping("/{perfil}")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void deleteSegPerfil(@PathVariable String perfil) {
+		segPerfilService.deleteSegPerfil(perfil);
 	}
 }

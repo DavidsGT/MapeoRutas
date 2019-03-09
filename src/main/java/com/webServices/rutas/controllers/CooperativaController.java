@@ -3,6 +3,8 @@ package com.webServices.rutas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ import com.webServices.rutas.services.CooperativaService;
  */
 @RestController
 @RequestMapping("cooperativas")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CooperativaController {
 	
 	/**
@@ -38,6 +41,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#getAllCooperativa()}
 	 */
 	@GetMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public List<Cooperativa> getAllCooperativa(){
 		return cooperativaService.getAllCooperativa();
 	}
@@ -49,6 +53,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#getAllCooperativaIgnoreEstado()}
 	 */
 	@GetMapping("/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<Cooperativa> getAllCooperativaIgnoreEstado(){
 		return cooperativaService.getAllCooperativaIgnoreEstado();
 	}
@@ -61,6 +66,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#getCooperativa(String)} 
 	 */
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Cooperativa getCooperativa(@PathVariable String id) {
 		return cooperativaService.getCooperativa(id);
 	}
@@ -73,6 +79,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#getCooperativaByNombre(String)}
 	 */
 	@GetMapping("/byNombre/{nombre}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Cooperativa getCooperativaByNombre(@PathVariable String nombre) {
 		return cooperativaService.getCooperativaByNombre(nombre);
 	}
@@ -85,6 +92,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#addCooperativa(Cooperativa))}
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Cooperativa addCooperativa(@RequestBody Cooperativa cooperativa) {
 		return cooperativaService.addCooperativa(cooperativa);
 	}
@@ -96,6 +104,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#updateCooperativa(Cooperativa)}
 	 */
 	@PutMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Cooperativa updateCooperativa(@RequestBody Cooperativa cooperativa) {
 		return cooperativaService.updateCooperativa(cooperativa);
 	}
@@ -107,6 +116,7 @@ public class CooperativaController {
 	 * @see {@link CooperativaService#deleteCooperativa(String)}
 	 */
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void deleteCooperativa(@PathVariable String id) {
 		cooperativaService.deleteCooperativa(id);
 	}

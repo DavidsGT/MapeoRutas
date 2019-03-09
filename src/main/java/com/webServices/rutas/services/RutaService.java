@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.webServices.rutas.exception.FileStorageException;
-import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.FileStorageProperties;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.Ruta;

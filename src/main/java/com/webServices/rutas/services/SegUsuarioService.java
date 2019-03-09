@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.webServices.rutas.model.SegMenu;
 import com.webServices.rutas.model.SegUsuario;
 import com.webServices.rutas.repository.SegUsuarioRepository;
 
@@ -35,6 +34,6 @@ public class SegUsuarioService {
 		segUsuarioRepository.deleteAll();
 	}
 	public SegUsuario getIdUsuario(String usuario, String clave) {
-		return segUsuarioRepository.findByNombreAndClave(usuario,clave);
+		return segUsuarioRepository.findByUsuarioAndClave(usuario,clave);
 	}
 }

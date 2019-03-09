@@ -3,8 +3,8 @@ package com.webServices.rutas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.webServices.rutas.model.SegMenu;
 import com.webServices.rutas.model.SegUsuario;
 import com.webServices.rutas.services.SegUsuarioService;
 
@@ -26,7 +24,8 @@ import com.webServices.rutas.services.SegUsuarioService;
  * @version 1.0
  */
 @RestController
-@RequestMapping("movil/usuarios")
+@RequestMapping("usuarios")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SegUsuarioController {
 	
 	/**
@@ -41,6 +40,7 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#getAllSegUsuario()}
 	 */
 	@GetMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public Iterable<SegUsuario> getAllUsuarios(){
 		return segUsuarioService.getAllSegUsuario();
 	}
@@ -52,6 +52,7 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#getAllSegUsuarioIgnoreEstado()}
 	 */
 	@GetMapping("/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<SegUsuario> getAllReporteIgnoreEstado(){
 		return segUsuarioService.getAllSegUsuarioIgnoreEstado();
 	}
@@ -64,7 +65,8 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#getSegUsuario(String)} 
 	 */
 	@GetMapping("/{id}")
-	public SegUsuario getUsuario(@PathVariable String id) {
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public SegUsuario getUsuario(@PathVariable String id) { 
 		return segUsuarioService.getSegUsuario(id);
 	}
 	
@@ -76,6 +78,7 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#addSegUsuario(SegUsuario)}
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
 	public SegUsuario addSegUsuario(@RequestBody SegUsuario segUsuario) {
 		return segUsuarioService.addSegUsuario(segUsuario);
 	}
@@ -88,6 +91,7 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#updateSegUsuario(SegUsuario)}.
 	 */
 	@PutMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
 	public SegUsuario updateSegUsuario(@RequestBody SegUsuario segUsuario,@PathVariable String id) {
 		return segUsuarioService.updateSegUsuario(segUsuario);
 	}
@@ -99,10 +103,13 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#deleteSegUsuario(String)}.
 	 */
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public void deleteSegUsuario(@PathVariable String id) {
 		segUsuarioService.deleteSegUsuario(id);
 	}
+	
 	@GetMapping("/{usuario}/{clave}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public SegUsuario getMenus(@PathVariable String usuario,@PathVariable String clave) {
 		return segUsuarioService.getIdUsuario(usuario,clave);
 	}

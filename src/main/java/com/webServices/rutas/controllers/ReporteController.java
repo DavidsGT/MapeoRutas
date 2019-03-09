@@ -3,6 +3,8 @@ package com.webServices.rutas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,7 @@ import com.webServices.rutas.services.ReporteService;
  */
 @RestController
 @RequestMapping("reportes")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ReporteController {
 	
 	/**
@@ -39,6 +42,7 @@ public class ReporteController {
 	 * @see {@link ReporteService#getAllReporte()}
 	 */
 	@GetMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Iterable<Reporte> getAllReporte(){
 		return reporteService.getAllReporte();
 	}
@@ -50,6 +54,7 @@ public class ReporteController {
 	 * @see {@link ReporteService#getAllReporteIgnoreEstado()}
 	 */
 	@GetMapping("/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<Reporte> getAllReporteIgnoreEstado(){
 		return reporteService.getAllReporteIgnoreEstado();
 	}
@@ -62,10 +67,11 @@ public class ReporteController {
 	 * @see {@link ReporteService#getReporte(String)} 
 	 */
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
 	public Reporte getReporte(@PathVariable String id){
 		return reporteService.getReporte(id);
 	}
-	
+	//TODO Obtener todos los reportes de un usuario
 	//TODO HACER REPORTES POR DISCO EN UN RANGO DE FECHA
 	//TODO HACER REPORTES DE ASUNTO EN EUN RANGO DE FECHA
 	//TODO BUSQUEDA DE REPORTE HECHO SEGUN UN USUARIO
@@ -80,6 +86,7 @@ public class ReporteController {
 	 * @see {@link ReporteService#addReporte(Reporte)}
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
 	public Reporte addReporte(@RequestBody Reporte reporte) {
 		return reporteService.addReporte(reporte);
 	}
@@ -92,6 +99,7 @@ public class ReporteController {
 	 * @see {@link ReporteService#updateReporte(Reporte)}
 	 */
 	@PutMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
 	public Reporte updateReporte(@RequestBody Reporte reporte) {
 		return reporteService.updateReporte(reporte);
 	}
@@ -103,6 +111,7 @@ public class ReporteController {
 	 * @see {@link ReporteService#deleteReporte(String)}
 	 */
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
 	public void deleteReporte(@PathVariable String id) {
 		reporteService.deleteReporte(id);
 	}

@@ -8,7 +8,6 @@ import java.util.TimeZone;
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
-import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
 import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 import org.springframework.data.couchbase.core.mapping.id.IdSuffix;
 
@@ -24,22 +23,27 @@ import com.couchbase.client.java.repository.annotation.Id;
 public class HistorialEstadoBus {
 	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES,delimiter = "::")
 	private String id;
-	@Field @IdPrefix(order=0)
+	@IdPrefix(order=0)
 	private Date fecha;
-	@Field	@IdSuffix(order=0)
+	@Field
+	private Date creadoEn;
+	@IdSuffix(order=0)
+	private String placaId;
+	@Field
 	private String placa;
 	@Field
-	private List<EstadoBus> ListaEstados;
-	public HistorialEstadoBus(String id, Date fecha, String placa, List<EstadoBus> listaEstados) {
+	private List<EstadoBus> listaEstados;
+	public HistorialEstadoBus(String placa, List<EstadoBus> listaEstados) {
 		super();
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.HOUR_OF_DAY, 0);
-		this.id = id;
 		this.fecha = now.getTime();
 		this.placa = placa;
-		ListaEstados = listaEstados;
+		this.placaId = placa;
+		this.listaEstados = listaEstados;
+		this.creadoEn = now.getTime();
 	}
 	public HistorialEstadoBus() {
 		super();
@@ -47,7 +51,8 @@ public class HistorialEstadoBus {
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.HOUR_OF_DAY, 0);
-        this.fecha = now.getTime() ;
+        this.fecha = now.getTime();
+        this.creadoEn = now.getTime();
 	}
 	public String getId() {
 		return id;
@@ -66,12 +71,19 @@ public class HistorialEstadoBus {
 	}
 	public void setPlaca(String placa) {
 		this.placa = placa;
+		this.placaId = placa;
 	}
 	public List<EstadoBus> getListaEstados() {
-		return ListaEstados;
+		return listaEstados;
 	}
 	public void setListaEstados(List<EstadoBus> listaEstados) {
-		ListaEstados = listaEstados;
+		this.listaEstados = listaEstados;
+	}
+	public Date getCreadoEn() {
+		return creadoEn;
+	}
+	public void setCreadoEn(Date creadoEn) {
+		this.creadoEn = creadoEn;
 	}
 	
 }

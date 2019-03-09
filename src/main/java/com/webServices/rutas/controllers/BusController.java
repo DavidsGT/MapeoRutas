@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +31,7 @@ import com.webServices.rutas.services.BusService;
  */
 @RestController
 @RequestMapping("buses")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class BusController {
 	
 	/**
@@ -42,7 +45,9 @@ public class BusController {
 	 * @return Lista de Buses
 	 * @see {@link BusService#getAllBus()}
 	 */
+	
 	@GetMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public List<Bus> getAllBuses(){
 		return busService.getAllBus();
 	}
@@ -54,6 +59,7 @@ public class BusController {
 	 * @see {@link BusService#getAllBusEstadoTrue()}
 	 */
 	@GetMapping("/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<Bus> getAllBusesIgnoreEstado(){
 		return busService.getAllBusIgnoreEstado();
 	}
@@ -66,6 +72,7 @@ public class BusController {
 	 * @see {@link BusService#getBus(String)}
 	 */
 	@GetMapping("/{placa}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
 	public Bus getBus(@PathVariable String placa) {
 		return busService.getBus(placa);
 	}
@@ -78,6 +85,7 @@ public class BusController {
 	 * @see {@link BusService#getBus(String)}
 	 */
 	@GetMapping("/{placa}/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public Bus getBusIgnoreEstado(@PathVariable String placa) {
 		return busService.getBusIgnoreEstado(placa);
 	}
@@ -90,6 +98,7 @@ public class BusController {
 	 * @see {@link BusService#getBusesByIdCooperativa(String)}
 	 */
 	@GetMapping("/byCooperativa/{idCooperativa}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Iterable<Bus> getAllBusesByCooperativa(@PathVariable String idCooperativa){
 		return busService.getBusesByIdCooperativa(idCooperativa);
 	}
@@ -102,6 +111,7 @@ public class BusController {
 	 * @see {@link BusService#getHistorialEstadoBusAllByPlaca(String)}
 	 */
 	@GetMapping("/{placa}/historialEstado/{fecha}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Iterable<EstadoBus> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date fecha){
 		System.out.println(fecha);
 		return busService.getHistorialEstadoBusAllByPlacaByFecha(placa,fecha);
@@ -115,6 +125,7 @@ public class BusController {
 	 * @see {@link BusService#getEstadoActualBus(String)}
 	 */
 	@GetMapping("/{placa}/estadoActual")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public EstadoBus getEstadoActualBus(@PathVariable String placa) {
 		return busService.getEstadoActualBus(placa);
 	}
@@ -127,6 +138,7 @@ public class BusController {
 	 * @see {@link BusService#addBus(Bus)}
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Bus addBus(@RequestBody Bus bus) {
 		return busService.addBus(bus);
 	}
@@ -138,6 +150,7 @@ public class BusController {
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
 	@PutMapping("/{placa}/estado")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
 	public void updateEstadoBus(@RequestBody EstadoBus estadoBus,@PathVariable String placa) {
 		busService.updateEstadoBus(estadoBus,placa);
 	}
@@ -155,6 +168,7 @@ public class BusController {
 	 * @see {@link BusService#updateEstadoBusGET(String, String) , {@link BusController#getEstadoActualBus(String)}}
 	 */
 	@GetMapping("/{placa}/estado/{valor}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
 	public void updateEstadoBusGET(@PathVariable String valor,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
 		busService.updateEstadoBusGET(valor,placa);
 	}
@@ -172,6 +186,7 @@ public class BusController {
 	 * @see {@link BusService#updateEstadoBusGETAlternative(String, String) , {@link BusController#getEstadoActualBus(String)}}
 	 */
 	@GetMapping("/{placa}/estadoBusAlternative/{valor}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
 	public void updateEstadoBusGETAlternative(@PathVariable String valor,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
 		busService.updateEstadoBusGETAlternative(valor,placa);
 	}
@@ -184,6 +199,7 @@ public class BusController {
 	 * @see {@link BusService#updateBus(Bus)}
 	 */
 	@PutMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Bus updateBus(@RequestBody Bus bus) {
 		return busService.updateBus(bus);
 	}
@@ -195,7 +211,17 @@ public class BusController {
 	 * @see {@link BusService#deleteBus(String)}
 	 */
 	@DeleteMapping("/{placa}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void deleteBus(@PathVariable String placa) {
 		busService.deleteBus(placa);
+	}
+	
+	/**
+	 * 
+	 */
+	@GetMapping("/traficBus")
+	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
+	public List<EstadoBus> getTraficBus(){
+		return busService.getTraficBus();
 	}
 }

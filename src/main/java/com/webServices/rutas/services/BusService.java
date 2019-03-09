@@ -1,6 +1,8 @@
 package com.webServices.rutas.services;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -174,9 +176,7 @@ public class BusService {
         }else {
         	List<EstadoBus> eb = new ArrayList<>();
         	eb.add(obj);
-        	h = new HistorialEstadoBus();
-        	h.setPlaca(placa);
-        	h.setListaEstados(eb);
+        	h = new HistorialEstadoBus(placa,eb);
         }
 		historialEstadoBusRepository.save(h);
 	}
@@ -212,5 +212,19 @@ public class BusService {
         	h.setListaEstados(eb);
         }
 		historialEstadoBusRepository.save(h);
+	}
+	
+	//Obtener trafico de buses online
+	public List<EstadoBus> getTraficBus() {
+		//TODO Falta ingresar el algoritmo de clustering.
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        String pattern = "yyyy-MM-dd";
+        DateFormat df = new SimpleDateFormat(pattern);
+        String todayAsString = df.format(now.getTime());
+        List<EstadoBus> list = historialEstadoBusRepository.findLastEstadoBus(todayAsString);
+		return list;
 	}
 }

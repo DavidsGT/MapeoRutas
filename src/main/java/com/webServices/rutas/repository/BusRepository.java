@@ -1,9 +1,13 @@
 package com.webServices.rutas.repository;
 
+import java.util.Date;
+
+import org.springframework.data.couchbase.core.query.Query;
 import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
 
 import com.webServices.rutas.model.Bus;
+import com.webServices.rutas.model.EstadoBus;
 
 /**
  * Repositorio Especifico para Buses

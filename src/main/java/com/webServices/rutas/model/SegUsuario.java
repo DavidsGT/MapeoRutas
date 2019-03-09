@@ -12,9 +12,9 @@ public class SegUsuario {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
 	private String id;
 	@Field
-	private String idSegPerfil;
+	private String perfil;
 	@Field
-	private String nombre;
+	private String usuario;
 	@Field
 	private String clave;
 	@Field
@@ -23,20 +23,20 @@ public class SegUsuario {
 		super();
 		this.estado = true;
 	}
-	public SegUsuario(String id, String nombre, String clave, String type, String idSegPerfil) {
+	public SegUsuario(String id, String usuario, String clave, String type, String perfil) {
 		super();
 		this.id = id;
-		this.idSegPerfil = idSegPerfil;
-		this.nombre = nombre;
+		this.perfil = perfil;
+		this.usuario = usuario;
 		this.clave = clave;
 		this.estado = true;
 	}
 	
-	public String getIdSegPerfil() {
-		return idSegPerfil;
+	public String getPerfil() {
+		return perfil;
 	}
-	public void setIdSegPerfil(String idSegPerfil) {
-		this.idSegPerfil = idSegPerfil;
+	public void setPerfil(String idSegPerfil) {
+		this.perfil = idSegPerfil;
 	}
 	public String getId() {
 		return id;
@@ -44,11 +44,11 @@ public class SegUsuario {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getNombre() {
-		return nombre;
+	public String getUsuario() {
+		return usuario;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setUsuario(String nombre) {
+		this.usuario = nombre;
 	}
 	public String getClave() {
 		return clave;
@@ -64,6 +64,6 @@ public class SegUsuario {
 	}
 	@Override
 	public String toString() {
-		return "SegUsuario [id=" + id + ", nombre=" + nombre + ", clave=" + clave + "]";
+		return "SegUsuario [id=" + id + ", nombre=" + usuario + ", clave=" + clave + "]";
 	}
 }

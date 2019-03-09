@@ -20,7 +20,7 @@ public class Asunto {
 	}
 	public Asunto(String id, List<String> asuntos) {
 		super();
-		this.id = id;
+		this.id = "Asuntos";
 		this.asuntos = asuntos;
 	}
 	public String getId() {

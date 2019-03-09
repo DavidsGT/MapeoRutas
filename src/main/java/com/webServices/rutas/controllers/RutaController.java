@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import com.webServices.rutas.services.RutaService;
  */
 @RestController
 @RequestMapping("rutas")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class RutaController {
 	
 	/**
@@ -41,7 +43,7 @@ public class RutaController {
 	 * @return Lista de Rutas
 	 * @see {@link RutaService#getAllRuta()}
 	 */
-	@PreAuthorize("hasRole('USER_MOVIL')")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	@GetMapping
 	public List<Ruta> getAllRuta(){
 		return rutaService.getAllRuta();
@@ -54,6 +56,7 @@ public class RutaController {
 	 * @see {@link RutaService#getAllRutaIgnoreEstado()}
 	 */
 	@GetMapping("/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<Ruta> getAllRutaIgnoreEstado(){
 		return rutaService.getAllRutaIgnoreEstado();
 	}
@@ -66,6 +69,7 @@ public class RutaController {
 	 * @see {@link RutaService#getRuta(String)} 
 	 */
 	@GetMapping("/{linea}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public Ruta getRuta(@PathVariable String linea) {
 		return rutaService.getRuta(linea);
 	}
@@ -80,6 +84,7 @@ public class RutaController {
 	 * @throws IOException - en caso de que el archivo no sea GPX
 	 */
 	@PostMapping("/archivoGPX")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Ruta addRutaWithGPX(@RequestParam("file") MultipartFile file,@RequestParam("linea") String linea) throws IOException {
 		return rutaService.addRutaWithGPX(file, linea);
 	}
@@ -92,6 +97,7 @@ public class RutaController {
 	 * @see {@link RutaService#addRutaModel(Ruta)}
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Ruta addRuta(@RequestBody Ruta ruta) {
 		return rutaService.addRuta(ruta);
 	}
@@ -103,6 +109,7 @@ public class RutaController {
 	 * @see {@link RutaService#updateRuta(Ruta)}
 	 */
 	@PutMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Ruta updateRutaModel(@RequestBody Ruta ruta) {
 		return rutaService.updateRuta(ruta);
 	}
@@ -114,6 +121,7 @@ public class RutaController {
 	 * @see {@link RutaService#deleteRuta(String)}
 	 */
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void deleteRuta(@PathVariable String id) {
 		rutaService.deleteRuta(id);
 	}

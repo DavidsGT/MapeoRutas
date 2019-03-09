@@ -2,6 +2,8 @@ package com.webServices.rutas.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,7 @@ import com.webServices.rutas.services.ParadaService;
  */
 @RestController
 @RequestMapping("paradas")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ParadaController {
 	
 	/**
@@ -36,6 +39,7 @@ public class ParadaController {
 	 * @see {@link ParadaService#getAllParada()}
 	 */
 	@GetMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public Iterable<Parada> getAllParada(){
 		return paradaService.getAllParada();
 	}
@@ -46,11 +50,13 @@ public class ParadaController {
 	 * @see {@link ParadaService#getAllParadaIgnoreEstado())}
 	 */
 	@GetMapping("/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public Iterable<Parada> getAllParadaIgnoreEstado(){
 		return paradaService.getAllParadaIgnoreEstado();
 	}
 	
 	@GetMapping("/radio/{radio}/point/x={x},y={y}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public Iterable<Parada> getAllParadaIgnoreEstado(@PathVariable double x,@PathVariable double y,@PathVariable Double radio){
 		return paradaService.getAllParadaCercanasRadio(new Point(x,y),radio);
 	}
@@ -63,6 +69,7 @@ public class ParadaController {
 	 * @see {@link ParadaService#addParada(Parada)}
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void addParada(@RequestBody Parada parada) {
 		paradaService.addParada(parada);
 	}
@@ -75,6 +82,7 @@ public class ParadaController {
 	 * @see {@link ParadaService#updateParada(Parada)}
 	 */
 	@PutMapping
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Parada updateParada(@RequestBody Parada parada) {
 		return paradaService.updateParada(parada);
 	}
@@ -86,6 +94,7 @@ public class ParadaController {
 	 * @see {@link ParadaService#deleteParada(String)}
 	 */
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void deleteAsunto(@PathVariable String id) {
 		paradaService.deleteParada(id);
 	}
@@ -99,6 +108,7 @@ public class ParadaController {
 	 * @return Lista de paradas cercanas al punto y radio Dado.
 	 */
 	@GetMapping("/{linea}/radio/{radio}/point/x={x},y={y}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public Iterable<Parada> getParadasCercanasRadio(@PathVariable double x,@PathVariable double y,@PathVariable Double radio,@PathVariable String linea) {
 		return paradaService.getParadasCercanasRadio(new Point(x,y),radio,linea);
 	}
