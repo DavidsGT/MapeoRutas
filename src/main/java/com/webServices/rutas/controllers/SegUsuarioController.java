@@ -109,8 +109,8 @@ public class SegUsuarioController {
 	}
 	
 	@GetMapping("/{usuario}/{clave}")
-	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public SegUsuario getMenus(@PathVariable String usuario,@PathVariable String clave) {
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public SegUsuario getUsuarioByNameAndPass(@PathVariable String usuario,@PathVariable String clave) {
 		return segUsuarioService.getIdUsuario(usuario,clave);
 	}
 }
