@@ -1,5 +1,6 @@
 package com.webServices.rutas.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +76,13 @@ public class HistorialEstadoBus {
 	}
 	public List<EstadoBus> getListaEstados() {
 		return listaEstados;
+	}
+	public List<EstadoBusTemporal> getListaEstadosTemporal() {
+		List<EstadoBusTemporal> p = new ArrayList<>();
+		for(EstadoBus a : listaEstados) {
+			p.add(new EstadoBusTemporal(a.getVelocidad(), a.getCantidadUsuarios(), a.getPosicionActual(), a.getEstadoPuerta(), a.getLinea()));
+		}
+		return p;
 	}
 	public void setListaEstados(List<EstadoBus> listaEstados) {
 		this.listaEstados = listaEstados;

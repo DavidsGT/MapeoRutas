@@ -1,10 +1,12 @@
 package com.webServices.rutas.controllers;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -129,6 +131,11 @@ public class BusController {
 	public EstadoBus getEstadoActualBus(@PathVariable String placa) {
 		return busService.getEstadoActualBus(placa);
 	}
+	@GetMapping("/{linea}/allEstadoActual")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public List<EstadoBus> getEstadoActualBusByLinea(@PathVariable String linea) {
+		return busService.getEstadoActualBusByLinea(linea);
+	}
 
 	/**
 	 * Metodo que Mapea "/buses", RequestMethod es POST, se enlaza al servicio {@link BusService#addBus(Bus)} 
@@ -215,13 +222,22 @@ public class BusController {
 	public void deleteBus(@PathVariable String placa) {
 		busService.deleteBus(placa);
 	}
-	
 	/**
+	 * 
+	 */
+	@GetMapping("/calculateTimeToStop/{idParada}/{placaBus}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public long getCalculateTimeToStop(@PathVariable String idParada,@PathVariable String placaBus){
+		return busService.getCalculateTimeToStop(idParada,placaBus);
+	}
+	/**
+	 * @throws ParseException 
+	 * @throws InterruptedException 
 	 * 
 	 */
 	@GetMapping("/traficBus")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
-	public List<EstadoBus> getTraficBus(){
+	public List<EstadoBus> getTraficBus() throws ParseException, InterruptedException{
 		return busService.getTraficBus();
 	}
 }

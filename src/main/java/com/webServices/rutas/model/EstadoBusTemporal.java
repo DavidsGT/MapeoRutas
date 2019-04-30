@@ -4,23 +4,30 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
+import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
 import org.springframework.data.geo.Point;
 
+import com.couchbase.client.java.repository.annotation.Field;
+import com.couchbase.client.java.repository.annotation.Id;
 
-public class EstadoBus {
+public class EstadoBusTemporal {
 	
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
+	private String id;
+	@Field
 	private Date creationDate;
-	
+	@Field
 	private int velocidad;
-	
+	@Field
 	private int cantidadUsuarios;
-	
+	@Field
 	private Point posicionActual;
-	
+	@Field
 	private Boolean estadoPuerta;
-	
+	@Field
 	private int linea;
-	public EstadoBus(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea) {
+	public EstadoBusTemporal(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea) {
 		super();
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 		this.velocidad = velocidad;
@@ -30,7 +37,7 @@ public class EstadoBus {
 		this.creationDate = now.getTime();
 		this.linea = linea;
 	}
-	public EstadoBus(EstadoBus bus) {
+	public EstadoBusTemporal(EstadoBusTemporal bus) {
 		this.velocidad = bus.velocidad;
 		this.cantidadUsuarios = bus.cantidadUsuarios;
 		this.posicionActual = bus.posicionActual;
@@ -38,7 +45,7 @@ public class EstadoBus {
 		this.creationDate = bus.creationDate;
 		this.linea = bus.linea;
 	}
-	public EstadoBus() {
+	public EstadoBusTemporal() {
 		super();
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 		this.creationDate = now.getTime();
@@ -79,5 +86,12 @@ public class EstadoBus {
 	public void setLinea(int linea) {
 		this.linea = linea;
 	}
+	@Override
+	public String toString() {
+		return "EstadoBusTemporal [id=" + id + ", creationDate=" + creationDate + ", velocidad=" + velocidad
+				+ ", cantidadUsuarios=" + cantidadUsuarios + ", posicionActual=" + posicionActual + ", estadoPuerta="
+				+ estadoPuerta + ", linea=" + linea + "]";
+	}
+	
 	
 }

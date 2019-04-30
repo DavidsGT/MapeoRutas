@@ -2,6 +2,7 @@ package com.webServices.rutas.services;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,9 +22,15 @@ import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.repository.BusRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
+import com.webServices.rutas.util.NightCalculation;
+import com.webServices.rutas.util.Simulators;
 
 @Service
 public class BusService {
+	@Autowired
+	private NightCalculation nightCalculation;
+	@Autowired
+	Simulators s;
 	/**
 	 * 
 	 */
@@ -215,16 +222,40 @@ public class BusService {
 	}
 	
 	//Obtener trafico de buses online
-	public List<EstadoBus> getTraficBus() {
-		//TODO Falta ingresar el algoritmo de clustering.
+	public List<EstadoBus> getTraficBus() throws ParseException, InterruptedException {
+		
+		//s.runLinea7();
+		nightCalculation.timeBetweenStops();
+		return null;
+	}
+
+	public long getCalculateTimeToStop(String idParada,String placaBus) {
+		try {
+			//
+			String time1 = "16:00:00";
+			String time2 = "19:00:00";
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			Date date1 = format.parse(time1);
+			Date date2 = format.parse(time2);
+			long difference = date2.getTime() - date1.getTime(); 
+			return difference;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return 0;
+		}
+		
+	}
+
+	public List<EstadoBus> getEstadoActualBusByLinea(String linea) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.SECOND, 0);   
         now.set(Calendar.HOUR_OF_DAY, 0);
         String pattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(pattern);
         String todayAsString = df.format(now.getTime());
-        List<EstadoBus> list = historialEstadoBusRepository.findLastEstadoBus(todayAsString);
+        
+        List<EstadoBus> list = historialEstadoBusRepository.findLastEstadoBusByLinea("2019-03-08", linea);
 		return list;
 	}
 }

@@ -17,16 +17,16 @@ import com.webServices.rutas.model.Parada;
 @ViewIndexed(designDoc = "parada", viewName = "all")
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	Iterable<Parada> findByEstadoIsTrue();
-	@Dimensional(designDocument = "paradas", spatialViewName = "paradas", dimensions = 2)
+	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada", dimensions = 2)
 	  @Retention(RetentionPolicy.RUNTIME)
 	  @interface IndexedByLocation {}
 	@IndexedByLocation
 	Iterable<Parada> findByCoordenadaWithin(Box x);
 	
-	@Dimensional(designDocument = "paradas", spatialViewName = "paradas")
+	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada")
 	Iterable<Parada> findByCoordenadaWithin(Circle p);
 	
-	@Dimensional(designDocument = "paradas", spatialViewName = "paradas")
+	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada")
 	Iterable<Parada> findByCoordenadaWithinAndIdIn(Circle p,Iterable<String> ids);
 	
 	@Query("SELECT t.*, META(t).id AS _ID, META(t).cas AS _CAS FROM #{#n1ql.bucket} AS p USE KEYS '#{#linea}' JOIN #{#n1ql.bucket} AS t ON KEYS ARRAY paradaId FOR paradaId IN p.listasParadas END where t.#{#n1ql.filter} or p.`_class` = \"com.webServices.rutas.model.ruta\";")

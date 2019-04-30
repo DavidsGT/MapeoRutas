@@ -62,5 +62,10 @@ public class Parada {
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
 	}
+	@Override
+	public String toString() {
+		return "Parada [id=" + id + ", nombre=" + nombre + ", urlFoto=" + urlFoto + ", coordenada=" + coordenada
+				+ ", estado=" + estado + "]";
+	}
 	
 }
