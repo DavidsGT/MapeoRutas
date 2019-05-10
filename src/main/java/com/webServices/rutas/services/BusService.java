@@ -18,9 +18,11 @@ import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 import com.webServices.rutas.model.Bus;
+import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.repository.BusRepository;
+import com.webServices.rutas.repository.CooperativaRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 import com.webServices.rutas.util.NightCalculation;
 import com.webServices.rutas.util.Simulators;
@@ -36,7 +38,8 @@ public class BusService {
 	 */
 	@Autowired
 	private HistorialEstadoBusRepository historialEstadoBusRepository;
-	
+	@Autowired
+	private CooperativaRepository cooperativaRepository;
 	@Autowired
 	private BusRepository busRepository;
 	
@@ -81,6 +84,9 @@ public class BusService {
 	 * @return Bus agregado
 	 */
 	public Bus addBus(Bus bus) {
+		Cooperativa c = cooperativaRepository.save(bus.getCooperativa());
+		bus.setIdCooperativa(c.getId());
+		bus.setCooperativa(null);
 		return busRepository.save(bus);
 	}
 	
@@ -91,7 +97,7 @@ public class BusService {
 	public Bus updateBus(Bus bus) {
 		return busRepository.save(bus);
 	}
-	
+
 	/**
 	 * Elimina un Bus
 	 * @param placa - Placa del bus a Eliminar
@@ -229,6 +235,10 @@ public class BusService {
 		return null;
 	}
 
+	public void startSimulator(int linea, String placa) throws ParseException, InterruptedException {
+		s.startSimulador(linea,placa);
+	}
+
 	public long getCalculateTimeToStop(String idParada,String placaBus) {
 		try {
 			//
@@ -255,7 +265,7 @@ public class BusService {
         DateFormat df = new SimpleDateFormat(pattern);
         String todayAsString = df.format(now.getTime());
         
-        List<EstadoBus> list = historialEstadoBusRepository.findLastEstadoBusByLinea("2019-03-08", linea);
+        List<EstadoBus> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
 		return list;
 	}
 }

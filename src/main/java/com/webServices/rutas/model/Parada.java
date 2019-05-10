@@ -21,12 +21,15 @@ public class Parada {
     private Point coordenada;
 	@Field
     private Boolean estado;
-	public Parada(String nombre, String urlFoto, Point coordenada) {
+	@Field
+	private int idx;
+	public Parada(String nombre, String urlFoto, Point coordenada, int idx) {
 		super();
 		this.nombre = nombre;
 		this.urlFoto = urlFoto;
 		this.coordenada = coordenada;
 		this.estado = true;
+		this.idx = idx;
 	}
 	public Parada() {
 		super();
@@ -61,6 +64,31 @@ public class Parada {
 	}
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
+	}
+	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+	public double distance(Point farAway, String unit) {
+		if ((farAway.getX() == coordenada.getX()) && (farAway.getY() == coordenada.getY())) {
+			return 0;
+		}
+		else {
+			double theta = coordenada.getX() - farAway.getX();
+			double dist = Math.sin(Math.toRadians(coordenada.getY())) * Math.sin(Math.toRadians(farAway.getY())) + Math.cos(Math.toRadians(coordenada.getY())) * Math.cos(Math.toRadians(farAway.getY())) * Math.cos(Math.toRadians(theta));
+			dist = Math.acos(dist);
+			dist = Math.toDegrees(dist);
+			dist = dist * 60 * 1.1515;
+			if (unit == "K") {
+				dist = dist * 1.609344;
+			} else if (unit == "N") {
+				dist = dist * 0.8684;
+			}
+			return (dist);
+		}
 	}
 	@Override
 	public String toString() {

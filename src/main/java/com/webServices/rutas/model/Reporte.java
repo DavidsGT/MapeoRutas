@@ -29,7 +29,7 @@ public class Reporte {
 	@Field
 	private String numeroDisco;
 	@Field
-	private Point ubicacion;
+	private String ubicacion;
 	@Field
 	private Date fecha;
 	@Field
@@ -43,7 +43,7 @@ public class Reporte {
     	this.estado = true;
     }
 
-	public Reporte(String id, String usuario, String movil, String asunto, String numeroDisco, Point ubicacion,
+	public Reporte(String id, String usuario, String movil, String asunto, String numeroDisco, String ubicacion,
 			Date fecha, String linea, String mensaje) {
 		super();
 		this.id = id;
@@ -98,11 +98,11 @@ public class Reporte {
 		this.numeroDisco = numeroDisco;
 	}
 
-	public Point getUbicacion() {
+	public String getUbicacion() {
 		return ubicacion;
 	}
 
-	public void setUbicacion(Point ubicacion) {
+	public void setUbicacion(String ubicacion) {
 		this.ubicacion = ubicacion;
 	}
 

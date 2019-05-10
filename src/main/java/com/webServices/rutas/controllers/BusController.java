@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Point;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -222,6 +221,13 @@ public class BusController {
 	public void deleteBus(@PathVariable String placa) {
 		busService.deleteBus(placa);
 	}
+	
+	@GetMapping("/simulador/{linea}/{placa}")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void startSimulatorBus(@PathVariable int linea,@PathVariable String placa) throws ParseException, InterruptedException {
+		busService.startSimulator(linea, placa);;
+	}
+	
 	/**
 	 * 
 	 */

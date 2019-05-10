@@ -13,6 +13,7 @@ import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Bus {
+	private Cooperativa cooperativa;
 	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES)
 	private String id;
 	@Size(max=7, min=7, message = "Debe contener exactamente 7 Caracteres")
@@ -68,4 +69,18 @@ public class Bus {
 	public void setCapacidad(int capacidad) {
 		this.capacidad = capacidad;
 	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public Cooperativa getCooperativa() {
+		return cooperativa;
+	}
+	public void setCooperativa(Cooperativa cooperativa) {
+		//System.out.println(cooperativa.getDescripcion());
+		this.cooperativa = cooperativa;
+	}
+	
 }

@@ -22,9 +22,9 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
 	List<EstadoBus> findLastEstadoBus(@Param("creadoEn") String creadoEn);
 	
-	@Query("SELECT ARRAY_MAX(listaEstados).cantidadUsuarios,ARRAY_MAX(listaEstados).creationDate,"
-				+ "ARRAY_MAX(listaEstados).velocidad,ARRAY_MAX(listaEstados).posicionActual,"
-				+ "ARRAY_MAX(listaEstados).estadoPuerta,ARRAY_MAX(listaEstados).linea, "
+	@Query("SELECT listaEstados[ARRAY_COUNT(listaEstados)-1].cantidadUsuarios,listaEstados[ARRAY_COUNT(listaEstados)-1].creationDate,"
+				+ "listaEstados[ARRAY_COUNT(listaEstados)-1].velocidad,listaEstados[ARRAY_COUNT(listaEstados)-1].posicionActual,"
+				+ "listaEstados[ARRAY_COUNT(listaEstados)-1].estadoPuerta,listaEstados[ARRAY_COUNT(listaEstados)-1].linea, "
 				+ "META(h).id AS _ID, META(h).cas AS _CAS "
 			+ "FROM #{#n1ql.bucket} as h "
 			+ "WHERE ARRAY_MAX(listaEstados).linea = #{#linea} AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")

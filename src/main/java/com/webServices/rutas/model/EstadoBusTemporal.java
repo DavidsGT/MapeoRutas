@@ -26,8 +26,10 @@ public class EstadoBusTemporal {
 	@Field
 	private Boolean estadoPuerta;
 	@Field
+	private int idx;
+	@Field
 	private int linea;
-	public EstadoBusTemporal(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea) {
+	public EstadoBusTemporal(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea, int idx) {
 		super();
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 		this.velocidad = velocidad;
@@ -36,6 +38,7 @@ public class EstadoBusTemporal {
 		this.estadoPuerta = estadoPuerta;
 		this.creationDate = now.getTime();
 		this.linea = linea;
+		this.idx = idx;
 	}
 	public EstadoBusTemporal(EstadoBusTemporal bus) {
 		this.velocidad = bus.velocidad;
@@ -86,12 +89,23 @@ public class EstadoBusTemporal {
 	public void setLinea(int linea) {
 		this.linea = linea;
 	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+	
 	@Override
 	public String toString() {
 		return "EstadoBusTemporal [id=" + id + ", creationDate=" + creationDate + ", velocidad=" + velocidad
 				+ ", cantidadUsuarios=" + cantidadUsuarios + ", posicionActual=" + posicionActual + ", estadoPuerta="
-				+ estadoPuerta + ", linea=" + linea + "]";
+				+ estadoPuerta + ", idx=" + idx + ", linea=" + linea + "]";
 	}
-	
-	
 }
