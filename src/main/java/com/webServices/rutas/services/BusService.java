@@ -84,9 +84,6 @@ public class BusService {
 	 * @return Bus agregado
 	 */
 	public Bus addBus(Bus bus) {
-		Cooperativa c = cooperativaRepository.save(bus.getCooperativa());
-		bus.setIdCooperativa(c.getId());
-		bus.setCooperativa(null);
 		return busRepository.save(bus);
 	}
 	

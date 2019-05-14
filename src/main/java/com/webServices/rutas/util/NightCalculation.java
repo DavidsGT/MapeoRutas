@@ -3,19 +3,13 @@ package com.webServices.rutas.util;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.GeoPage;
-import org.springframework.data.geo.GeoResult;
-import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
@@ -47,23 +41,52 @@ public class NightCalculation {
         String todayAsString = df.format(now.getTime());
         todayAsString = "2019-05-08";
         List<HistorialEstadoBus> allHistorialEstadoBus = historialEstadoBusRepository.findByCreadoEn(todayAsString);
+        //Recorrer los resultados para evaluar puntos
         for(HistorialEstadoBus oneHEB : allHistorialEstadoBus) {
+        	//Guardar para poder evaluar por SpatialView
         	List<EstadoBusTemporal> temp = (List<EstadoBusTemporal>) estadoBusTemporalRepository.saveAll(oneHEB.getListaEstadosTemporal());
+        	//buscar las paradas pertenecientes a la linea que esta haciendo el recorrido
         	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHEB.getListaEstados().get(0).getLinea()));
+        	//recorro las paradas
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
         		Parada p = paradasByLinea.get(i);
+        		//por cada parada pregunto si existen buses cercanos a menos de 4 metros
     			Circle circle = new Circle(p.getCoordenada(),new Distance(0.4, Metrics.KILOMETERS));
     			List<EstadoBusTemporal> busesCercanos = estadoBusTemporalRepository.findByPosicionActualWithin(circle);
-    			Parada siguienteParada = paradasByLinea.get(i+1);
+    			//obtengo la siguiente parada para comenzar a recorrer cada punto del historial hasta encontrar el menor
+    			Parada siguienteParada;
+    			if((i+1) >= paradasByLinea.size()){
+				  //index not exists parada
+    				siguienteParada = paradasByLinea.get(0);
+				}else{
+				 // index exists parada
+					siguienteParada = paradasByLinea.get(i+1);
+				}
+    			//Si encuentra multiples buses cercanos a la parada recorre
     			for(EstadoBusTemporal e : busesCercanos) {
+    				//obtiene su index para comenzar a evaluar de alli en adelante
     				int idxw = e.getIdx();
     				List<EstadoBus> listEstados = oneHEB.getListaEstados();
-    				double distanciaInicial = siguienteParada.distance(e.getPosicionActual(), "K");
-    				for(int j = idxw + 1;j <=listEstados.size();j++) {
-    					Double auxDistance = siguienteParada.distance(listEstados.get(j).getPosicionActual(), "K");
-    				} 				
+    				//Distancia inicial a la siguiente parada
+    				double menorDistancia = siguienteParada.distance(e.getPosicionActual(), "K");
+    				System.out.println("Distancia Inicial: "+menorDistancia);
+    				double otraDistancia;
+    				//comienza a recorrer desde el index registrado
+    				for(int j = idxw+1;j <=listEstados.size()-1;j++) {
+    					//consultar siguiente distancia
+    					otraDistancia = siguienteParada.distance(listEstados.get(j).getPosicionActual(), "K");
+    					if(otraDistancia < menorDistancia ) {
+    						menorDistancia = otraDistancia;
+    					}else {
+    						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
+    						long diffInMillies = Math.abs(e.getCreationDate().getTime() - listEstados.get(j).getCreationDate().getTime());
+    					    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    						System.out.println("La distancia mayor a esta era: " + otraDistancia);
+    						System.out.println("La menor distanciaes: " + menorDistancia);
+    						break;
+    					}
+    				}
     			}
-    			busesCercanos.forEach(System.out::println);
         	}
     		estadoBusTemporalRepository.deleteAll();
         }
