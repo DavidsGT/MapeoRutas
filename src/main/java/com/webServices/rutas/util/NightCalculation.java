@@ -17,9 +17,11 @@ import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.model.Parada;
+import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.repository.EstadoBusTemporalRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 import com.webServices.rutas.repository.ParadaRepository;
+import com.webServices.rutas.repository.TimeControlParadaRepository;
 @Service
 public class NightCalculation {
 	@Autowired
@@ -27,62 +29,68 @@ public class NightCalculation {
 	@Autowired
 	EstadoBusTemporalRepository estadoBusTemporalRepository;
 	@Autowired
+	TimeControlParadaRepository timeControlParadaRepository;
+	@Autowired
 	private ParadaRepository paradaRepository;
 	public NightCalculation() {
 		super();
 	}
 	public void timeBetweenStops(){
-		/*Obtengo todos los circuitos de los buses del dia actual*/
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);   
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String todayAsString = df.format(now.getTime());
-        todayAsString = "2019-05-08";
-        List<HistorialEstadoBus> allHistorialEstadoBus = historialEstadoBusRepository.findByCreadoEn(todayAsString);
-        //Recorrer los resultados para evaluar puntos
-        for(HistorialEstadoBus oneHEB : allHistorialEstadoBus) {
-        	//Guardar para poder evaluar por SpatialView
-        	List<EstadoBusTemporal> temp = (List<EstadoBusTemporal>) estadoBusTemporalRepository.saveAll(oneHEB.getListaEstadosTemporal());
+		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
+        //Recorrer los historiales del los buses
+        for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
+        	System.out.println("Para el bus: " + oneHistorial.getPlaca());
+        	List<EstadoBus> listEstadosDelHistorial = oneHistorial.getListaEstados();
+        	//Guardar temporalmente para poder evaluar por SpatialView
+        	estadoBusTemporalRepository.saveAll(oneHistorial.getListaEstadosTemporal());
         	//buscar las paradas pertenecientes a la linea que esta haciendo el recorrido
-        	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHEB.getListaEstados().get(0).getLinea()));
-        	//recorro las paradas
+        	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        	//Buscar TimeCoontrol para esta linea
+        	TimeControlParada timeControlParada;
+        	if(!timeControlParadaRepository.existsByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()))) {
+        		timeControlParada = new TimeControlParada(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        	}
+        	else{
+        		timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        	}
+        	//Recorro las paradas
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
         		Parada p = paradasByLinea.get(i);
-        		//por cada parada pregunto si existen buses cercanos a menos de 4 metros
-    			Circle circle = new Circle(p.getCoordenada(),new Distance(0.4, Metrics.KILOMETERS));
+        		//por cada parada pregunto si existen buses cercanos a menos de 3 metros a la redonda
+    			Circle circle = new Circle(p.getCoordenada(),new Distance(0.3, Metrics.KILOMETERS));
     			List<EstadoBusTemporal> busesCercanos = estadoBusTemporalRepository.findByPosicionActualWithin(circle);
+    			System.out.println("Buses Cercanos: " + busesCercanos.size());
     			//obtengo la siguiente parada para comenzar a recorrer cada punto del historial hasta encontrar el menor
     			Parada siguienteParada;
     			if((i+1) >= paradasByLinea.size()){
-				  //index not exists parada
     				siguienteParada = paradasByLinea.get(0);
 				}else{
-				 // index exists parada
 					siguienteParada = paradasByLinea.get(i+1);
 				}
     			//Si encuentra multiples buses cercanos a la parada recorre
     			for(EstadoBusTemporal e : busesCercanos) {
     				//obtiene su index para comenzar a evaluar de alli en adelante
-    				int idxw = e.getIdx();
-    				List<EstadoBus> listEstados = oneHEB.getListaEstados();
+    				int idxw = e.getIdx(); 
     				//Distancia inicial a la siguiente parada
-    				double menorDistancia = siguienteParada.distance(e.getPosicionActual(), "K");
+    				double menorDistancia = siguienteParada.distance(e.getPosicionActual(), "M");
+    				EstadoBus estadoBusMenorDistancia = listEstadosDelHistorial.get(idxw);
     				System.out.println("Distancia Inicial: "+menorDistancia);
     				double otraDistancia;
     				//comienza a recorrer desde el index registrado
-    				for(int j = idxw+1;j <=listEstados.size()-1;j++) {
-    					//consultar siguiente distancia
-    					otraDistancia = siguienteParada.distance(listEstados.get(j).getPosicionActual(), "K");
+    				for(int j = idxw+1;j <=listEstadosDelHistorial.size()-1;j++) {
+    					//consultar siguiente distancia en metros
+    					otraDistancia = siguienteParada.distance(listEstadosDelHistorial.get(j).getPosicionActual(), "M");
     					if(otraDistancia < menorDistancia ) {
     						menorDistancia = otraDistancia;
+    						estadoBusMenorDistancia = listEstadosDelHistorial.get(j);
     					}else {
     						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
-    						long diffInMillies = Math.abs(e.getCreationDate().getTime() - listEstados.get(j).getCreationDate().getTime());
-    					    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    						Long diffInMillies = Math.abs(e.getCreationDate().getTime() - listEstadosDelHistorial.get(j).getCreationDate().getTime());
+    					    Long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     						System.out.println("La distancia mayor a esta era: " + otraDistancia);
-    						System.out.println("La menor distanciaes: " + menorDistancia);
+    						System.out.println("La menor distancia es: " + menorDistancia);
+    						System.out.println("la diferencia de tiempo es " + diff + " segundos.");
+    						System.out.println("El estado crecano a la parada es: " + estadoBusMenorDistancia.toString());
     						break;
     					}
     				}
@@ -90,5 +98,12 @@ public class NightCalculation {
         	}
     		estadoBusTemporalRepository.deleteAll();
         }
+	}
+	private List<HistorialEstadoBus> getHistorialDelDia() {
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String todayAsString = df.format(now.getTime());
+        todayAsString = "2019-05-08";
+        return historialEstadoBusRepository.findByCreadoEn(todayAsString);
 	}
 }

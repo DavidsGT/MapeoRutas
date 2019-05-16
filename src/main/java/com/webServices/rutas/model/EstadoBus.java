@@ -79,5 +79,11 @@ public class EstadoBus {
 	public void setLinea(int linea) {
 		this.linea = linea;
 	}
+	@Override
+	public String toString() {
+		return "EstadoBus [creationDate=" + creationDate + ", velocidad=" + velocidad + ", cantidadUsuarios="
+				+ cantidadUsuarios + ", posicionActual=" + posicionActual + ", estadoPuerta=" + estadoPuerta
+				+ ", linea=" + linea + "]";
+	}
 	
 }
