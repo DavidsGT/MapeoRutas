@@ -13,7 +13,6 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
-import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.HistorialEstadoBus;
@@ -47,12 +46,9 @@ public class NightCalculation {
         	//buscar las paradas pertenecientes a la linea que esta haciendo el recorrido
         	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
         	//Buscar TimeCoontrol para esta linea
-        	TimeControlParada timeControlParada;
-        	if(!timeControlParadaRepository.existsByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()))) {
+        	TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        	if(timeControlParada == null) {
         		timeControlParada = new TimeControlParada(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
-        	}
-        	else{
-        		timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
         	}
         	//Recorro las paradas
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
@@ -60,7 +56,6 @@ public class NightCalculation {
         		//por cada parada pregunto si existen buses cercanos a menos de 3 metros a la redonda
     			Circle circle = new Circle(p.getCoordenada(),new Distance(0.3, Metrics.KILOMETERS));
     			List<EstadoBusTemporal> busesCercanos = estadoBusTemporalRepository.findByPosicionActualWithin(circle);
-    			System.out.println("Buses Cercanos: " + busesCercanos.size());
     			//obtengo la siguiente parada para comenzar a recorrer cada punto del historial hasta encontrar el menor
     			Parada siguienteParada;
     			if((i+1) >= paradasByLinea.size()){
@@ -68,7 +63,6 @@ public class NightCalculation {
 				}else{
 					siguienteParada = paradasByLinea.get(i+1);
 				}
-    			
     			//Si encuentra multiples buses cercanos a la parada recorre
     			for(EstadoBusTemporal e : busesCercanos) {
     				//obtiene su index para comenzar a evaluar de alli en adelante
@@ -100,7 +94,7 @@ public class NightCalculation {
     				}
     			}
         	}
-        	timeControlParadaRepository.save(timeControlParada);
+        	System.out.println(timeControlParadaRepository.save(timeControlParada).toString());
     		estadoBusTemporalRepository.deleteAll();
         }
 	}

@@ -52,14 +52,21 @@ public class TimeControlParada {
 		this.listTime = listTime;
 	}
 	public void existsParada1AndParada2(String parada1, String parada2, Long diff) {
-		for(BetweenParada bp : this.listTime) {
-			if(bp.getIdparada1() == parada1 && bp.getIdparada2() == parada2) {
-				bp.addListTiempo(diff);
-				break;
-			}else {
-				this.listTime.add(new BetweenParada(parada1,parada2,diff));
+		if(this.listTime.isEmpty()) {
+			this.listTime.add(new BetweenParada(parada1,parada2,diff));
+		}else {
+			for(int i=0; i< this.listTime.size();i++) {
+				if(this.listTime.get(i).getIdparada1() == parada1 && this.listTime.get(i).getIdparada2() == parada2) {
+					this.listTime.get(i).addListTiempo(diff);
+					break;
+				}else {
+					this.listTime.add(new BetweenParada(parada1,parada2,diff));
+				}
 			}
 		}
 	}
-	
+	@Override
+	public String toString() {
+		return "TimeControlParada [id=" + id + ", linea=" + linea + ", listTime=" + listTime + "]";
+	}
 }
