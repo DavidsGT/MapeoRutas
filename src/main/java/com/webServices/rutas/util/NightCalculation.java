@@ -13,6 +13,7 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
+import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.HistorialEstadoBus;
@@ -67,6 +68,7 @@ public class NightCalculation {
 				}else{
 					siguienteParada = paradasByLinea.get(i+1);
 				}
+    			
     			//Si encuentra multiples buses cercanos a la parada recorre
     			for(EstadoBusTemporal e : busesCercanos) {
     				//obtiene su index para comenzar a evaluar de alli en adelante
@@ -84,9 +86,11 @@ public class NightCalculation {
     						menorDistancia = otraDistancia;
     						estadoBusMenorDistancia = listEstadosDelHistorial.get(j);
     					}else {
-    						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
     						Long diffInMillies = Math.abs(e.getCreationDate().getTime() - listEstadosDelHistorial.get(j).getCreationDate().getTime());
     					    Long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    					    //Buscar si ya existen en timeControlParada
+    		    			timeControlParada.existsParada1AndParada2(p.getId(),siguienteParada.getId(),diff);
+    						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
     						System.out.println("La distancia mayor a esta era: " + otraDistancia);
     						System.out.println("La menor distancia es: " + menorDistancia);
     						System.out.println("la diferencia de tiempo es " + diff + " segundos.");
@@ -96,6 +100,7 @@ public class NightCalculation {
     				}
     			}
         	}
+        	timeControlParadaRepository.save(timeControlParada);
     		estadoBusTemporalRepository.deleteAll();
         }
 	}

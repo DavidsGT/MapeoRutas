@@ -1,51 +1,54 @@
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\exception\MyFileNotFoundException.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\RutaController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\CooperativaService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\ParadaRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\SegAcceso.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\Bus.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\CooperativaRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\SegMenuService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\SegPerfilController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\CooperativaController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\SegPerfilService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\SegUsuarioController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\RutaRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\SegAccesoService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\SegPerfilRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\SegUsuarioService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\FileStorageProperties.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\SegAccesoController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\Asunto.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\UploadFileResponse.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\ReporteRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\ReporteController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\RutaService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\Ruta.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\BusController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\SegUsuario.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\nonUsed\FileStorageService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\BusService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\SegMenuController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\AsuntoRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\ParadaController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\BusRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\ParadaService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\SegUsuarioRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\SegMenuRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\SegAccesoRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\Parada.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\util\Gpx.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\Reporte.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\ReporteService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\services\AsuntoService.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\WebServicesRutasApplication.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\EstadoBus.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\nonUsed\FileController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\SegPerfil.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\repository\HistorialEstadoBusRepository.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\HistorialEstadoBus.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\Cooperativa.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\exception\FileStorageException.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\controllers\AsuntoController.java
-D:\WorkSpace\WebServicesRutas\src\main\java\com\webServices\rutas\model\SegMenu.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\ParadaService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\BusService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\HistorialEstadoBusRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\exception\FileStorageException.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\util\Simulators.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\EstadoBus.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\RutaRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\SegPerfilService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\RutaController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\EstadoBusTemporal.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\ReporteRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\AsuntoController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\ReporteController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\Parada.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\util\NightCalculation.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\ReporteService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\BetweenParada.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\configurations\CustomBasicAuthenticationEntryPoint.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\configurations\SecurityConfiguration.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\CooperativaController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\CustomUserDetailsService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\HistorialEstadoBus.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\TimeControlParada.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\SegPerfil.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\configurations\ResourceServerConfig.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\SegUsuarioController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\nonUsed\FileStorageService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\Ruta.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\FileStorageProperties.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\WebServicesRutasApplication.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\Asunto.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\RutaService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\Bus.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\SegPerfilController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\ParadaRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\AsuntoService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\util\Gpx.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\SegUsuario.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\UploadFileResponse.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\BusRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\CooperativaService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\SegUsuarioService.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\BusController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\exception\MyFileNotFoundException.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\EstadoBusTemporalRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\ParadaController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\SegUsuarioRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\nonUsed\FileController.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\CooperativaRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\Cooperativa.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\Reporte.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\AsuntoRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\TimeControlParadaRepository.java
+D:\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\SegPerfilRepository.java

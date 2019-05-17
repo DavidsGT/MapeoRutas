@@ -1,5 +1,6 @@
 package com.webServices.rutas.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.couchbase.core.mapping.Document;
@@ -16,7 +17,7 @@ public class TimeControlParada {
 	@Field
 	private String linea;
 	@Field
-	private List<BetweenParada> listTime;
+	private List<BetweenParada> listTime = new ArrayList<BetweenParada>();
 	
 	public TimeControlParada() {
 		super();
@@ -49,6 +50,16 @@ public class TimeControlParada {
 	}
 	public void setListTime(List<BetweenParada> listTime) {
 		this.listTime = listTime;
+	}
+	public void existsParada1AndParada2(String parada1, String parada2, Long diff) {
+		for(BetweenParada bp : this.listTime) {
+			if(bp.getIdparada1() == parada1 && bp.getIdparada2() == parada2) {
+				bp.addListTiempo(diff);
+				break;
+			}else {
+				this.listTime.add(new BetweenParada(parada1,parada2,diff));
+			}
+		}
 	}
 	
 }
