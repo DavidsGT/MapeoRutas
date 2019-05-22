@@ -10,12 +10,12 @@ public class BetweenParada {
 	private List<Long> listTiempo = new ArrayList<Long>();
 	
 	
-	public BetweenParada(String idparada1, String idparada2, Long diff) {
+	public BetweenParada(String idparada1, String idparada2, Long tiempoPromedio) {
 		super();
 		this.idparada1 = idparada1;
 		this.idparada2 = idparada2;
-		this.listTiempo.add(diff);
-		this.tiempoPromedio = diff;
+		this.listTiempo.add(tiempoPromedio);
+		this.tiempoPromedio = tiempoPromedio;
 	}
 	public String getIdparada1() {
 		return idparada1;
@@ -41,8 +41,8 @@ public class BetweenParada {
 	public void setListTiempo(List<Long> listTiempo) {
 		this.listTiempo = listTiempo;
 	}
-	public void addListTiempo(Long diff) {
-		this.listTiempo.add(diff);
+	public void addListTiempo(Long second) {
+		this.listTiempo.add(second);
 		Long sumListTiempo = new Long(0);
 		for(Long a : this.listTiempo) {
 			sumListTiempo = sumListTiempo + a;

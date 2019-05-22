@@ -81,9 +81,11 @@ public class NightCalculation {
     						estadoBusMenorDistancia = listEstadosDelHistorial.get(j);
     					}else {
     						Long diffInMillies = Math.abs(e.getCreationDate().getTime() - listEstadosDelHistorial.get(j).getCreationDate().getTime());
-    					    Long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    					    Long diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     					    //Buscar si ya existen en timeControlParada
-    		    			timeControlParada.existsParada1AndParada2(p.getId(),siguienteParada.getId(),diff);
+    					    if(diff != 0) {
+    					    	timeControlParada.buscarParada1AndParada2(p.getId(),siguienteParada.getId(),diff);
+    					    }
     						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
     						System.out.println("La distancia mayor a esta era: " + otraDistancia);
     						System.out.println("La menor distancia es: " + menorDistancia);
@@ -102,7 +104,7 @@ public class NightCalculation {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String todayAsString = df.format(now.getTime());
-        todayAsString = "2019-05-08";
+        todayAsString = "2019-05-17";
         return historialEstadoBusRepository.findByCreadoEn(todayAsString);
 	}
 }

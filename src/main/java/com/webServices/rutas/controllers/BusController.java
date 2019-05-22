@@ -243,7 +243,17 @@ public class BusController {
 	 */
 	@GetMapping("/traficBus")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
-	public List<EstadoBus> getTraficBus() throws ParseException, InterruptedException{
+	public String getTraficBus() throws ParseException, InterruptedException{
 		return busService.getTraficBus();
+	}
+	/**
+	 * @throws ParseException 
+	 * @throws InterruptedException 
+	 * 
+	 */
+	@GetMapping("/nightCalculation")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
+	public void nightCalculation() throws ParseException, InterruptedException{
+		busService.nightCalculation();
 	}
 }

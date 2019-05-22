@@ -51,17 +51,20 @@ public class TimeControlParada {
 	public void setListTime(List<BetweenParada> listTime) {
 		this.listTime = listTime;
 	}
-	public void existsParada1AndParada2(String parada1, String parada2, Long diff) {
+	public void buscarParada1AndParada2(String parada1, String parada2, Long diff) {
 		if(this.listTime.isEmpty()) {
 			this.listTime.add(new BetweenParada(parada1,parada2,diff));
 		}else {
+			boolean encontro =false;
 			for(int i=0; i< this.listTime.size();i++) {
 				if(this.listTime.get(i).getIdparada1() == parada1 && this.listTime.get(i).getIdparada2() == parada2) {
 					this.listTime.get(i).addListTiempo(diff);
+					encontro =true;
 					break;
-				}else {
-					this.listTime.add(new BetweenParada(parada1,parada2,diff));
 				}
+			}
+			if(encontro==false) {
+				this.listTime.add(new BetweenParada(parada1,parada2,diff));
 			}
 		}
 	}

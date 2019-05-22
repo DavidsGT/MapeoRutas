@@ -21,9 +21,11 @@ import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.HistorialEstadoBus;
+import com.webServices.rutas.model.Ruta;
 import com.webServices.rutas.repository.BusRepository;
 import com.webServices.rutas.repository.CooperativaRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
+import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.util.NightCalculation;
 import com.webServices.rutas.util.Simulators;
 
@@ -39,7 +41,7 @@ public class BusService {
 	@Autowired
 	private HistorialEstadoBusRepository historialEstadoBusRepository;
 	@Autowired
-	private CooperativaRepository cooperativaRepository;
+	private RutaRepository rutaRepository;
 	@Autowired
 	private BusRepository busRepository;
 	
@@ -225,11 +227,13 @@ public class BusService {
 	}
 	
 	//Obtener trafico de buses online
-	public List<EstadoBus> getTraficBus() throws ParseException, InterruptedException {
-		
-		//s.runLinea7();
+	public void nightCalculation() throws ParseException, InterruptedException {
 		nightCalculation.timeBetweenStops();
-		return null;
+	}
+	//Obtener trafico de buses online
+	public String getTraficBus() throws ParseException, InterruptedException {
+		String r = rutaRepository.findById("11").get().getRutaGeoJson();
+		return r;
 	}
 
 	public void startSimulator(int linea, String placa) throws ParseException, InterruptedException {

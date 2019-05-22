@@ -20,7 +20,7 @@ import org.springframework.data.geo.Point;
 
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.Parada;
-
+@ViewIndexed(designDoc = "estadoBusTemporal", viewName = "all")
 public interface EstadoBusTemporalRepository  extends CouchbaseRepository<EstadoBusTemporal, String>{
 	@Dimensional(designDocument = "spatialView_estadoBusTemporal", spatialViewName = "spatialView_estadoBusTemporal", dimensions = 2)
 	List<EstadoBusTemporal> findByPosicionActualWithin(Circle p);

@@ -62,5 +62,23 @@ public class Ruta {
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
 	}
+	public String getRutaGeoJson() {
+		String r = "[";
+		for(Point p : this.listasPuntos) {
+			r = r + "{" + 
+					"      \"type\": \"Feature\"," + 
+					"      \"properties\": {}," + 
+					"      \"geometry\": {" + 
+					"        \"type\": \"Point\"," + 
+					"        \"coordinates\": [" + 
+					"          " + p.getY() + "," + 
+					"          " + p.getX() + "" + 
+					"        ]" + 
+					"      }" + 
+					"    },";
+		}
+		r = r.substring(0, r.length()-1);
+		return r + "]";
+	}
 	
 }

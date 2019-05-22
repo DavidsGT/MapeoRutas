@@ -28,7 +28,7 @@ public class Simulators {
 			Thread.sleep(5*1000);
 			EstadoBus b = new EstadoBus(alea1.nextInt(80), alea3.nextInt(35), rs.getListasPuntos().get(count), Math.random() < 0.5, linea); 
 			busService.updateEstadoBus(b, placa);
-			count = count + alea2.nextInt(4);
+			count = count + 1;
 			if(count >= rs.getListasPuntos().size()) {
 				count = 0;
 			}
