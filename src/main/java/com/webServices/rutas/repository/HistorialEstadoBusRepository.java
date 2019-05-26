@@ -14,10 +14,10 @@ import com.webServices.rutas.model.HistorialEstadoBus;
 @ViewIndexed(designDoc = "historialEstadoBus", viewName = "all")
 public interface HistorialEstadoBusRepository  extends CouchbaseRepository<HistorialEstadoBus, String>  {
 	
-	@Query("SELECT ARRAY_MAX(listaEstados).cantidadUsuarios,ARRAY_MAX(listaEstados).creationDate,"
-				+ "ARRAY_MAX(listaEstados).velocidad,ARRAY_MAX(listaEstados).posicionActual,"
-				+ "ARRAY_MAX(listaEstados).estadoPuerta,ARRAY_MAX(listaEstados).linea, "
-				+ "META(h).id AS _ID, META(h).cas AS _CAS "
+	@Query("SELECT h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].cantidadUsuarios,h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].creationDate,"
+			+ "h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].velocidad,h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].posicionActual,"
+			+ "h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].estadoPuerta,h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].linea, "
+			+ "META(h).id AS _ID, META(h).cas AS _CAS "
 			+ "FROM #{#n1ql.bucket} as h "
 			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
 	List<EstadoBus> findLastEstadoBus(@Param("creadoEn") String creadoEn);

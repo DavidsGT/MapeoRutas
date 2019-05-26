@@ -231,10 +231,10 @@ public class BusController {
 	/**
 	 * 
 	 */
-	@GetMapping("/calculateTimeToStop/{idParada}/{placaBus}")
+	@GetMapping("/calculateTimeToStop/{idParada}/{linea}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
-	public long getCalculateTimeToStop(@PathVariable String idParada,@PathVariable String placaBus){
-		return busService.getCalculateTimeToStop(idParada,placaBus);
+	public long getCalculateTimeToStop(@PathVariable String idParada,@PathVariable String linea){
+		return busService.getCalculateTimeToStop(idParada,linea);
 	}
 	/**
 	 * @throws ParseException 
@@ -245,15 +245,5 @@ public class BusController {
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
 	public String getTraficBus() throws ParseException, InterruptedException{
 		return busService.getTraficBus();
-	}
-	/**
-	 * @throws ParseException 
-	 * @throws InterruptedException 
-	 * 
-	 */
-	@GetMapping("/nightCalculation")
-	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public void nightCalculation() throws ParseException, InterruptedException{
-		busService.nightCalculation();
 	}
 }

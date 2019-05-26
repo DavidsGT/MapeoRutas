@@ -87,7 +87,7 @@ public class Parada {
 			} else if (unit == "N") {
 				dist = dist * 0.8684;
 			} else if (unit == "M") {
-				dist = dist * 0.8684 * 1000;
+				dist = dist * 1.609344 * 1000;
 			}
 
 			return (dist);

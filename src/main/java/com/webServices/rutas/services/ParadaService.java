@@ -47,7 +47,8 @@ public class ParadaService {
 	}
 	
 	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
-		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));
+		Double coeficiente = 57.304;
+		Circle circle = new Circle(punto,new Distance((longitud*coeficiente), Metrics.KILOMETERS));
 		List<String> idsParadas = rutaRepository.findById(linea).get().getListasParadas();
 		List<Parada> par = (List<Parada>) paradaRepository.findByCoordenadaWithin(circle);
 		List<Parada> listOutput = par.stream()

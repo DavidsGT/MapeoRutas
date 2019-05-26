@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.webServices.rutas.model.EstadoBus;
@@ -22,7 +24,7 @@ import com.webServices.rutas.repository.EstadoBusTemporalRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
-@Service
+@Component
 public class NightCalculation {
 	@Autowired
 	HistorialEstadoBusRepository historialEstadoBusRepository;
@@ -32,9 +34,7 @@ public class NightCalculation {
 	TimeControlParadaRepository timeControlParadaRepository;
 	@Autowired
 	private ParadaRepository paradaRepository;
-	public NightCalculation() {
-		super();
-	}
+	@Scheduled(cron="0 0 0 * * ?", zone="America/Guayaquil")
 	public void timeBetweenStops(){
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
         //Recorrer los historiales del los buses
