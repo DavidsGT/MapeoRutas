@@ -13,7 +13,6 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
@@ -34,7 +33,7 @@ public class NightCalculation {
 	TimeControlParadaRepository timeControlParadaRepository;
 	@Autowired
 	private ParadaRepository paradaRepository;
-	@Scheduled(cron="0 0 0 * * ?", zone="America/Guayaquil")
+	@Scheduled(cron="15 24 23 * * ?", zone="America/Guayaquil")
 	public void timeBetweenStops(){
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
         //Recorrer los historiales del los buses
@@ -48,7 +47,7 @@ public class NightCalculation {
         	//Buscar TimeCoontrol para esta linea
         	TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
         	if(timeControlParada == null) {
-        		timeControlParada = new TimeControlParada(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        		timeControlParada = new TimeControlParada(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()),paradasByLinea);
         	}
         	//Recorro las paradas
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
@@ -84,7 +83,8 @@ public class NightCalculation {
     					    Long diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     					    //Buscar si ya existen en timeControlParada
     					    if(diff != 0) {
-    					    	timeControlParada.buscarParada1AndParada2(p.getId(),siguienteParada.getId(),diff);
+    					    	//TODO Falta comprobar si ya existe un BetweenParada con mismo ip1 y idP2
+    					    	timeControlParada = timeControlParada.buscarParada1AndParada2(p.getId(),siguienteParada.getId(),diff);
     					    }
     						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
     						System.out.println("La distancia mayor a esta era: " + otraDistancia);
@@ -96,15 +96,15 @@ public class NightCalculation {
     				}
     			}
         	}
-        	System.out.println(timeControlParadaRepository.save(timeControlParada).toString());
     		estadoBusTemporalRepository.deleteAll();
+    		timeControlParada = timeControlParadaRepository.save(timeControlParada);
         }
 	}
 	private List<HistorialEstadoBus> getHistorialDelDia() {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String todayAsString = df.format(now.getTime());
-        todayAsString = "2019-05-17";
+        todayAsString = "2019-05-26";
         return historialEstadoBusRepository.findByCreadoEn(todayAsString);
 	}
 }

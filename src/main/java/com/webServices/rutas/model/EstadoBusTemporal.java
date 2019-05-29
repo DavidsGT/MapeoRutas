@@ -20,9 +20,13 @@ public class EstadoBusTemporal {
 	@Field
 	private int velocidad;
 	@Field
+	private String placa;
+	@Field
 	private int cantidadUsuarios;
 	@Field
 	private Point posicionActual;
+	@Field
+	private Point posicionAnterior;
 	@Field
 	private Boolean estadoPuerta;
 	@Field
@@ -77,11 +81,24 @@ public class EstadoBusTemporal {
 	public void setPosicionActual(Point posicionActual) {
 		this.posicionActual = posicionActual;
 	}
+	public Point getPosicionAnterior() {
+		return posicionAnterior;
+	}
+	public void setPosicionAnterior(Point posicionAnterior) {
+		this.posicionAnterior = posicionAnterior;
+	}
 	public Boolean getEstadoPuerta() {
 		return estadoPuerta;
 	}
 	public void setEstadoPuerta(Boolean estadoPuerta) {
 		this.estadoPuerta = estadoPuerta;
+	}
+	
+	public String getPlaca() {
+		return placa;
+	}
+	public void setPlaca(String placa) {
+		this.placa = placa;
 	}
 	public int getLinea() {
 		return linea;

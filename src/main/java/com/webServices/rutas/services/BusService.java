@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBus;
+import com.webServices.rutas.model.EstadoBusTemporal;
+import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.TimeControlParada;
@@ -39,12 +41,9 @@ public class BusService {
 	@Autowired
 	private ParadaRepository paradaRepository;
 	@Autowired
-	Simulators s;
+	private Simulators s;
 	@Autowired
 	private TimeControlParadaRepository timeControlParadaRepository;
-	/**
-	 * 
-	 */
 	@Autowired
 	private HistorialEstadoBusRepository historialEstadoBusRepository;
 	@Autowired
@@ -246,22 +245,22 @@ public class BusService {
 	public long getCalculateTimeToStop(String idParada, String linea) {
 		List<String> idsParadas = rutaRepository.findById(linea).get().getListasParadas();
 		TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea);
-		Double coeficiente = 57.304;
+		
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String todayAsString = df.format(now.getTime());
         //todayAsString = "2019-05-17";
-		List<EstadoBus> listEstadoBus = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
-		for(EstadoBus eb : listEstadoBus) {
+		List<EstadoBusTemporal> listEstadoBus = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
+		for(EstadoBusTemporal eb : listEstadoBus) {
 			Long result = (now.getTime().getTime() - eb.getCreationDate().getTime())/1000;
 			if(result>0 && result<10) {
 				List<Parada> par = null;
 				Double sumKm = 0.0;
 				while(par == null){
 					sumKm = sumKm + 0.1;
-					Circle circle = new Circle(eb.getPosicionActual(),new Distance((coeficiente*sumKm), Metrics.KILOMETERS));
+					Circle circle = new Circle(eb.getPosicionActual(),new Distance((GlobalVariables.coeficiente*sumKm), Metrics.KILOMETERS));
 					par = (List<Parada>) paradaRepository.findByCoordenadaWithin(circle);
-					if(par != null) {
+					if(!par.isEmpty() || par.equals(null)) {
 						List<Parada> listOutput = par.stream()
 					            .filter(e -> idsParadas.contains(e.getId()))
 					            .collect(Collectors.toList());
@@ -279,26 +278,69 @@ public class BusService {
 										}
 									}
 								}
-								//pAux.distance(eb.getPosicionActual(), "M");
 							}
-							/**
-							 * TODO Listo para evaluar BetweenParada
-							 * No olvidar que si se aleja de la parada y su punto anterior tambien se aleja
-							 * o el primero se acercar y el segundo tambien entonces son BetweenParada no validos, ademas si se aleja del segundo punto
-							 * y se acerca al primer punto tambien es un BetweenParada no valido ya que debe acercarse a la segunda parada y alejarse
-							 * de la primera parada
-							 */
+							for(BetweenParada bpEvaluar : validosParaEvaluar ) {
+								//evaluar puntos con la primera parada
+								Parada p1 = paradaRepository.findById(bpEvaluar.getIdparada1()).get();
+								//estado bus anterior
+								double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
+								//estado bus actual
+								double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
+								//evaluar puntos con la segunda parada
+								Parada p2 = paradaRepository.findById(bpEvaluar.getIdparada2()).get();
+								//estado bus anterior
+								double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
+								//estado bus actual
+								double distanciaP2BusActual = p2.distance(eb.getPosicionActual(), "M");
+								if(distanciaP1BusActual>distanciaP1BusAnterior && distanciaP2BusActual<distanciaP2BusAnterior) {
+									//BetweenParadas Valido para sacar su tiempo...
+									//utilizare la posicion actual del bus
+									double distanciaP1P2 = p1.distance(p2.getCoordenada(), "M");
+									double porcentajeP2BusActual = distanciaP2BusActual*100/distanciaP1P2;//% para calcular el tiempo restante
+									double tiempotarda = bpEvaluar.getTiempoPromedio()*porcentajeP2BusActual/100;
+									System.out.println("El tiempo que tardara el bus a esa parada es: " + tiempotarda);
+									boolean ban = true;
+									String idParadaSiguente = p2.getId();
+									while(ban) {
+										ban = false;
+										for(BetweenParada bParada : tcp.getListTime()) {
+											if(idParadaSiguente==bParada.getIdparada1()) {
+												tiempotarda = tiempotarda + bParada.getTiempoPromedio();
+												idParadaSiguente = bParada.getIdparada2();
+												ban = true;
+												break;
+											}
+										}
+										if(!ban) {
+											System.out.println("No hay parada siguiente...");
+										}else {
+											if(idParadaSiguente == idParada) {
+												ban = false;
+												System.out.println("Termino operacion, tiempo a esta parada es: " + tiempotarda);
+											}
+										}
+									}
+								}else if(distanciaP1BusActual==distanciaP1BusAnterior || distanciaP2BusActual==distanciaP2BusAnterior){
+									//si alguna distancia es igual a la otra.. de ser asi debe tomar el siguiente punto anterior
+									//y volver a evaluar.
+									System.out.println("No se puede identificar... Buses en la misma posicion...");
+								}else {// de no ser el caso seguira el while infinito colocar null a par
+									par = null;
+								}
+							}
 						}
 					}
 				}
 				
 			}
-			System.out.println("Diferencia de Tiempo: " + result);
 		}
 		return 0;
 	}
-
-	public List<EstadoBus> getEstadoActualBusByLinea(String linea) {
+	//TODO Pasar aqui valores del bus y paradas para evaluar
+	public void calcularTiempoBus() {
+		
+	}
+	public List<EstadoBusTemporal> getEstadoActualBusByLinea(String linea) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);   
@@ -306,8 +348,8 @@ public class BusService {
         String pattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(pattern);
         String todayAsString = df.format(now.getTime());
-        
-        List<EstadoBus> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
+        todayAsString = "2019-05-26";
+        List<EstadoBusTemporal> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
 		return list;
 	}
 }

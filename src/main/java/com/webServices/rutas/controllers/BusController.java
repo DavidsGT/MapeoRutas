@@ -22,6 +22,7 @@ import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
 import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBus;
+import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.services.BusService;
 
 /**
@@ -132,7 +133,7 @@ public class BusController {
 	}
 	@GetMapping("/{linea}/allEstadoActual")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
-	public List<EstadoBus> getEstadoActualBusByLinea(@PathVariable String linea) {
+	public List<EstadoBusTemporal> getEstadoActualBusByLinea(@PathVariable String linea) {
 		return busService.getEstadoActualBusByLinea(linea);
 	}
 
