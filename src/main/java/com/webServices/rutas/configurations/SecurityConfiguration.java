@@ -25,7 +25,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().fullyAuthenticated();
+		http.authorizeRequests().antMatchers("/rutas*").permitAll();
+		//http.authorizeRequests().anyRequest().fullyAuthenticated();
 		http.httpBasic().realmName(REALM).authenticationEntryPoint(getBasicAuthEntryPoint());
 		http.csrf().disable();
 	}

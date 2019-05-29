@@ -270,7 +270,7 @@ public class BusService {
 							List<BetweenParada> validosParaEvaluar = new ArrayList<BetweenParada>();
 							for(Parada pAux:listOutput) {//listas de paradas cercanas al bus
 								for(BetweenParada oneBP:tcp.getListTime()) {
-									if(oneBP.getIdparada1()==pAux.getId() || oneBP.getIdparada2()==pAux.getId()) {
+									if(oneBP.getIdparada1().equals(pAux.getId()) || oneBP.getIdparada2().equals(pAux.getId())) {
 										for(BetweenParada b : validosParaEvaluar) {
 											if(!b.equals(oneBP)) {
 												validosParaEvaluar.add(oneBP);
