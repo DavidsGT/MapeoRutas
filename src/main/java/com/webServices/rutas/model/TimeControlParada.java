@@ -66,7 +66,6 @@ public class TimeControlParada {
 	}
 	public TimeControlParada buscarParada1AndParada2(String parada1, String parada2, Long diff) {
 		for(int i=0; i< this.listTime.size();i++) {
-			System.out.println(this.listTime.get(i).getIdparada1() + "=" + parada1 + " && " + this.listTime.get(i).getIdparada2() + "=" + parada2);
 			if(this.listTime.get(i).getIdparada1().equals(parada1) && this.listTime.get(i).getIdparada2().equals(parada2)) {
 				this.listTime.get(i).addListTiempo(diff);
 				break;

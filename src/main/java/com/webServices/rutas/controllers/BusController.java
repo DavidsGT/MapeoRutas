@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -230,11 +231,12 @@ public class BusController {
 	}
 	
 	/**
+	 * @throws InterruptedException 
 	 * 
 	 */
 	@GetMapping("/calculateTimeToStop/{idParada}/{linea}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
-	public long getCalculateTimeToStop(@PathVariable String idParada,@PathVariable String linea){
+	public Map<String, Double> getCalculateTimeToStop(@PathVariable String idParada,@PathVariable String linea) throws InterruptedException{
 		return busService.getCalculateTimeToStop(idParada,linea);
 	}
 	/**

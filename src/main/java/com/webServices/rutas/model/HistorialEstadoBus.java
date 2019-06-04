@@ -81,7 +81,7 @@ public class HistorialEstadoBus {
 		List<EstadoBusTemporal> p = new ArrayList<>();
 		int count = 0;
 		for(EstadoBus a : listaEstados) {
-			p.add(new EstadoBusTemporal(a.getVelocidad(), a.getCantidadUsuarios(), a.getPosicionActual(), a.getEstadoPuerta(), a.getLinea(),count));
+			p.add(new EstadoBusTemporal(a.getCreationDate(),a.getVelocidad(), a.getCantidadUsuarios(), a.getPosicionActual(), a.getEstadoPuerta(), a.getLinea(),count));
 			count++;
 		}
 		return p;

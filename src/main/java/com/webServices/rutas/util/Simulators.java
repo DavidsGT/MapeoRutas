@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.webServices.rutas.model.EstadoBus;
+import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.Ruta;
 import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.services.BusService;
@@ -32,7 +33,7 @@ public class Simulators {
 				count = 0;
 			}
 			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-			if (now.get(Calendar.HOUR_OF_DAY) == 22) {
+			if (now.get(Calendar.HOUR_OF_DAY) == GlobalVariables.horaFinalSimulador) {
 				ban = false;
 			}
 		}

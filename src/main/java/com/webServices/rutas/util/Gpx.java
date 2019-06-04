@@ -139,7 +139,7 @@ public class Gpx {
                  paradas.add(new Parada(newName,
                 		 	newImagen!="0"?newImagen:"",
                 		 	new Point(  Double.parseDouble(newLatitude),
-                		 				Double.parseDouble(newLongitude)),i));
+                		 				Double.parseDouble(newLongitude))));
              }
              x.put("ruta", douglasPeucker(ruta,0.000025));
              x.put("parada", paradas);

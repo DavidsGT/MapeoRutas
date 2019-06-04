@@ -90,7 +90,7 @@ public class FileStorageService {
             	url= latlong[3];
             }
             Point q = new Point(latitude,longitude);
-            Parada parada = new Parada(nombre,url,q,0);
+            Parada parada = new Parada(nombre,url,q);
             paradas.add(parada);
         }
     	List<String> obId = new ArrayList<String>();

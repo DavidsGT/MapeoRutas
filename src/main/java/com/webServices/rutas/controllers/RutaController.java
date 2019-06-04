@@ -28,7 +28,7 @@ import com.webServices.rutas.services.RutaService;
  */
 @RestController
 @RequestMapping("rutas")
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class RutaController {
 	
 	/**
@@ -84,7 +84,7 @@ public class RutaController {
 	 * @throws IOException - en caso de que el archivo no sea GPX
 	 */
 	@PostMapping("/archivoGPX")
-	//@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public Ruta addRutaWithGPX(@RequestParam("file") MultipartFile file,@RequestParam("linea") String linea) throws IOException {
 		return rutaService.addRutaWithGPX(file, linea);
 	}

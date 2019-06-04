@@ -7,14 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Circle;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +23,11 @@ import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
-import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.repository.BusRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
-import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 import com.webServices.rutas.util.Simulators;
@@ -39,7 +35,7 @@ import com.webServices.rutas.util.Simulators;
 @Service
 public class BusService {
 	@Autowired
-	private ParadaRepository paradaRepository;
+	private ParadaService paradaService;
 	@Autowired
 	private Simulators s;
 	@Autowired
@@ -145,7 +141,7 @@ public class BusService {
 		int idx = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get().getListaEstados().size();
 		return historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get().getListaEstados().get(idx-1);
 	}
-	
+
 	/**
 	 * Añade un nuevo estado al bus en un respectivo Dia
 	 * @param estadoBus - Estado del bus a guardar
@@ -169,7 +165,6 @@ public class BusService {
         }
 		historialEstadoBusRepository.save(h);
 	}
-	
 	/**
 	 * Añade un nuevo estado al bus en un respectivo dia pero entregando un cadena Json como estadoBus
 	 * @param valor - Cadena Json del Estado Bus
@@ -198,7 +193,6 @@ public class BusService {
         }
 		historialEstadoBusRepository.save(h);
 	}
-	
 	/**
 	 * Añade un nuevo estado al bus en un respectivo dia pero entregando valores de representan el estado seguido de comas
 	 * @param valor - datos del Estado seguido de comas
@@ -231,63 +225,42 @@ public class BusService {
         }
 		historialEstadoBusRepository.save(h);
 	}
-
 	//Obtener trafico de buses online
 	public String getTraficBus() throws ParseException, InterruptedException {
 		String r = rutaRepository.findById("11").get().getRutaGeoJson();
 		return r;
 	}
-
 	public void startSimulator(int linea, String placa) throws ParseException, InterruptedException {
 		s.startSimulador(linea,placa);
 	}
-
-	public long getCalculateTimeToStop(String idParada, String linea) {
-		List<String> idsParadas = rutaRepository.findById(linea).get().getListasParadas();
+	public Map<String, Double> getCalculateTimeToStop(String idParada, String linea) throws InterruptedException {
 		TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea);
-		
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String todayAsString = df.format(now.getTime());
-        //todayAsString = "2019-05-17";
-		List<EstadoBusTemporal> listEstadoBus = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
+		List<EstadoBusTemporal> listEstadoBus = getEstadoActualBusByLinea(linea);
+		Map<String,Double> listTiempoBus = new HashMap<String, Double>();
 		for(EstadoBusTemporal eb : listEstadoBus) {
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 			Long result = (now.getTime().getTime() - eb.getCreationDate().getTime())/1000;
-			if(result>0 && result<10) {
+			if(result>=0 && result<=10) {
 				List<Parada> par = null;
 				Double sumKm = 0.0;
-				while(par == null){
+				boolean banSerch =true;
+				while(banSerch){
 					sumKm = sumKm + 0.1;
-					Circle circle = new Circle(eb.getPosicionActual(),new Distance((GlobalVariables.coeficiente*sumKm), Metrics.KILOMETERS));
-					par = (List<Parada>) paradaRepository.findByCoordenadaWithin(circle);
-					if(!par.isEmpty() || par.equals(null)) {
-						List<Parada> listOutput = par.stream()
-					            .filter(e -> idsParadas.contains(e.getId()))
-					            .collect(Collectors.toList());
-						if(listOutput == null) {
-							par = null;
+					par = (List<Parada>) paradaService.getParadasCercanasRadio(eb.getPosicionActual(), sumKm, linea);
+					if(!par.isEmpty() || !par.equals(null)) {
+						List<BetweenParada> validosParaEvaluar = findBetweenParadaForEvaluate(par,tcp);
+						if(validosParaEvaluar == null) {
+							banSerch =true;
 						}else {
-							List<BetweenParada> validosParaEvaluar = new ArrayList<BetweenParada>();
-							for(Parada pAux:listOutput) {//listas de paradas cercanas al bus
-								for(BetweenParada oneBP:tcp.getListTime()) {
-									if(oneBP.getIdparada1().equals(pAux.getId()) || oneBP.getIdparada2().equals(pAux.getId())) {
-										for(BetweenParada b : validosParaEvaluar) {
-											if(!b.equals(oneBP)) {
-												validosParaEvaluar.add(oneBP);
-											}
-										}
-									}
-								}
-							}
-							for(BetweenParada bpEvaluar : validosParaEvaluar ) {
+							for(int j=0;j<validosParaEvaluar.size();j++) {
 								//evaluar puntos con la primera parada
-								Parada p1 = paradaRepository.findById(bpEvaluar.getIdparada1()).get();
+								Parada p1 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada1());
 								//estado bus anterior
 								double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
 								//estado bus actual
 								double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
 								//evaluar puntos con la segunda parada
-								Parada p2 = paradaRepository.findById(bpEvaluar.getIdparada2()).get();
+								Parada p2 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada2());
 								//estado bus anterior
 								double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
 								//estado bus actual
@@ -297,48 +270,61 @@ public class BusService {
 									//utilizare la posicion actual del bus
 									double distanciaP1P2 = p1.distance(p2.getCoordenada(), "M");
 									double porcentajeP2BusActual = distanciaP2BusActual*100/distanciaP1P2;//% para calcular el tiempo restante
-									double tiempotarda = bpEvaluar.getTiempoPromedio()*porcentajeP2BusActual/100;
+									double tiempotarda = validosParaEvaluar.get(j).getTiempoPromedio()*porcentajeP2BusActual/100;
 									System.out.println("El tiempo que tardara el bus a esa parada es: " + tiempotarda);
 									boolean ban = true;
 									String idParadaSiguente = p2.getId();
 									while(ban) {
 										ban = false;
 										for(BetweenParada bParada : tcp.getListTime()) {
-											if(idParadaSiguente==bParada.getIdparada1()) {
+											if(idParadaSiguente.equals(bParada.getIdparada1())) {
 												tiempotarda = tiempotarda + bParada.getTiempoPromedio();
 												idParadaSiguente = bParada.getIdparada2();
 												ban = true;
 												break;
 											}
 										}
-										if(!ban) {
-											System.out.println("No hay parada siguiente...");
-										}else {
-											if(idParadaSiguente == idParada) {
-												ban = false;
-												System.out.println("Termino operacion, tiempo a esta parada es: " + tiempotarda);
-											}
+										if(idParadaSiguente.equals(idParada)) {
+											ban = false;
+											listTiempoBus.put(eb.getPlaca(), tiempotarda);
+											banSerch =false;
 										}
 									}
 								}else if(distanciaP1BusActual==distanciaP1BusAnterior || distanciaP2BusActual==distanciaP2BusAnterior){
-									//si alguna distancia es igual a la otra.. de ser asi debe tomar el siguiente punto anterior
-									//y volver a evaluar.
 									System.out.println("No se puede identificar... Buses en la misma posicion...");
-								}else {// de no ser el caso seguira el while infinito colocar null a par
-									par = null;
 								}
 							}
-						}
+						}	
 					}
 				}
-				
 			}
 		}
-		return 0;
+		return listTiempoBus;
 	}
 	//TODO Pasar aqui valores del bus y paradas para evaluar
-	public void calcularTiempoBus() {
-		
+	public List<BetweenParada> findBetweenParadaForEvaluate(List<Parada> par, TimeControlParada tcp) {
+		List<BetweenParada> validosParaEvaluar = null;
+		for(Parada pAux:par) {//listas de paradas cercanas al bus
+			for(BetweenParada oneBP:tcp.getListTime()) {
+				if(oneBP.getIdparada1().equals(pAux.getId()) || oneBP.getIdparada2().equals(pAux.getId())) {
+					if(validosParaEvaluar==null) {
+						validosParaEvaluar = new ArrayList<BetweenParada>();
+						validosParaEvaluar.add(oneBP);
+					}else {
+						boolean encontro = false;
+						for(int x =0;x<validosParaEvaluar.size();x++) {
+							if(validosParaEvaluar.get(x).equals(oneBP)) {
+								encontro = true;
+								break;
+							}
+						}
+						if(encontro == false)
+							validosParaEvaluar.add(oneBP);
+					}
+				}
+			}
+		}
+		return validosParaEvaluar;
 	}
 	public List<EstadoBusTemporal> getEstadoActualBusByLinea(String linea) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
@@ -348,7 +334,7 @@ public class BusService {
         String pattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(pattern);
         String todayAsString = df.format(now.getTime());
-        todayAsString = "2019-05-26";
+        //todayAsString = "2019-05-26";
         List<EstadoBusTemporal> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
 		return list;
 	}

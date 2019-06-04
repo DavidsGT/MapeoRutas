@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
+import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.TimeControlParada;
@@ -33,7 +34,7 @@ public class NightCalculation {
 	TimeControlParadaRepository timeControlParadaRepository;
 	@Autowired
 	private ParadaRepository paradaRepository;
-	@Scheduled(cron="15 24 23 * * ?", zone="America/Guayaquil")
+	@Scheduled(cron="0 0 0 * * ?", zone="America/Guayaquil")
 	public void timeBetweenStops(){
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
         //Recorrer los historiales del los buses
@@ -53,7 +54,7 @@ public class NightCalculation {
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
         		Parada p = paradasByLinea.get(i);
         		//por cada parada pregunto si existen buses cercanos a menos de 3 metros a la redonda
-    			Circle circle = new Circle(p.getCoordenada(),new Distance(0.3, Metrics.KILOMETERS));
+    			Circle circle = new Circle(p.getCoordenada(),new Distance(0.003*GlobalVariables.coeficiente, Metrics.KILOMETERS));
     			List<EstadoBusTemporal> busesCercanos = estadoBusTemporalRepository.findByPosicionActualWithin(circle);
     			//obtengo la siguiente parada para comenzar a recorrer cada punto del historial hasta encontrar el menor
     			Parada siguienteParada;
@@ -80,17 +81,17 @@ public class NightCalculation {
     						estadoBusMenorDistancia = listEstadosDelHistorial.get(j);
     					}else {
     						Long diffInMillies = Math.abs(e.getCreationDate().getTime() - listEstadosDelHistorial.get(j).getCreationDate().getTime());
-    					    Long diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    					    Long diff = diffInMillies/1000;//segundos
     					    //Buscar si ya existen en timeControlParada
     					    if(diff != 0) {
     					    	//TODO Falta comprobar si ya existe un BetweenParada con mismo ip1 y idP2
     					    	timeControlParada = timeControlParada.buscarParada1AndParada2(p.getId(),siguienteParada.getId(),diff);
     					    }
     						//RESTAR E MENOS EL MAS CERCANO A LA PARADA SIGUIENTE
-    						System.out.println("La distancia mayor a esta era: " + otraDistancia);
+    						/*System.out.println("La distancia mayor a esta era: " + otraDistancia);
     						System.out.println("La menor distancia es: " + menorDistancia);
     						System.out.println("la diferencia de tiempo es " + diff + " segundos.");
-    						System.out.println("El estado crecano a la parada es: " + estadoBusMenorDistancia.toString());
+    						System.out.println("El estado crecano a la parada es: " + estadoBusMenorDistancia.toString());*/
     						break;
     					}
     				}

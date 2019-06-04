@@ -58,5 +58,17 @@ public class BetweenParada {
 		setTiempoPromedio(promAux);
 		setListTiempo(ltime);
 	}
-	
+	@Override
+	public boolean equals(Object obj) {
+		BetweenParada ob = (BetweenParada) obj;
+		if(ob.idparada1.equals(this.idparada1) && ob.idparada2.equals(this.idparada2)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	@Override
+	public String toString() {
+		return "BetweenParada [idparada1=" + idparada1 + ", idparada2=" + idparada2 + "]";
+	}
 }

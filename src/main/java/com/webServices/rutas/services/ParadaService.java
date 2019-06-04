@@ -10,6 +10,7 @@ import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
+import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.RutaRepository;
@@ -45,10 +46,11 @@ public class ParadaService {
 		c.setEstado(false);
 		paradaRepository.save(c);
 	}
-	
+	public Parada getParadaById(String id) {
+		return paradaRepository.findById(id).get();
+	}
 	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
-		Double coeficiente = 57.304;
-		Circle circle = new Circle(punto,new Distance((longitud*coeficiente), Metrics.KILOMETERS));
+		Circle circle = new Circle(punto,new Distance((longitud*GlobalVariables.coeficiente), Metrics.KILOMETERS));
 		List<String> idsParadas = rutaRepository.findById(linea).get().getListasParadas();
 		List<Parada> par = (List<Parada>) paradaRepository.findByCoordenadaWithin(circle);
 		List<Parada> listOutput = par.stream()
@@ -59,7 +61,7 @@ public class ParadaService {
 	
 	//TODO debe consultar por linea y realizar el query geografico
 	public Iterable<Parada> getAllParadaCercanasRadio(Point punto,Double longitud){
-		Circle circle = new Circle(punto,new Distance(longitud, Metrics.KILOMETERS));
+		Circle circle = new Circle(punto,new Distance(longitud*GlobalVariables.coeficiente, Metrics.KILOMETERS));
 		return paradaRepository.findByCoordenadaWithinAndIdIn(circle,null);
 	}
 }

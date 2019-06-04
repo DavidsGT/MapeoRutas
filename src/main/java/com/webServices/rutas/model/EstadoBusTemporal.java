@@ -33,14 +33,13 @@ public class EstadoBusTemporal {
 	private int idx;
 	@Field
 	private int linea;
-	public EstadoBusTemporal(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea, int idx) {
+	public EstadoBusTemporal(Date creationDate, int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta,int linea, int idx) {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 		this.velocidad = velocidad;
 		this.cantidadUsuarios = cantidadUsuarios;
 		this.posicionActual = posicionActual;
 		this.estadoPuerta = estadoPuerta;
-		this.creationDate = now.getTime();
+		this.creationDate = creationDate;
 		this.linea = linea;
 		this.idx = idx;
 	}
@@ -54,8 +53,6 @@ public class EstadoBusTemporal {
 	}
 	public EstadoBusTemporal() {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-		this.creationDate = now.getTime();
 	}
 	public Date getCreationDate() {
 		return creationDate;
