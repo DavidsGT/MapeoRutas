@@ -226,9 +226,9 @@ public class BusService {
 		historialEstadoBusRepository.save(h);
 	}
 	//Obtener trafico de buses online
-	public String getTraficBus() throws ParseException, InterruptedException {
-		String r = rutaRepository.findById("11").get().getRutaGeoJson();
-		return r;
+	public void getTraficBus() throws ParseException, InterruptedException {
+		//String r = rutaRepository.findById("11").get().getRutaGeoJson();
+		//return r;
 	}
 	public void startSimulator(int linea, String placa) throws ParseException, InterruptedException {
 		s.startSimulador(linea,placa);

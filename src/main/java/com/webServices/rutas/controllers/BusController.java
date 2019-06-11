@@ -227,7 +227,7 @@ public class BusController {
 	@GetMapping("/simulador/{linea}/{placa}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public void startSimulatorBus(@PathVariable int linea,@PathVariable String placa) throws ParseException, InterruptedException {
-		busService.startSimulator(linea, placa);;
+		busService.startSimulator(linea, placa);
 	}
 	
 	/**
@@ -246,7 +246,7 @@ public class BusController {
 	 */
 	@GetMapping("/traficBus")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
-	public String getTraficBus() throws ParseException, InterruptedException{
-		return busService.getTraficBus();
+	public void getTraficBus() throws ParseException, InterruptedException{
+		busService.getTraficBus();
 	}
 }
