@@ -59,7 +59,6 @@ public class Gpx {
     }
      
      public static void guardaConFormato(Document document, String URI) throws IOException{
-        
             try {
                 TransformerFactory transFact = TransformerFactory.newInstance();
 
@@ -110,8 +109,8 @@ public class Gpx {
              for(int i = 0; i < nodelist_trkpt.getLength(); i++){
                  Node node = nodelist_trkpt.item(i);
                  NamedNodeMap attributes = node.getAttributes();
-                 ruta.add(new Point(Double.parseDouble(attributes.getNamedItem("lat").getTextContent()),
-                		 			Double.parseDouble(attributes.getNamedItem("lon").getTextContent())));
+                 ruta.add(new Point(Double.parseDouble(attributes.getNamedItem("lon").getTextContent()),
+                		 			Double.parseDouble(attributes.getNamedItem("lat").getTextContent())));
              }
              for(int i = 0; i < nodelist_wpt.getLength(); i++){
                  Node node = nodelist_wpt.item(i);
@@ -138,8 +137,8 @@ public class Gpx {
                  }
                  paradas.add(new Parada(newName,
                 		 	newImagen!="0"?newImagen:"",
-                		 	new Point(  Double.parseDouble(newLatitude),
-                		 				Double.parseDouble(newLongitude))));
+                		 	new Point(  Double.parseDouble(newLongitude),
+                		 				Double.parseDouble(newLatitude))));
              }
              x.put("ruta", douglasPeucker(ruta,0.000025));
              x.put("parada", paradas);

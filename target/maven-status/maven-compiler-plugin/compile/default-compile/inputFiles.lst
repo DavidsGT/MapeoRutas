@@ -19,6 +19,7 @@ D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\ru
 D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\exception\FileStorageException.java
 D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\repository\CooperativaRepository.java
 D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\SegUsuarioService.java
+D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\GeoLocation.java
 D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\services\SegPerfilService.java
 D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\controllers\RutaController.java
 D:\UPSE\Ultimate - WorkSpace\APIRest-MapeoRutas\src\main\java\com\webServices\rutas\model\EstadoBus.java
