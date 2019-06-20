@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -75,7 +76,11 @@ public class NightCalculation {
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
         		Parada p = paradasByLinea.get(i);
         		//por cada parada pregunto si existen buses cercanos a menos de 3 metros a la redonda
-    			List<EstadoBusTemporal> busesCercanos = findBusesCercanos(p, oneHistorial.getId());
+        		List<EstadoBusTemporal> busesCercanos = new ArrayList<>();
+        		for(i=1;i<=3;i++)
+        		{
+        			 busesCercanos.addAll(findBusesCercanos(p, oneHistorial.getId(),"listaEstados"+String.valueOf(i)));
+        		}
     			System.out.println("Cantidad de buses: "+busesCercanos.size());
     			//obtengo la siguiente parada para comenzar a recorrer cada punto del historial hasta encontrar el menor
     			Parada siguienteParada;
@@ -126,13 +131,13 @@ public class NightCalculation {
         }
         return historialEstadoBusRepository.findByCreadoEn(todayAsString);
 	}
-	private List<EstadoBusTemporal> findBusesCercanos(Parada p,String idHistorial) {
+	private List<EstadoBusTemporal> findBusesCercanos(Parada p,String idHistorial,String listado) {
 		double lat = p.getCoordenada().getY();
 		double lon = p.getCoordenada().getX();
 		GeoLocation loc = new GeoLocation(lat,lon);
 		List<GeoLocation> SW_NE_LOC = loc.bounding_locations(GlobalVariables.distanceMaxBusesToParada);
 		String meridian180condition = (SW_NE_LOC.get(0).getRad_lon() > SW_NE_LOC.get(1).getRad_lon()) ? " OR " : " AND ";
-		return historialEstadoBusRepository.findByListaEstadosInPosicionWithIn(meridian180condition, loc.getDeg_lat(),  
+		return historialEstadoBusRepository.findByListaEstadosInPosicionWithIn(listado,meridian180condition, loc.getDeg_lat(),  
 																				loc.getDeg_lon(), SW_NE_LOC.get(0).getRad_lat(),  
 																				SW_NE_LOC.get(0).getRad_lon(), SW_NE_LOC.get(1).getRad_lat(),
 																				SW_NE_LOC.get(1).getRad_lon(), GlobalVariables.distanceMaxBusesToParada,idHistorial);

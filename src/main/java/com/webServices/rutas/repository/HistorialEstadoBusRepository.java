@@ -43,14 +43,15 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 	
 	//6378.1 - radio aproximado de la tierra
 	//17200.45
-	@Query("SELECT m.listaEstados[ARRAY_POSITION(m.listaEstados,er)-1].posicionActual as posicionAnterior, ARRAY_POSITION(m.listaEstados,er)  as idx, m.placa, er.cantidadUsuarios,er.creationDate,"
+	@Query("SELECT m.#{#lista}[ARRAY_POSITION(m.#{#lista},er)-1].posicionActual as posicionAnterior, ARRAY_POSITION(m.#{#lista},er)  as idx, m.placa, er.cantidadUsuarios,er.creationDate,"
 					+ "er.velocidad,er.posicionActual, er.estadoPuerta,er.linea, "
-					+ "META(m).id AS _ID, META(m).cas AS _CAS "+" FROM #{#n1ql.bucket} AS m UNNEST m.listaEstados AS er WHERE " + 
+					+ "META(m).id AS _ID, META(m).cas AS _CAS "+" FROM #{#n1ql.bucket} AS m UNNEST m.#{#lista} AS er WHERE " + 
     "(RADIANS(er.posicionActual.y) >=  #{#SW_loc_rad_lat}  and RADIANS(er.posicionActual.y) <= #{#NE_loc_rad_lat}) and " +
     "(RADIANS(er.posicionActual.x) >= #{#SW_loc_rad_lon} #{#meridian180condition} RADIANS(er.posicionActual.x) <= #{#NE_loc_rad_lon} ) AND " +
     " acos(sin( RADIANS( #{#loc_deg_lat} )) * sin (RADIANS(er.posicionActual.y)) + cos( RADIANS( #{#loc_deg_lat} )) " 
     + " * cos(RADIANS(er.posicionActual.y)) * cos (RADIANS(er.posicionActual.x) - RADIANS( #{#loc_deg_lon} ))) <= #{#distance}/6378  AND m.#{#n1ql.filter} AND meta(m).id = '#{#idHistorial}'")
-	List<EstadoBusTemporal> findByListaEstadosInPosicionWithIn( @Param("meridian180condition") String meridian180condition,
+	List<EstadoBusTemporal> findByListaEstadosInPosicionWithIn( @Param("lista") String lista,
+																@Param("meridian180condition") String meridian180condition,
 																@Param("loc_deg_lat") double loc_deg_lat, 
 																@Param("loc_deg_lon") double loc_deg_lon,
 																@Param("SW_loc_rad_lat") double SW_loc_rad_lat,
