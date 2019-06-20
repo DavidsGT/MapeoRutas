@@ -1,5 +1,10 @@
 package com.webServices.rutas.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,20 +37,39 @@ public class NightCalculation {
 	@Autowired
 	private ParadaRepository paradaRepository;
 	@Scheduled(cron=GlobalVariables.timeScheduled, zone="America/Guayaquil")
-	public void timeBetweenStopsAlternative(){
+	public void timeBetweenStopsAlternative() throws IOException{
 		//TODO crear index para mayor velocidad de consulta
+		File file = new File("prob.txt");
+		  
+		//Create the file
+		if (file.createNewFile())
+		{
+		    System.out.println("File is created!");
+		} else {
+		    System.out.println("File already exists.");
+		}
+		 
+		//Write Content
+		FileWriter writer = new FileWriter(file);
+		writer.write("Antes de buscar");
+		writer.close();
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
+		FileWriter writer2 = new FileWriter(file);
+		writer2.write("despues de buscar");
+		writer2.close();
         //Recorrer los historiales del los buses
         for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
         	System.out.println("Para el bus: " + oneHistorial.getPlaca());
-        	List<EstadoBus> listEstadosDelHistorial = oneHistorial.getListaEstados();
+        	List<EstadoBus> listEstadosDelHistorial = oneHistorial.getListaEstados1();
+        	listEstadosDelHistorial.addAll(oneHistorial.getListaEstados2());
+        	listEstadosDelHistorial.addAll(oneHistorial.getListaEstados3());
         	//Guardar temporalmente para poder evaluar por SpatialView
         	//buscar las paradas pertenecientes a la linea que esta haciendo el recorrido
-        	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHistorial.getLinea()));
         	//Buscar TimeCoontrol para esta linea
-        	TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()));
+        	TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getLinea()));
         	if(timeControlParada == null) {
-        		timeControlParada = new TimeControlParada(String.valueOf(oneHistorial.getListaEstados().get(0).getLinea()),paradasByLinea);
+        		timeControlParada = new TimeControlParada(String.valueOf(oneHistorial.getLinea()),paradasByLinea);
         	}
         	//Recorro las paradas
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
@@ -91,8 +115,8 @@ public class NightCalculation {
     		timeControlParada = timeControlParadaRepository.save(timeControlParada);
         }
 	}
-	private List<HistorialEstadoBus> getHistorialDelDia() {
-        String todayAsString;
+	private List<HistorialEstadoBus> getHistorialDelDia() throws FileNotFoundException, UnsupportedEncodingException {
+		String todayAsString;
         if(GlobalVariables.fechaNightCalculation.equals("")) {
         	Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");

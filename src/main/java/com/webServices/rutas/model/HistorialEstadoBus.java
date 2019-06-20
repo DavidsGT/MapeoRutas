@@ -1,6 +1,5 @@
 package com.webServices.rutas.model;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +32,13 @@ public class HistorialEstadoBus {
 	@Field
 	private String placa;
 	@Field
-	private List<EstadoBus> listaEstados;
+	private int linea;
+	@Field
+	private List<EstadoBus> listaEstados1;
+	@Field
+	private List<EstadoBus> listaEstados2;
+	@Field
+	private List<EstadoBus> listaEstados3;
 	public HistorialEstadoBus(String placa, List<EstadoBus> listaEstados) {
 		super();
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
@@ -43,7 +48,7 @@ public class HistorialEstadoBus {
 		this.fecha = now.getTime();
 		this.placa = placa;
 		this.placaId = placa;
-		this.listaEstados = listaEstados;
+		this.listaEstados1 = listaEstados;
 		this.creadoEn = now.getTime();
 	}
 	public HistorialEstadoBus() {
@@ -74,20 +79,23 @@ public class HistorialEstadoBus {
 		this.placa = placa;
 		this.placaId = placa;
 	}
-	public List<EstadoBus> getListaEstados() {
-		return listaEstados;
+	public List<EstadoBus> getListaEstados1() {
+		return listaEstados1;
 	}
-	public List<EstadoBusTemporal> getListaEstadosTemporal() {
-		List<EstadoBusTemporal> p = new ArrayList<>();
-		int count = 0;
-		for(EstadoBus a : listaEstados) {
-			p.add(new EstadoBusTemporal(a.getCreationDate(),a.getVelocidad(), a.getCantidadUsuarios(), a.getPosicionActual(), a.getEstadoPuerta(), a.getLinea(),count));
-			count++;
-		}
-		return p;
+	public void setListaEstados1(List<EstadoBus> listaEstados1) {
+		this.listaEstados1 = listaEstados1;
 	}
-	public void setListaEstados(List<EstadoBus> listaEstados) {
-		this.listaEstados = listaEstados;
+	public List<EstadoBus> getListaEstados2() {
+		return listaEstados2;
+	}
+	public void setListaEstados2(List<EstadoBus> listaEstados2) {
+		this.listaEstados2 = listaEstados2;
+	}
+	public List<EstadoBus> getListaEstados3() {
+		return listaEstados3;
+	}
+	public void setListaEstados3(List<EstadoBus> listaEstados3) {
+		this.listaEstados3 = listaEstados3;
 	}
 	public Date getCreadoEn() {
 		return creadoEn;
@@ -95,5 +103,12 @@ public class HistorialEstadoBus {
 	public void setCreadoEn(Date creadoEn) {
 		this.creadoEn = creadoEn;
 	}
+	public int getLinea() {
+		return linea;
+	}
+	public void setLinea(int linea) {
+		this.linea = linea;
+	}
+	
 	
 }

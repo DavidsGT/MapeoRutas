@@ -35,6 +35,7 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 			+ "FROM #{#n1ql.bucket} as h "
 			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
 	List<HistorialEstadoBus> findByCreadoEn(@Param("creadoEn") String creadoEn);
+	
 	@Query("SELECT META(h).id AS id , META(h).id AS _ID, META(h).cas AS _CAS "
 			+ "FROM #{#n1ql.bucket} as h "
 			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")

@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.Bus;
@@ -28,7 +30,6 @@ import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.repository.BusRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
-import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 import com.webServices.rutas.util.Simulators;
 
@@ -42,8 +43,6 @@ public class BusService {
 	private TimeControlParadaRepository timeControlParadaRepository;
 	@Autowired
 	private HistorialEstadoBusRepository historialEstadoBusRepository;
-	@Autowired
-	private RutaRepository rutaRepository;
 	@Autowired
 	private BusRepository busRepository;
 	
@@ -124,8 +123,10 @@ public class BusService {
 	 * @param fecha - fecha del dia que se desee consultar
 	 * @return
 	 */
-	public Iterable<EstadoBus> getHistorialEstadoBusAllByPlacaByFecha(String placa,Date fecha){
-		return historialEstadoBusRepository.findById(fecha+"::"+placa).get().getListaEstados();
+	public List<Iterable<EstadoBus>> getHistorialEstadoBusAllByPlacaByFecha(String placa,Date fecha){
+		HistorialEstadoBus h = historialEstadoBusRepository.findById(fecha+"::"+placa).get();
+		List<Iterable<EstadoBus>> eb = new ArrayList<Iterable<EstadoBus>>(Arrays.asList(h.getListaEstados1(), h.getListaEstados2(), h.getListaEstados3()));
+		return eb;
 	}
 	
 	/**
@@ -138,8 +139,9 @@ public class BusService {
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.HOUR_OF_DAY, 0);
-		int idx = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get().getListaEstados().size();
-		return historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get().getListaEstados().get(idx-1);
+        HistorialEstadoBus h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
+        EstadoBus lastElement = Iterables.getLast(h.getListaEstados3(), Iterables.getLast(h.getListaEstados2(), Iterables.getLast(h.getListaEstados1(), null)));
+		return lastElement;
 	}
 
 	/**
@@ -147,7 +149,7 @@ public class BusService {
 	 * @param estadoBus - Estado del bus a guardar
 	 * @param placa - Placa del bus
 	 */
-	public void updateEstadoBus(EstadoBus estadoBus,String placa) {
+	public void updateEstadoBus(EstadoBus estadoBus,String placa,int linea) {
 		HistorialEstadoBus h;
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
@@ -155,13 +157,22 @@ public class BusService {
         now.set(Calendar.HOUR_OF_DAY, 0);
         if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
         	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	h.getListaEstados().add(estadoBus);
+        	if(h.getListaEstados1().size()<4000) {
+        		h.getListaEstados1().add(estadoBus);
+        	}else {
+        		if(h.getListaEstados2().size()<4000) {
+        			h.getListaEstados2().add(estadoBus);
+        		}else {
+        			h.getListaEstados3().add(estadoBus);
+        		}
+        	}
         }else {
         	List<EstadoBus> eb = new ArrayList<>();
         	eb.add(estadoBus);
         	h = new HistorialEstadoBus();
         	h.setPlaca(placa);
-        	h.setListaEstados(eb);
+        	h.setListaEstados1(eb);
+        	h.setLinea(linea);
         }
 		historialEstadoBusRepository.save(h);
 	}
@@ -175,7 +186,7 @@ public class BusService {
 	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
-	public void updateEstadoBusGET(String valor, String placa) throws JsonParseException, JsonMappingException, IOException {
+	public void updateEstadoBusGET(String valor, int linea, String placa) throws JsonParseException, JsonMappingException, IOException {
 		HistorialEstadoBus h;
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
         now.set(Calendar.MINUTE, 0);
@@ -185,11 +196,20 @@ public class BusService {
 		EstadoBus obj = mapper.fromJson(valor, EstadoBus.class);
         if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
         	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	h.getListaEstados().add(obj);
+        	if(h.getListaEstados1().size()<4000) {
+        		h.getListaEstados1().add(obj);
+        	}else {
+        		if(h.getListaEstados2().size()<4000) {
+        			h.getListaEstados2().add(obj);
+        		}else {
+        			h.getListaEstados3().add(obj);
+        		}
+        	}
         }else {
         	List<EstadoBus> eb = new ArrayList<>();
         	eb.add(obj);
         	h = new HistorialEstadoBus(placa,eb);
+        	h.setLinea(linea);
         }
 		historialEstadoBusRepository.save(h);
 	}
@@ -207,21 +227,29 @@ public class BusService {
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.HOUR_OF_DAY, 0);
-		EstadoBus obj = new EstadoBus(	Integer.parseInt(attrib[0]),
+		EstadoBus obj = new EstadoBus(Integer.parseInt(attrib[0]),
 										Integer.parseInt(attrib[1]),
 										new Point(Double.parseDouble(attrib[2]),
 										Double.parseDouble(attrib[3])),
-										Boolean.parseBoolean(attrib[4]),
-										Integer.parseInt(attrib[5]));
+										Boolean.parseBoolean(attrib[4]));
 		if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
         	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	h.getListaEstados().add(obj);
+        	if(h.getListaEstados1().size()<4000) {
+        		h.getListaEstados1().add(obj);
+        	}else {
+        		if(h.getListaEstados2().size()<4000) {
+        			h.getListaEstados2().add(obj);
+        		}else {
+        			h.getListaEstados3().add(obj);
+        		}
+        	}
         }else {
         	List<EstadoBus> eb = new ArrayList<>();
         	eb.add(obj);
         	h = new HistorialEstadoBus();
         	h.setPlaca(placa);
-        	h.setListaEstados(eb);
+        	h.setLinea(Integer.parseInt(attrib[5]));
+        	h.setListaEstados1(eb);
         }
 		historialEstadoBusRepository.save(h);
 	}

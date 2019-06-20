@@ -26,8 +26,8 @@ public class Simulators {
 		boolean ban = true;
 		while(ban) {
 			Thread.sleep(GlobalVariables.secondSimulatorSave*1000);
-			EstadoBus b = new EstadoBus(alea1.nextInt(80), alea2.nextInt(35), rs.getListasPuntos().get(count), Math.random() < 0.5, linea); 
-			busService.updateEstadoBus(b, placa);
+			EstadoBus b = new EstadoBus(alea1.nextInt(80), alea2.nextInt(35), rs.getListasPuntos().get(count), Math.random() < 0.5); 
+			busService.updateEstadoBus(b, placa,linea);
 			count = count + 1;
 			if(count >= rs.getListasPuntos().size()) {
 				count = 0;

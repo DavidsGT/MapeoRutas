@@ -115,7 +115,7 @@ public class BusController {
 	 */
 	@GetMapping("/{placa}/historialEstado/{fecha}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public Iterable<EstadoBus> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date fecha){
+	public List<Iterable<EstadoBus>> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date fecha){
 		System.out.println(fecha);
 		return busService.getHistorialEstadoBusAllByPlacaByFecha(placa,fecha);
 	}
@@ -157,10 +157,10 @@ public class BusController {
 	 * @param placa - Placa del Bus a actualizar su estado Actual
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
-	@PutMapping("/{placa}/estado")
+	@PutMapping("/{placa}/estado/{linea}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
-	public void updateEstadoBus(@RequestBody EstadoBus estadoBus,@PathVariable String placa) {
-		busService.updateEstadoBus(estadoBus,placa);
+	public void updateEstadoBus(@RequestBody EstadoBus estadoBus,@PathVariable String placa, @PathVariable int linea) {
+		busService.updateEstadoBus(estadoBus,placa,linea);
 	}
 	
 	/**
@@ -175,10 +175,10 @@ public class BusController {
 	 * @throws IOException
 	 * @see {@link BusService#updateEstadoBusGET(String, String) , {@link BusController#getEstadoActualBus(String)}}
 	 */
-	@GetMapping("/{placa}/estado/{valor}")
+	@GetMapping("/{placa}/estado/{linea}/{valor}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
-	public void updateEstadoBusGET(@PathVariable String valor,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
-		busService.updateEstadoBusGET(valor,placa);
+	public void updateEstadoBusGET(@PathVariable String valor,@PathVariable int linea,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
+		busService.updateEstadoBusGET(valor,linea,placa);
 	}
 	
 	/**
