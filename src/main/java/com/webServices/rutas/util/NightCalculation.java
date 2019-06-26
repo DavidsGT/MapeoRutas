@@ -38,26 +38,9 @@ public class NightCalculation {
 	@Autowired
 	private ParadaRepository paradaRepository;
 	@Scheduled(cron=GlobalVariables.timeScheduled, zone="America/Guayaquil")
-	public void timeBetweenStopsAlternative() throws IOException{
+	public void timeBetweenStops() throws IOException{
 		//TODO crear index para mayor velocidad de consulta
-		File file = new File("prob.txt");
-		  
-		//Create the file
-		if (file.createNewFile())
-		{
-		    System.out.println("File is created!");
-		} else {
-		    System.out.println("File already exists.");
-		}
-		 
-		//Write Content
-		FileWriter writer = new FileWriter(file);
-		writer.write("Antes de buscar");
-		writer.close();
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
-		FileWriter writer2 = new FileWriter(file);
-		writer2.write("despues de buscar");
-		writer2.close();
         //Recorrer los historiales del los buses
         for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
         	System.out.println("Para el bus: " + oneHistorial.getPlaca());

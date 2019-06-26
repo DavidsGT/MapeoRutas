@@ -7,4 +7,5 @@ public class GlobalVariables {
 	public static final int secondSimulatorSave = 2;//cada segundo guarda un dato de avance del bus de manera aleatoria
 	public static final String timeScheduled  = "0 50 22 * * ?";//Hora que se lanza para el calculo de tiempos entre parada
 	public static final String fechaNightCalculation  = "";//Si esta vacio coge el tiempo actual a menos q en este campo se especifique con una fecha yyyy-MM-dd
+	public static final int limitePuntosListaEstados1_2_3 = 100;
 }

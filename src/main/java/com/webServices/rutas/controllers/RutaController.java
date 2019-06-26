@@ -110,7 +110,7 @@ public class RutaController {
 	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public Ruta updateRutaModel(@RequestBody Ruta ruta) {
+	public Ruta updateRuta(@RequestBody Ruta ruta) {
 		return rutaService.updateRuta(ruta);
 	}
 	

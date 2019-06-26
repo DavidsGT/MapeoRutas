@@ -54,7 +54,7 @@ public class BusController {
 	public List<Bus> getAllBuses(){
 		return busService.getAllBus();
 	}
-	
+
 	/**
 	 * Metodo que Mapea "/buses/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link BusService#getAllBusEstadoTrue()} 
 	 * y retorna todos los buses incluye eliminados logicamente.
@@ -224,7 +224,7 @@ public class BusController {
 		busService.deleteBus(placa);
 	}
 	
-	@GetMapping("/simulador/{linea}/{placa}")
+	@PostMapping("/simulador/{linea}/{placa}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public void startSimulatorBus(@PathVariable int linea,@PathVariable String placa) throws ParseException, InterruptedException {
 		busService.startSimulator(linea, placa);

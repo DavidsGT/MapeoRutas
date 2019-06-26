@@ -15,7 +15,9 @@ import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
@@ -25,6 +27,7 @@ import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
+import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.TimeControlParada;
@@ -157,21 +160,32 @@ public class BusService {
         now.set(Calendar.HOUR_OF_DAY, 0);
         if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
         	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	if(h.getListaEstados1().size()<4000) {
+        	if(h.getListaEstados1().size()<GlobalVariables.limitePuntosListaEstados1_2_3) {
         		h.getListaEstados1().add(estadoBus);
         	}else {
-        		if(h.getListaEstados2().size()<4000) {
-        			h.getListaEstados2().add(estadoBus);
+        		if(h.getListaEstados2()==null) {
+        			h.setListaEstados2(new ArrayList<EstadoBus>(Arrays.asList(estadoBus)));
         		}else {
-        			h.getListaEstados3().add(estadoBus);
+        			if(h.getListaEstados2().size()<GlobalVariables.limitePuntosListaEstados1_2_3) {
+            			h.getListaEstados2().add(estadoBus);
+            		}else {
+            			if(h.getListaEstados3()==null) {
+                			h.setListaEstados3(new ArrayList<EstadoBus>(Arrays.asList(estadoBus)));
+                		}else {
+                			if(h.getListaEstados3().size()<GlobalVariables.limitePuntosListaEstados1_2_3) {
+                				h.getListaEstados3().add(estadoBus);
+                			}else {
+                				throw new ResponseStatusException(
+                					       HttpStatus.CONFLICT, "Se alcanzo el limite permitido de estados del bus en el Historial.");
+                			}
+                		}
+            		}
         		}
         	}
         }else {
-        	List<EstadoBus> eb = new ArrayList<>();
-        	eb.add(estadoBus);
         	h = new HistorialEstadoBus();
         	h.setPlaca(placa);
-        	h.setListaEstados1(eb);
+        	h.setListaEstados1(new ArrayList<>(Arrays.asList(estadoBus)));
         	h.setLinea(linea);
         }
 		historialEstadoBusRepository.save(h);

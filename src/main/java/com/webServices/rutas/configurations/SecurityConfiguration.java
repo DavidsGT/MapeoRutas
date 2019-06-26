@@ -12,27 +12,56 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import com.webServices.rutas.services.CustomUserDetailsService;
+/**
+ * Configuraciones basicas que necesitamos para habilitar la seguridad
+ * en los Servicios Web
+ * @author Davids Adrian Gonzalez Tigrero
+ *
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	private static String REALM="MY_TEST_REALM";
+	/**
+	 * Instancia a los servicios  de UserDetails
+	 */
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
+	
+	/**
+	 * Hace uso de la clase {@link CustomUserDetailsService} para la utentificacion de usuarios en los servicios web
+	 * @see {@link CustomUserDetailsService}
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(customUserDetailsService);
 	}
+	
+	/**
+	 * Esta configuracion asegura que cualquier solicitud a estos servicios web 
+	 * se autentifique con inicio de secion basado en autentificacion básica HTTP
+	 */
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().anyRequest().fullyAuthenticated();
 		http.httpBasic().realmName(REALM).authenticationEntryPoint(getBasicAuthEntryPoint());
 		http.csrf().disable();
 	}
+	
+	/**
+	 * Metodo que configura las respuesta en caso de malas credenciales.
+	 * @see {@link CustomBasicAuthenticationEntryPoint}
+	 * @return {@link CustomBasicAuthenticationEntryPoint}
+	 */
 	@Bean
     public CustomBasicAuthenticationEntryPoint getBasicAuthEntryPoint(){
         return new CustomBasicAuthenticationEntryPoint();
     }
+	
+	/**
+	 * Metodo que me permite ignorar cualquier recurso que yo desee.
+	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers(HttpMethod.OPTIONS,"/**");
