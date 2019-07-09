@@ -40,7 +40,7 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#getAllAsunto()}
 	 */
 	@GetMapping
-	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
 	public List<String> getAllAsunto(){
 		return asuntoService.getAllAsunto();
 	}

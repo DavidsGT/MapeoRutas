@@ -18,7 +18,7 @@ import com.webServices.rutas.model.Parada;
 
 @ViewIndexed(designDoc = "parada", viewName = "all")
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
-	Iterable<Parada> findByEstadoIsTrue();
+	Optional<List<Parada>> findByEstadoIsTrue();
 	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada", dimensions = 2)
 	  @Retention(RetentionPolicy.RUNTIME)
 	  @interface IndexedByLocation {}
@@ -30,4 +30,9 @@ public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	
 	@Query("SELECT t.*, META(t).id AS _ID, META(t).cas AS _CAS FROM #{#n1ql.bucket} AS p USE KEYS '#{#linea}' JOIN #{#n1ql.bucket} AS t ON KEYS ARRAY paradaId FOR paradaId IN p.listasParadas END where t.#{#n1ql.filter} or p.`_class` = \"com.webServices.rutas.model.ruta\";")
 	Iterable<Parada> findAllByLinea(@Param("linea") String linea);
+
+	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "
+			+ "FROM #{#n1ql.bucket} as c "
+			+ "WHERE lower(c.nombre) = lower('#{#nombre}') AND c.estado=true AND c.#{#n1ql.filter}")
+	boolean existsByNombreAndEstadoIsTrue(String nombre);
 }

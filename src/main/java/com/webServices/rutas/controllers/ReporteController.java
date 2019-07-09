@@ -71,12 +71,13 @@ public class ReporteController {
 	public Reporte getReporte(@PathVariable String id){
 		return reporteService.getReporte(id);
 	}
-	//TODO Obtener todos los reportes de un usuario
-	//TODO HACER REPORTES POR DISCO EN UN RANGO DE FECHA
-	//TODO HACER REPORTES DE ASUNTO EN EUN RANGO DE FECHA
+	
+	//TODO HACER REPORTES POR COOPERATIVA (LINEA) Y BUS (PLACA) EN UN RANGO DE FECHA
+	
+	//TODO HACER REPORTES DE ASUNTO EN RANGO DE FECHA
 	//TODO BUSQUEDA DE REPORTE HECHO SEGUN UN USUARIO
-	//TODO HACER REPORTE POR LINEA EN UN RANGO DE FECHA
 	//TODO HACER REPORTE POR RANGO DE FECHA
+	//TODO Obtener todos los reportes de un usuario
 	
 	/**
 	 * Metodo que Mapea "/reportes", RequestMethod es POST, se enlaza al servicio {@link ReporteService#addReporte(Reporte)} 

@@ -94,11 +94,12 @@ public class CooperativaService {
 	 * @return {@link Cooperativa} agregado
 	 */
 	public Cooperativa addCooperativa(Cooperativa cooperativa) {
-		if(cooperativaRepository.existsByNombreAndEstadoIsTrue(cooperativa.getNombre()))
+		if(cooperativaRepository.existsByNombreAndEstadoIsTrue(cooperativa.getNombre()) && cooperativa.getId()==null)
 			throw new ResponseStatusException(
-			           HttpStatus.CONFLICT, "Ya existe Cooperativa cin el Nombre:  "+cooperativa.getNombre()+".");
+			           HttpStatus.CONFLICT, "Ya existe Cooperativa con el Nombre:  "+cooperativa.getNombre()+".");
 		else return cooperativaRepository.save(cooperativa);
 	}
+	
 	/**
 	 * Actualiza datos de una {@link Cooperativa}
 	 * @param cooperativa - {@link Cooperativa} que desea actualizar sus datos

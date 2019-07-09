@@ -46,6 +46,7 @@ public class ParadaController {
 	public Iterable<Parada> getAllParada(){
 		return paradaService.getAllParada();
 	}
+	
 	/**
 	 * Metodo que Mapea "/paradas/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getAllParadaIgnoreEstado()} 
 	 * y retorna todos los {@link Parada} incluye eliminados logicamente.
