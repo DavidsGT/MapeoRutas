@@ -3,10 +3,6 @@ package com.webServices.rutas.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.couchbase.core.mapping.Document;
-
-import com.couchbase.client.java.repository.annotation.Field;
-
 public class BetweenParada {
 	
 	private String idparada1;

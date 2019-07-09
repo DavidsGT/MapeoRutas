@@ -1,6 +1,7 @@
 package com.webServices.rutas.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.couchbase.core.query.Query;
 import org.springframework.data.couchbase.core.query.ViewIndexed;
@@ -12,7 +13,7 @@ import com.webServices.rutas.model.TimeControlParada;
 
 @ViewIndexed(designDoc = "timeControlParada", viewName = "all")
 public interface TimeControlParadaRepository extends CouchbaseRepository<TimeControlParada, String>{
-	TimeControlParada findByLinea(String linea);
+	Optional<TimeControlParada> findByLinea(String linea);
 	@Query("select "
 			+ "ARRAY betweenParada FOR betweenParada IN m.listTime WHEN betweenParada.idparada1 = '#{#idP1}' END AS item "
 			+ "from #{#n1ql.bucket} as m "

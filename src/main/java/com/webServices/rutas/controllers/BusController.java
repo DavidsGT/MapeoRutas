@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
@@ -39,16 +41,17 @@ public class BusController {
 	
 	/**
 	 * Instancia de los servicios para Bus
+	 * @see {@link BusService}
 	 */
 	@Autowired
 	private BusService busService;
 	
 	/**
-	 * Metodo que Mapea "/buses", RequestMethod es GET, se enlaza al servicio {@link BusService#getAllBus()} y retorna datos de todos los buses registrados
-	 * @return Lista de Buses
+	 * Metodo que Mapea "/buses", RequestMethod es GET, se enlaza al servicio {@link BusService#getAllBus()}
+	 * Retorna datos de todos los {@link Bus} registrados
+	 * @return Lista de {@link Bus}
 	 * @see {@link BusService#getAllBus()}
 	 */
-	
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public List<Bus> getAllBuses(){
@@ -115,8 +118,7 @@ public class BusController {
 	 */
 	@GetMapping("/{placa}/historialEstado/{fecha}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public List<Iterable<EstadoBus>> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date fecha){
-		System.out.println(fecha);
+	public List<EstadoBus> getHistorialEstadoBusByPlaca(@PathVariable String placa,@PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date fecha){
 		return busService.getHistorialEstadoBusAllByPlacaByFecha(placa,fecha);
 	}
 
@@ -129,13 +131,33 @@ public class BusController {
 	 */
 	@GetMapping("/{placa}/estadoActual")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
-	public EstadoBus getEstadoActualBus(@PathVariable String placa) {
+	public EstadoBusTemporal getEstadoActualBus(@PathVariable String placa) {
 		return busService.getEstadoActualBus(placa);
 	}
+	
+	/**
+	 * Metodo  que Mapea "/buses/{linea}/allEstadoActual", RequestMethod es GET, se enlaza al servicio {@link BusService#getEstadoActualBusByLinea(String)}
+	 * y retorna Estado actual de un bus segun su placa
+	 * @param linea - linea de la Cooperativa a obtener los Estados actuales
+	 * @return Lista de Estados de los Buses segun una linea de Cooperativa
+	 * @see {@link BusService#getEstadoActualBusByLinea(String)}
+	 */
 	@GetMapping("/{linea}/allEstadoActual")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public List<EstadoBusTemporal> getEstadoActualBusByLinea(@PathVariable String linea) {
 		return busService.getEstadoActualBusByLinea(linea);
+	}
+	
+	/**
+	 * Metodo  que Mapea "/buses/allEstadoActual", RequestMethod es GET, se enlaza al servicio {@link BusService#getAllEstadoActualBus()}
+	 * y retornalos Estado actual de todos los buses
+	 * @return Lista de Estados de los Buses
+	 * @see {@link BusService#getEstadoActualBusByLinea(String)}
+	 */
+	@GetMapping("/allEstadoActual")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public List<EstadoBusTemporal> getAllEstadoActualBus() {
+		return busService.getAllEstadoActualBus();
 	}
 
 	/**
@@ -158,6 +180,7 @@ public class BusController {
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
 	@PutMapping("/{placa}/estado/{linea}")
+	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
 	public void updateEstadoBus(@RequestBody EstadoBus estadoBus,@PathVariable String placa, @PathVariable int linea) {
 		busService.updateEstadoBus(estadoBus,placa,linea);
@@ -176,6 +199,7 @@ public class BusController {
 	 * @see {@link BusService#updateEstadoBusGET(String, String) , {@link BusController#getEstadoActualBus(String)}}
 	 */
 	@GetMapping("/{placa}/estado/{linea}/{valor}")
+	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
 	public void updateEstadoBusGET(@PathVariable String valor,@PathVariable int linea,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
 		busService.updateEstadoBusGET(valor,linea,placa);
@@ -194,6 +218,7 @@ public class BusController {
 	 * @see {@link BusService#updateEstadoBusGETAlternative(String, String) , {@link BusController#getEstadoActualBus(String)}}
 	 */
 	@GetMapping("/{placa}/estadoBusAlternative/{valor}")
+	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
 	public void updateEstadoBusGETAlternative(@PathVariable String valor,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
 		busService.updateEstadoBusGETAlternative(valor,placa);
@@ -219,11 +244,46 @@ public class BusController {
 	 * @see {@link BusService#deleteBus(String)}
 	 */
 	@DeleteMapping("/{placa}")
+	@ResponseStatus(value=HttpStatus.OK, reason="Bus eliminado correctamente.")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void deleteBus(@PathVariable String placa) {
 		busService.deleteBus(placa);
 	}
 	
+	/**
+	 * Metodo que Mapea "/buses/{placa}/physical", RequestMethod es DELETE, se enlaza al servicio {@link BusService#deleteBusPhysical(String)}.
+	 * Eliminar de la base de datos un Bus .
+	 * @param placa - PLACA del bus al que se desea eliminar
+	 * @see {@link BusService#deleteBusPhysical(String)}
+	 */
+	@DeleteMapping("/{placa}/physical")
+	@ResponseStatus(value=HttpStatus.OK, reason="Bus eliminado de la Base de Datos correctamente.")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void deleteBusPhysical(@PathVariable String placa) {
+		busService.deleteBusPhysical(placa);
+	}
+	
+	/**
+	 * Metodo que Mapea "/buses/physical", RequestMethod es DELETE, se enlaza al servicio {@link BusService#deleteAllBusPhysical()}.
+	 * Eliminar de la base de datos todos los Buses Registrados.
+	 * @see {@link BusService#deleteAllBusPhysical()}
+	 */
+	@DeleteMapping("/physical")
+	@ResponseStatus(value=HttpStatus.OK, reason="Buses eliminados de la Base de Datos correctamente.")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public void deleteAllBusPhysical() {
+		busService.deleteAllBusPhysical();
+	}
+	
+	/**
+	 * Metodo que Mapea "/buses/simulado/{linea}/{placa}", RequestMethod es POST, se enlaza al servicio {@link BusService#startSimulator(int, String)}.
+	 * Inicial el simulador de un recorrido de un Bus.
+	 * @param linea - linea de cooperativa a la pertenece el Bus.
+	 * @param placa - placa del bus que va a realizar el recorrido.
+	 * @see {@link BusService#startSimulator(int, String)}
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 */
 	@PostMapping("/simulador/{linea}/{placa}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public void startSimulatorBus(@PathVariable int linea,@PathVariable String placa) throws ParseException, InterruptedException {
@@ -231,18 +291,24 @@ public class BusController {
 	}
 	
 	/**
-	 * @throws InterruptedException 
-	 * 
+	 * Metodo que Mapea "/buses/calculateTimetoStop/{idParada}/{linea}", RequestMethod es GET, se enlaza al servicio {@link BusService#getCalculateTimeToStop(String, String)}.
+	 * Calcula el tiempo que taradara los buses pertenecientes a una Linea de Cooperativa en llegar a una parada seleccionada.
+	 * @param idParada - parada perteneciente a la linea de cooperativa
+	 * @param linea - Linea de cooperativa para realizar el calculo con sus respectivos buses.
+	 * @return lista de placas de buses con sus respectivos tiempos de llegada a una cooperativa.
+	 * @throws InterruptedException
 	 */
 	@GetMapping("/calculateTimeToStop/{idParada}/{linea}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public Map<String, Double> getCalculateTimeToStop(@PathVariable String idParada,@PathVariable String linea) throws InterruptedException{
 		return busService.getCalculateTimeToStop(idParada,linea);
 	}
+	
 	/**
-	 * @throws ParseException 
-	 * @throws InterruptedException 
-	 * 
+	 * Metodo que Mapea "/buses/traficBus", RequestMethod es GET, se enlaza al servicio {@link BusService#getTraficBus()}.
+	 * Verifica zonas de alto trafico de buses dentro de una zona urbana.
+	 * @throws ParseException
+	 * @throws InterruptedException
 	 */
 	@GetMapping("/traficBus")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")

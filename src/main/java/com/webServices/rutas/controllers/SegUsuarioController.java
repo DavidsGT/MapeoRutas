@@ -3,6 +3,7 @@ package com.webServices.rutas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.SegUsuario;
@@ -103,6 +105,7 @@ public class SegUsuarioController {
 	 * @see {@link SegUsuarioService#deleteSegUsuario(String)}.
 	 */
 	@DeleteMapping("/{id}")
+	@ResponseStatus(value = HttpStatus.OK, reason = "Usuario Eliminado Correctamente")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public void deleteSegUsuario(@PathVariable String id) {
 		segUsuarioService.deleteSegUsuario(id);

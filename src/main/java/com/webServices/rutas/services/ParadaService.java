@@ -1,6 +1,7 @@
 package com.webServices.rutas.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.Parada;
@@ -49,19 +52,41 @@ public class ParadaService {
 	public Parada getParadaById(String id) {
 		return paradaRepository.findById(id).get();
 	}
-	public Iterable<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
+	public List<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
 		Circle circle = new Circle(punto,new Distance((longitud*GlobalVariables.coeficiente), Metrics.KILOMETERS));
-		List<String> idsParadas = rutaRepository.findById(linea).get().getListasParadas();
-		List<Parada> par = (List<Parada>) paradaRepository.findByCoordenadaWithin(circle);
-		List<Parada> listOutput = par.stream()
+		List<String> idsParadas = rutaRepository.findById(linea).orElseThrow(() -> new ResponseStatusException(
+			       HttpStatus.NOT_FOUND, "No exsiste paradas para la Line "+linea+".")).getListasParadas();
+		Optional<List<Parada>> par = paradaRepository.findByCoordenadaWithin(circle);
+		par.get().stream()
 		            .filter(e -> idsParadas.contains(e.getId()))
 		            .collect(Collectors.toList());
-		return listOutput;
+		return par.filter(a -> !a.isEmpty()).orElseThrow(() -> new ResponseStatusException(
+			       HttpStatus.NOT_FOUND, "No exsiste paradas cercanas a su posicion de la linea "+linea+"."));
 	}
 	
 	//TODO debe consultar por linea y realizar el query geografico
 	public Iterable<Parada> getAllParadaCercanasRadio(Point punto,Double longitud){
 		Circle circle = new Circle(punto,new Distance(longitud*GlobalVariables.coeficiente, Metrics.KILOMETERS));
-		return paradaRepository.findByCoordenadaWithinAndIdIn(circle,null);
+		return paradaRepository.findByCoordenadaWithin(circle).orElseThrow(() -> new ResponseStatusException(
+			       HttpStatus.NOT_FOUND, "No exsiste paradas cercanas."));
+	}
+	
+	/**
+	 * Elimina de manera permanente de la base de Datos una {@link Parada}
+	 * @param id - ID de la {@link Parada} a eliminar
+	 */
+	public void deleteParadaPhysical(String id) {
+		if(paradaRepository.existsById(id))
+			paradaRepository.deleteById(id);
+		else
+			throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND, "No existe Parada con ID: "+id+".");
+	}
+
+	/**
+	 * Elimina de manera Permanente todos las {@link Parada} registrados en la base de datos.
+	 */
+	public void deleteAllParadaPhysical() {
+		paradaRepository.deleteAll();
 	}
 }

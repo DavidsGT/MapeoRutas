@@ -25,25 +25,34 @@ public class SegUsuarioService {
 		return (List<SegUsuario>)segUsuarioRepository.findAll();
 	}
 	public SegUsuario addSegUsuario(SegUsuario segUsuario) {
-		SegUsuario u = segUsuarioRepository.findByUsuario(segUsuario.getUsuario());
+		SegUsuario u = segUsuarioRepository.findByUsuarioOrEmail(segUsuario.getUsuario(),segUsuario.getEmail());
 		if(u == null) {
 			return segUsuarioRepository.save(segUsuario);
 		}else {
-			throw new ResponseStatusException(
-			           HttpStatus.CONFLICT, "Nombre de Usuario Existente");
+			if(segUsuario.getEmail().equals(u.getEmail())){
+				throw new ResponseStatusException(
+				           HttpStatus.CONFLICT, "Email Existente");
+			}
+			else {
+				throw new ResponseStatusException(
+				           HttpStatus.CONFLICT, "Nombre de Usuario Existente");
+			}
+			
 		}
 	}
 	public SegUsuario updateSegUsuario(SegUsuario segUsuario) {
 		return segUsuarioRepository.save(segUsuario);
 	}
 	public void deleteSegUsuario(String id) {
-		segUsuarioRepository.deleteById(id);
+		SegUsuario u = segUsuarioRepository.findById(id).get();
+		u.setEstado(false);
+		segUsuarioRepository.save(u);
 	}
 	public void deleteAllSegUsuario() {
 		segUsuarioRepository.deleteAll();
 	}
 	public SegUsuario getIdUsuario(String usuario, String clave) {
-		SegUsuario u = segUsuarioRepository.findByUsuario(usuario);
+		SegUsuario u = segUsuarioRepository.findByUsuarioOrEmail(usuario,usuario);
 		if(u == null) {
 			throw new ResponseStatusException(
 			           HttpStatus.NOT_FOUND, "Usuario no encontrado");

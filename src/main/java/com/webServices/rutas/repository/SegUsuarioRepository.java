@@ -9,5 +9,5 @@ import com.webServices.rutas.model.SegUsuario;
 public interface SegUsuarioRepository extends CouchbaseRepository<SegUsuario, String>{
 	SegUsuario findByUsuarioAndClave(String n,String cl);
 	Iterable<SegUsuario> findByEstadoIsTrue();
-	SegUsuario findByUsuario(String name);
+	SegUsuario findByUsuarioOrEmail(String name,String email);
 }

@@ -2,34 +2,54 @@ package com.webServices.rutas.repository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.couchbase.core.query.Query;
 import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.HistorialEstadoBus;
 
 @ViewIndexed(designDoc = "historialEstadoBus", viewName = "all")
 public interface HistorialEstadoBusRepository  extends CouchbaseRepository<HistorialEstadoBus, String>  {
 	
-	@Query("SELECT h.listaEstados[ARRAY_COUNT(h.listaEstados)-2].posicionActual as posicionAnterior, (ARRAY_COUNT(h.listaEstados)-1) as idx, h.placa, h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].cantidadUsuarios,h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].creationDate,"
-			+ "h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].velocidad,h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].posicionActual,"
-			+ "h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].estadoPuerta,h.listaEstados[ARRAY_COUNT(h.listaEstados)-1].linea, "
-			+ "META(h).id AS _ID, META(h).cas AS _CAS "
+	@Query("SELECT OBJECT_CONCAT(u,{'placa':h.placa},{'_ID':META(h).id},{'_CAS':META(h).cas}).* "
 			+ "FROM #{#n1ql.bucket} as h "
+			+ "LET u = CASE WHEN ARRAY_COUNT(h.listaEstados3) <> 0"
+			+ "   THEN OBJECT_CONCAT(h.listaEstados3[ARRAY_COUNT(h.listaEstados3)-1],{'posicionAnterior':h.listaEstados3[ARRAY_COUNT(h.listaEstados3)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados3)-1})"
+			+ "   ELSE CASE WHEN ARRAY_COUNT(h.listaEstados2) <> 0"
+			+ "        THEN OBJECT_CONCAT(h.listaEstados2[ARRAY_COUNT(h.listaEstados2)-1],{'posicionAnterior':h.listaEstados2[ARRAY_COUNT(h.listaEstados2)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados2)-1})"
+			+ "        ELSE OBJECT_CONCAT(h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-1],{'posicionAnterior':h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados1)-1})"
+			+ "        END"
+			+ "   END "
 			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
-	List<EstadoBusTemporal> findLastEstadoBus(@Param("creadoEn") String creadoEn);
-	
-	@Query("SELECT h.listaEstados[ARRAY_COUNT(h.listaEstados)-2].posicionActual as posicionAnterior, (ARRAY_COUNT(h.listaEstados)-1) as idx, h.placa, listaEstados[ARRAY_COUNT(listaEstados)-1].cantidadUsuarios,listaEstados[ARRAY_COUNT(listaEstados)-1].creationDate,"
-				+ "listaEstados[ARRAY_COUNT(listaEstados)-1].velocidad,listaEstados[ARRAY_COUNT(listaEstados)-1].posicionActual,"
-				+ "listaEstados[ARRAY_COUNT(listaEstados)-1].estadoPuerta,listaEstados[ARRAY_COUNT(listaEstados)-1].linea, "
-				+ "META(h).id AS _ID, META(h).cas AS _CAS "
+	Optional<List<EstadoBusTemporal>> findLastEstadoBus(@Param("creadoEn") String creadoEn);
+	//TODO resolver ultimo estado evaluar con el nuevo modelo
+	@Query("SELECT OBJECT_CONCAT(u,{'placa':h.placa},{'_ID':META(h).id},{'_CAS':META(h).cas}).* "
 			+ "FROM #{#n1ql.bucket} as h "
-			+ "WHERE ARRAY_MAX(listaEstados).linea = #{#linea} AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
-	List<EstadoBusTemporal> findLastEstadoBusByLinea(@Param("creadoEn") String creadoEn,@Param("linea") String linea);
+			+ "LET u = CASE WHEN ARRAY_COUNT(h.listaEstados3) <> 0"
+			+ "   THEN OBJECT_CONCAT(h.listaEstados3[ARRAY_COUNT(h.listaEstados3)-1],{'posicionAnterior':h.listaEstados3[ARRAY_COUNT(h.listaEstados3)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados3)-1})"
+			+ "   ELSE CASE WHEN ARRAY_COUNT(h.listaEstados2) <> 0"
+			+ "        THEN OBJECT_CONCAT(h.listaEstados2[ARRAY_COUNT(h.listaEstados2)-1],{'posicionAnterior':h.listaEstados2[ARRAY_COUNT(h.listaEstados2)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados2)-1})"
+			+ "        ELSE OBJECT_CONCAT(h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-1],{'posicionAnterior':h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados1)-1})"
+			+ "        END"
+			+ "   END "
+			+ "WHERE h.linea= #{#linea} AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
+	Optional<List<EstadoBusTemporal>> findLastEstadoBusByLinea(@Param("creadoEn") String creadoEn,@Param("linea") String linea);
+	
+	@Query("SELECT OBJECT_CONCAT(u,{'placa':h.placa},{'_ID':META(h).id},{'_CAS':META(h).cas}).* "
+			+ "FROM #{#n1ql.bucket} as h "
+			+ "LET u = CASE WHEN ARRAY_COUNT(h.listaEstados3) <> 0"
+			+ "   THEN OBJECT_CONCAT(h.listaEstados3[ARRAY_COUNT(h.listaEstados3)-1],{'posicionAnterior':h.listaEstados3[ARRAY_COUNT(h.listaEstados3)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados3)-1})"
+			+ "   ELSE CASE WHEN ARRAY_COUNT(h.listaEstados2) <> 0"
+			+ "        THEN OBJECT_CONCAT(h.listaEstados2[ARRAY_COUNT(h.listaEstados2)-1],{'posicionAnterior':h.listaEstados2[ARRAY_COUNT(h.listaEstados2)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados2)-1})"
+			+ "        ELSE OBJECT_CONCAT(h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-1],{'posicionAnterior':h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados1)-1})"
+			+ "        END"
+			+ "   END "
+			+ "WHERE h.placa= '#{#placa}' AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
+	Optional<List<EstadoBusTemporal>> findLastEstadoBusByPlaca(@Param("creadoEn") String creadoEn,@Param("placa") String placa);
 	
 	@Query("SELECT h.*, META(h).id AS _ID, META(h).cas AS _CAS "
 			+ "FROM #{#n1ql.bucket} as h "

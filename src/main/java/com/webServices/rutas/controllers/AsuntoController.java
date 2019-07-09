@@ -18,10 +18,10 @@ import com.webServices.rutas.model.Asunto;
 import com.webServices.rutas.services.AsuntoService;
 
 /**
- * Contiene los requestMapping de Asunto y los asocia a sus respectivos servicios en {@link AsuntoService}.
+ * Contiene los requestMapping de {@link Asunto} y los asocia a sus respectivos servicios en {@link AsuntoService}.
  * @author Davids Adrian Gonzalez Tigrero
  * @version 1.0
- * @see AsuntoService
+ * @see {@link AsuntoService}
  */
 @RestController
 @RequestMapping("asuntos")
@@ -29,7 +29,7 @@ import com.webServices.rutas.services.AsuntoService;
 public class AsuntoController {
 	
 	/**
-	 * Instancia de los servicios para Asunto
+	 * Instancia de los servicios para {@link Asunto}
 	 */
 	@Autowired
 	private AsuntoService asuntoService;
@@ -40,10 +40,11 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#getAllAsunto()}
 	 */
 	@GetMapping
-	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<String> getAllAsunto(){
 		return asuntoService.getAllAsunto();
 	}
+	
 	/**
 	 * Metodo que Mapea "/asuntos/create", RequestMethod es POST, se enlaza al servicio {@link AsuntoService#createAsunto(Asunto)} 
 	 * @param asunto - Datos del Asunto a Registrar

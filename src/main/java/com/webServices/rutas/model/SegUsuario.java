@@ -1,5 +1,7 @@
 package com.webServices.rutas.model;
 
+import javax.validation.constraints.Email;
+
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
@@ -18,20 +20,28 @@ public class SegUsuario {
 	@Field
 	private String clave;
 	@Field
+	private String movil;
+	@Field
+	@Email(message="Correo no valido")
+	private String email;
+	@Field
 	private Boolean estado;
 	public SegUsuario() {
 		super();
 		this.estado = true;
 	}
-	public SegUsuario(String id, String usuario, String clave, String type, String perfil) {
+	
+	public SegUsuario(String perfil, String usuario, String clave, String movil,String email) {
 		super();
-		this.id = id;
 		this.perfil = perfil;
 		this.usuario = usuario;
 		this.clave = clave;
+		this.movil = movil;
+		this.email = email;
 		this.estado = true;
 	}
-	
+
+
 	public String getPerfil() {
 		return perfil;
 	}
@@ -56,6 +66,23 @@ public class SegUsuario {
 	public void setClave(String clave) {
 		this.clave = clave;
 	}
+	
+	public String getMovil() {
+		return movil;
+	}
+
+	public void setMovil(String movil) {
+		this.movil = movil;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Boolean getEstado() {
 		return estado;
 	}

@@ -109,6 +109,4 @@ public class HistorialEstadoBus {
 	public void setLinea(int linea) {
 		this.linea = linea;
 	}
-	
-	
 }

@@ -1,8 +1,6 @@
 package com.webServices.rutas.model;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;

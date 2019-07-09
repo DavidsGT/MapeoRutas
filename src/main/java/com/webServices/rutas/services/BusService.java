@@ -6,12 +6,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
@@ -21,179 +20,269 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
-import com.google.common.collect.Iterables;
+import com.couchbase.client.deps.io.netty.util.internal.ThreadLocalRandom;
 import com.google.gson.Gson;
 import com.webServices.rutas.model.BetweenParada;
 import com.webServices.rutas.model.Bus;
+import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.HistorialEstadoBus;
 import com.webServices.rutas.model.Parada;
+import com.webServices.rutas.model.Ruta;
 import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.repository.BusRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
+import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
-import com.webServices.rutas.util.Simulators;
 
+/**
+ * Contiene los Servicios de {@link Bus} y realiza sus respectivas operaciones.
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 @Service
 public class BusService {
+	/**
+	 * Instancia para los servicios de {@link Parada}
+	 * @see {@link ParadaService}
+	 */
 	@Autowired
 	private ParadaService paradaService;
+	
+	/**
+	 * Instancia para los servicios de {@link Cooperativa}
+	 * @see {@link CooperativaService}
+	 */
 	@Autowired
-	private Simulators s;
+	private CooperativaService cooperativaService;
+	
+	/**
+	 * Instancia para el Repositorio de {@link TimeControlParada}
+	 * @see {@link TimeControlParadaRepository}
+	 */
 	@Autowired
 	private TimeControlParadaRepository timeControlParadaRepository;
+	
+	/**
+	 * Instancia para el Repositorio de {@link HistorialEstadoBus}
+	 * @see {@link HistorialEstadoBusRepository}
+	 */
 	@Autowired
 	private HistorialEstadoBusRepository historialEstadoBusRepository;
+	
+	/**
+	 * Instancia para el Repositorio de {@link Bus}
+	 * @see {@link BusRepository}
+	 */
 	@Autowired
 	private BusRepository busRepository;
 	
 	/**
-	 * Obtener datos de un Bus entregando su respectiva placa.
-	 * @param placa - Placa del Bus que desee obtener los datos
-	 * @return Bus
+	 * Instancia para el Repositorio de {@link Ruta}
+	 * @see {@link ParadaService}
+	 */
+	@Autowired
+	private RutaRepository rutaRepository;
+	
+	/**
+	 * Obtener datos de un {@link Bus} entregando su respectiva placa.
+	 * @param placa - Placa del {@link Bus} que desee obtener los datos
+	 * @return {@link Bus}
 	 */
 	public Bus getBus(String placa) {
-		return busRepository.findByPlacaAndEstadoIsTrue(placa);
+		String p = GlobalVariables.confirmPlaca(placa);
+		return busRepository.findByPlacaAndEstadoIsTrue(p)
+				.orElseThrow(() -> new ResponseStatusException(
+				           HttpStatus.NOT_FOUND, "No existe Bus registrado con la placa "+p+"."));
 	}
 	
 	/**
-	 * Obtener datos de un Bus entregando su respectiva placa.
+	 * Obtener datos de un {@link Bus} entregando su respectiva placa.
 	 * Ignorando su estado eliminado
-	 * @param placa - Placa del Bus que desee obtener los datos
-	 * @return Bus
+	 * @param placa - Placa del {@link Bus} que desee obtener los datos
+	 * @return {@link Bus}
 	 */
 	public Bus getBusIgnoreEstado(String placa) {
-		return busRepository.findById(placa).get();
+		String p = GlobalVariables.confirmPlaca(placa);
+		return busRepository.findById(p)
+				.orElseThrow(() -> new ResponseStatusException(
+				           HttpStatus.NOT_FOUND, "No existe Bus registrado con la placa "+p+"."));
 	}
 	
 	/**
-	 * Obtener lista de Buses
-	 * @return Lista de Buses
+	 * Obtener lista de {@link Bus}
+	 * @return Lista de {@link Bus}
 	 */
 	public List<Bus> getAllBus(){
-		return (List<Bus>) busRepository.findByEstadoIsTrue(); 
+		return busRepository.findByEstadoIsTrue()
+									.filter(a -> !a.isEmpty())
+									.orElseThrow(() ->new ResponseStatusException(
+									           HttpStatus.NOT_FOUND, "No existen Buses Registrados."));
 	}
 	
 	/**
-	 * Obtener Lista de Buses Ignorando su estado Eliminado
-	 * @return
+	 * Obtener Lista de {@link Bus} Ignorando su estado Eliminado
+	 * @return Lista de {@link Bus}
 	 */
 	public List<Bus> getAllBusIgnoreEstado(){
-		return (List<Bus>) busRepository.findAll();
+		return Optional.of(((List<Bus>)busRepository.findAll()))
+				.filter(a -> !a.isEmpty())
+				.orElseThrow(() -> new ResponseStatusException(
+				           HttpStatus.NOT_FOUND, "No existen Buses Registrados."));
 	}
 	
 	/**
-	 * Agregar Bus
-	 * @param bus
-	 * @return Bus agregado
+	 * Agregar {@link Bus}
+	 * @param bus - {@link Bus} que desea guardar
+	 * @return {@link Bus} agregado
 	 */
 	public Bus addBus(Bus bus) {
-		return busRepository.save(bus);
-	}
-	
-	/**
-	 * Actualiza datos de un Bus
-	 * @return Bus actualizado
-	 */
-	public Bus updateBus(Bus bus) {
-		return busRepository.save(bus);
+		if(busRepository.existsById(bus.getPlaca()))
+			throw new ResponseStatusException(
+			           HttpStatus.CONFLICT, "El bus con placas "+bus.getPlaca()+" ya se encuentra Registrado.");
+		else return busRepository.save(bus);
 	}
 
 	/**
-	 * Elimina un Bus
-	 * @param placa - Placa del bus a Eliminar
+	 * Actualiza datos de un {@link Bus}
+	 * @param bus - {@link Bus} que desea actualizar sus datos
+	 * @return {@link Bus} actualizado
+	 */
+	public Bus updateBus(Bus bus) {
+		if(!busRepository.existsById(bus.getPlaca())) 
+			throw new ResponseStatusException(
+			           HttpStatus.CONFLICT, "El bus con placas "+bus.getPlaca()+" no se encuentra Registrado.");
+		else return busRepository.save(bus);
+		
+	}
+
+	/**
+	 * Elimina un {@link Bus}
+	 * @param placa - Placa del {@link Bus} a Eliminar
 	 */
 	public void deleteBus(String placa) {
-		Bus c = busRepository.findById(placa).get();
+		String p = GlobalVariables.confirmPlaca(placa);
+		Bus c = getBus(p);
 		c.setEstado(false);
 		busRepository.save(c);
 	}
 	
 	/**
-	 * Obtener Listado de Buses pertenecientes a una cooperativa
-	 * @param idCooperativa - Id de la Cooperativa
-	 * @return Listado de Buses de una Coooperativa
+	 * Obtener Listado de {@link Bus} pertenecientes a una {@link Cooperativa}
+	 * @param idCooperativa - Id de la {@link Cooperativa}
+	 * @return Listado de {@link Bus} de una {@link Cooperativa}
 	 */
 	public Iterable<Bus> getBusesByIdCooperativa(String idCooperativa){
-		return busRepository.findByIdCooperativaAndEstadoIsTrue(idCooperativa);
+		Cooperativa c= cooperativaService.getCooperativa(idCooperativa);
+		return busRepository.findByIdCooperativaAndEstadoIsTrue(idCooperativa)
+							.filter(a -> !a.isEmpty())
+							.orElseThrow(()-> new ResponseStatusException(
+							           HttpStatus.CONFLICT, "No existen Buses Registrados para la Cooperativa "+c.getNombre()+"."));
 	}
 	
 	/**
-	 * Retorna una lista de Estados que ha tenido el bus en el transcurso del dia.
-	 * @param placa - Plava del Bus a consultar su estado
-	 * @param fecha - fecha del dia que se desee consultar
-	 * @return
+	 * Retorna una lista de {@link EstadoBus} que ha tenido el {@link Bus} en el transcurso del dia.
+	 * @param placa - Placa del {@link Bus} a consultar su {@link EstadoBus}
+	 * @param fecha - Fecha que se desee consultar
+	 * @return Lista de {@link EstadoBus}
 	 */
-	public List<Iterable<EstadoBus>> getHistorialEstadoBusAllByPlacaByFecha(String placa,Date fecha){
-		HistorialEstadoBus h = historialEstadoBusRepository.findById(fecha+"::"+placa).get();
-		List<Iterable<EstadoBus>> eb = new ArrayList<Iterable<EstadoBus>>(Arrays.asList(h.getListaEstados1(), h.getListaEstados2(), h.getListaEstados3()));
-		return eb;
+	public List<EstadoBus> getHistorialEstadoBusAllByPlacaByFecha(String placa,Date fecha){
+		String p = GlobalVariables.confirmPlaca(placa);
+		if(busRepository.existsById(p)) {
+			HistorialEstadoBus h = historialEstadoBusRepository.findById(fecha+"::"+p)
+					.orElseThrow(()->new ResponseStatusException(
+					           HttpStatus.NOT_FOUND, "No existe Historial para el Bus con Placa "+p+"."));
+				List<EstadoBus> allH = h.getListaEstados1();
+				allH.addAll(h.getListaEstados2());
+				allH.addAll(h.getListaEstados3());
+				return allH;
+		}else
+			throw new ResponseStatusException(
+			           HttpStatus.NOT_FOUND, "No existe el Bus con Placa "+p+".");
 	}
 	
 	/**
-	 * Obtener el ultimo estado del bus
-	 * @param placa - Placa del Bus a obtener el estado
-	 * @return	Estado actual del Bus
+	 * Obtener el ultimo {@link EstadoBus} del {@link Bus}
+	 * @param placa - Placa del {@link Bus} a obtener el {@link EstadoBus}
+	 * @return	{@link EstadoBus}
 	 */
-	public EstadoBus getEstadoActualBus(String placa) {
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        HistorialEstadoBus h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        EstadoBus lastElement = Iterables.getLast(h.getListaEstados3(), Iterables.getLast(h.getListaEstados2(), Iterables.getLast(h.getListaEstados1(), null)));
-		return lastElement;
+	public EstadoBusTemporal getEstadoActualBus(String placa) {
+		String p = GlobalVariables.confirmPlaca(placa);
+		if(busRepository.existsById(placa)) {
+			String pattern = "yyyy-MM-dd";
+	        DateFormat df = new SimpleDateFormat(pattern);
+	        String todayAsString = df.format(GlobalVariables.getFechaDMA());
+	        Optional<List<EstadoBusTemporal>> list = historialEstadoBusRepository.findLastEstadoBusByPlaca(todayAsString, p);
+	        list.get().removeIf(q -> ifBusDisponible(q.getCreationDate()));
+	        return list.filter(a -> !a.isEmpty())
+					.orElseThrow(() -> new ResponseStatusException(
+									HttpStatus.NOT_FOUND, "Bus no disponible por el momento.")).get(0);
+		}else
+			throw new ResponseStatusException(
+			           HttpStatus.NOT_FOUND, "No existe el Bus con Placa "+p+".");
+	}
+	
+	public List<EstadoBusTemporal> getAllEstadoActualBus() {
+		String pattern = "yyyy-MM-dd";
+        DateFormat df = new SimpleDateFormat(pattern);
+        String todayAsString = df.format(GlobalVariables.getFechaDMA());
+        Optional<List<EstadoBusTemporal>> list = historialEstadoBusRepository.findLastEstadoBus(todayAsString);
+        list.get().removeIf(q -> ifBusDisponible(q.getCreationDate()));
+        return list.filter(a -> !a.isEmpty())
+				.orElseThrow(() -> new ResponseStatusException(
+								HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
 	}
 
 	/**
-	 * Añade un nuevo estado al bus en un respectivo Dia
-	 * @param estadoBus - Estado del bus a guardar
-	 * @param placa - Placa del bus
+	 * Añade un nuevo {@link EstadoBus} en un respectivo Dia
+	 * @param estadoBus - {@link EstadoBus} a guardar
+	 * @param placa - Placa del {@link Bus}
 	 */
 	public void updateEstadoBus(EstadoBus estadoBus,String placa,int linea) {
-		HistorialEstadoBus h;
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
-        	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	if(h.getListaEstados1().size()<GlobalVariables.limitePuntosListaEstados1_2_3) {
-        		h.getListaEstados1().add(estadoBus);
-        	}else {
-        		if(h.getListaEstados2()==null) {
-        			h.setListaEstados2(new ArrayList<EstadoBus>(Arrays.asList(estadoBus)));
-        		}else {
-        			if(h.getListaEstados2().size()<GlobalVariables.limitePuntosListaEstados1_2_3) {
-            			h.getListaEstados2().add(estadoBus);
-            		}else {
-            			if(h.getListaEstados3()==null) {
-                			h.setListaEstados3(new ArrayList<EstadoBus>(Arrays.asList(estadoBus)));
-                		}else {
-                			if(h.getListaEstados3().size()<GlobalVariables.limitePuntosListaEstados1_2_3) {
-                				h.getListaEstados3().add(estadoBus);
-                			}else {
-                				throw new ResponseStatusException(
-                					       HttpStatus.CONFLICT, "Se alcanzo el limite permitido de estados del bus en el Historial.");
-                			}
-                		}
-            		}
-        		}
-        	}
-        }else {
-        	h = new HistorialEstadoBus();
-        	h.setPlaca(placa);
-        	h.setListaEstados1(new ArrayList<>(Arrays.asList(estadoBus)));
-        	h.setLinea(linea);
-        }
-		historialEstadoBusRepository.save(h);
+		if(rutaRepository.existsById(String.valueOf(linea))) {
+			if(busRepository.existsById(placa)) {
+				HistorialEstadoBus h;
+				Date now = GlobalVariables.getFechaDMA();
+				if(historialEstadoBusRepository.existsById(now+"::"+placa)) {
+					h = historialEstadoBusRepository.findById(now+"::"+placa).get();
+					if(h.getListaEstados1().size()<GlobalVariables.limitListEstados) {
+		        		h.getListaEstados1().add(estadoBus);
+		        	}else {
+		    			if(h.getListaEstados2().size()<GlobalVariables.limitListEstados) {
+		        			h.getListaEstados2().add(estadoBus);
+		        		}else {
+		        			if(h.getListaEstados3().size()<GlobalVariables.limitListEstados) {
+		        				h.getListaEstados3().add(estadoBus);
+		        			}else {
+		        				throw new ResponseStatusException(
+		        					       HttpStatus.CONFLICT, "Se alcanzo el limite permitido de estados del bus en el Historial.");
+		        			}
+		        		}
+		        	}
+				}else {
+					h = new HistorialEstadoBus();
+		        	h.setPlaca(placa);
+		        	h.setListaEstados1(new ArrayList<>(Arrays.asList(estadoBus)));
+		        	h.setListaEstados2(new ArrayList<>());
+		        	h.setListaEstados3(new ArrayList<>());
+		        	h.setLinea(linea);
+				}
+				historialEstadoBusRepository.save(h);
+			}else {
+				throw new ResponseStatusException(
+					       HttpStatus.NOT_FOUND, "No existe Bus con la placa "+placa+".");
+			}
+		}else {
+			throw new ResponseStatusException(
+				       HttpStatus.NO_CONTENT, "No existe ruta para la linea "+linea+".");
+		}
 	}
 	/**
-	 * Añade un nuevo estado al bus en un respectivo dia pero entregando un cadena Json como estadoBus
-	 * @param valor - Cadena Json del Estado Bus
-	 * @param placa - Placa del bus
+	 * Añade un nuevo {@link EstadoBus} en un respectivo dia pero entregando un cadena Json
+	 * @param valor - Cadena Json del {@link EstadoBus}
+	 * @param placa - Placa del {@link Bus}
 	 * @throws JsonParseException
 	 * @throws JsonMappingException
 	 * @throws IOException
@@ -201,157 +290,152 @@ public class BusService {
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
 	public void updateEstadoBusGET(String valor, int linea, String placa) throws JsonParseException, JsonMappingException, IOException {
-		HistorialEstadoBus h;
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, 0);
         Gson mapper = new Gson();
-		EstadoBus obj = mapper.fromJson(valor, EstadoBus.class);
-        if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
-        	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	if(h.getListaEstados1().size()<4000) {
-        		h.getListaEstados1().add(obj);
-        	}else {
-        		if(h.getListaEstados2().size()<4000) {
-        			h.getListaEstados2().add(obj);
-        		}else {
-        			h.getListaEstados3().add(obj);
-        		}
-        	}
-        }else {
-        	List<EstadoBus> eb = new ArrayList<>();
-        	eb.add(obj);
-        	h = new HistorialEstadoBus(placa,eb);
-        	h.setLinea(linea);
-        }
-		historialEstadoBusRepository.save(h);
+		EstadoBus estadoBus = mapper.fromJson(valor, EstadoBus.class);
+		updateEstadoBus(estadoBus, placa, linea);
 	}
+	
 	/**
-	 * Añade un nuevo estado al bus en un respectivo dia pero entregando valores de representan el estado seguido de comas
-	 * @param valor - datos del Estado seguido de comas
-	 * @param placa - Placa del Bus
+	 * Añade un nuevo {@link EstadoBus} en un respectivo dia pero entregando valores que representan este pero seguido de comas
+	 * @param valor - datos del {@link EstadoBus} seguido de comas
+	 * @param placa - Placa del {@link Bus}
 	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
 	 */
 	public void updateEstadoBusGETAlternative(String valor, String placa) {
-		HistorialEstadoBus h;
 		String[] attrib = valor.split(",");
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, 0);
-		EstadoBus obj = new EstadoBus(Integer.parseInt(attrib[0]),
+		EstadoBus estadoBus = new EstadoBus(Integer.parseInt(attrib[0]),
 										Integer.parseInt(attrib[1]),
-										new Point(Double.parseDouble(attrib[2]),
-										Double.parseDouble(attrib[3])),
+										new Point(Double.parseDouble(attrib[2]),Double.parseDouble(attrib[3])),
 										Boolean.parseBoolean(attrib[4]));
-		if(historialEstadoBusRepository.existsById(now.getTime()+"::"+placa)) {
-        	h = historialEstadoBusRepository.findById(now.getTime()+"::"+placa).get();
-        	if(h.getListaEstados1().size()<4000) {
-        		h.getListaEstados1().add(obj);
-        	}else {
-        		if(h.getListaEstados2().size()<4000) {
-        			h.getListaEstados2().add(obj);
-        		}else {
-        			h.getListaEstados3().add(obj);
-        		}
-        	}
-        }else {
-        	List<EstadoBus> eb = new ArrayList<>();
-        	eb.add(obj);
-        	h = new HistorialEstadoBus();
-        	h.setPlaca(placa);
-        	h.setLinea(Integer.parseInt(attrib[5]));
-        	h.setListaEstados1(eb);
-        }
-		historialEstadoBusRepository.save(h);
+		int linea = Integer.parseInt(attrib[5]);
+		updateEstadoBus(estadoBus, placa, linea);
 	}
+
 	//Obtener trafico de buses online
 	public void getTraficBus() throws ParseException, InterruptedException {
 		//String r = rutaRepository.findById("11").get().getRutaGeoJson();
 		//return r;
 	}
-	public void startSimulator(int linea, String placa) throws ParseException, InterruptedException {
-		s.startSimulador(linea,placa);
+	
+	/**
+	 * Inicia la simulación de un {@link Bus} de una linea de una {@link Cooperativa}
+	 * @param linea - Linea de {@link Cooperativa}
+	 * @param placa - Placa de {@link Bus}
+	 * @throws InterruptedException
+	 */
+	public void startSimulator(int linea, String placa) throws InterruptedException{
+		Ruta rs = rutaRepository.findById(String.valueOf(linea)).orElseThrow(() -> new ResponseStatusException(
+				       HttpStatus.CONFLICT, "No se puede iniciar el Simulador Linea no existente."));
+		ThreadLocalRandom alea1 = ThreadLocalRandom.current();
+		int count = alea1.nextInt(1, 4);
+		boolean ban = true;
+		while(ban) {
+			ban = GlobalVariables.validateSimulator();
+			Thread.sleep(GlobalVariables.secondSimulatorSave*1000);
+			EstadoBus b = new EstadoBus(alea1.nextInt(1, 4), alea1.nextInt(1, 4), rs.getListasPuntos().get(count), Math.random() < 0.5); 
+			updateEstadoBus(b, placa,linea);
+			count = count + alea1.nextInt(1, 4);
+			if(count >= rs.getListasPuntos().size()) {
+				count = alea1.nextInt(1, 4);
+			}
+		}
 	}
+	
+	/**
+	 * Calcula el tiempo que tarda en llegar los diferentes {@link Bus} de una linea de {@link Cooperativa} a una {@link Parada} especifica
+	 * @param idParada - Id de una {@link Parada}
+	 * @param linea - Linea de {@link Cooperativa}
+	 * @return Placa de {@link Bus} con sus respectivos tiempos de llegada a la {@link Parada}
+	 * @throws InterruptedException
+	 */
 	public Map<String, Double> getCalculateTimeToStop(String idParada, String linea) throws InterruptedException {
-		TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea);
+		TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea).orElseThrow(() -> new ResponseStatusException(
+				       HttpStatus.NOT_FOUND, "No exsiste historial de Tiempos a Paradas para la Line "+linea+"."));
 		List<EstadoBusTemporal> listEstadoBus = getEstadoActualBusByLinea(linea);
 		Map<String,Double> listTiempoBus = new HashMap<String, Double>();
 		for(EstadoBusTemporal eb : listEstadoBus) {
-			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-			Long result = (now.getTime().getTime() - eb.getCreationDate().getTime())/1000;
-			if(result>=0 && result<=10) {
-				List<Parada> par = null;
-				Double sumKm = 0.0;
-				boolean banSerch =true;
-				while(banSerch){
-					sumKm = sumKm + 0.1;
-					par = (List<Parada>) paradaService.getParadasCercanasRadio(eb.getPosicionActual(), sumKm, linea);
-					if(!par.isEmpty() || !par.equals(null)) {
-						List<BetweenParada> validosParaEvaluar = findBetweenParadaForEvaluate(par,tcp);
-						if(validosParaEvaluar == null) {
-							banSerch =true;
-						}else {
-							for(int j=0;j<validosParaEvaluar.size();j++) {
-								//evaluar puntos con la primera parada
-								Parada p1 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada1());
-								//estado bus anterior
-								double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
-								//estado bus actual
-								double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
-								//evaluar puntos con la segunda parada
-								Parada p2 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada2());
-								//estado bus anterior
-								double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
-								//estado bus actual
-								double distanciaP2BusActual = p2.distance(eb.getPosicionActual(), "M");
-								if(distanciaP1BusActual>distanciaP1BusAnterior && distanciaP2BusActual<distanciaP2BusAnterior) {
-									//BetweenParadas Valido para sacar su tiempo...
-									//utilizare la posicion actual del bus
-									double distanciaP1P2 = p1.distance(p2.getCoordenada(), "M");
-									double porcentajeP2BusActual = distanciaP2BusActual*100/distanciaP1P2;//% para calcular el tiempo restante
-									double tiempotarda = validosParaEvaluar.get(j).getTiempoPromedio()*porcentajeP2BusActual/100;
-									System.out.println("El tiempo que tardara el bus a esa parada es: " + tiempotarda);
-									boolean ban = true;
-									String idParadaSiguente = p2.getId();
-									while(ban) {
-										ban = false;
-										for(BetweenParada bParada : tcp.getListTime()) {
-											if(idParadaSiguente.equals(bParada.getIdparada1())) {
-												tiempotarda = tiempotarda + bParada.getTiempoPromedio();
-												idParadaSiguente = bParada.getIdparada2();
-												ban = true;
-												break;
-											}
-										}
-										if(idParadaSiguente.equals(idParada)) {
-											ban = false;
-											listTiempoBus.put(eb.getPlaca(), tiempotarda);
-											banSerch =false;
+			Double sumKm = 0.0;
+			boolean banSerch =true;
+			while(banSerch){
+				sumKm = sumKm + 0.1;
+				List<Parada> par;
+				try {
+					par = paradaService.getParadasCercanasRadio(eb.getPosicionActual(), sumKm, linea);
+				} catch (Exception e) {
+					par = null;
+				}
+				if(par!=null) {
+					List<BetweenParada> validosParaEvaluar = findBetweenParadaForEvaluate(par,tcp);
+					if(validosParaEvaluar == null) {
+						banSerch =true;
+					}else {
+						for(int j=0;j<validosParaEvaluar.size();j++) {
+							//evaluar puntos con la primera parada
+							Parada p1 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada1());
+							//estado bus anterior
+							double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
+							//estado bus actual
+							double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
+							//evaluar puntos con la segunda parada
+							Parada p2 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada2());
+							//estado bus anterior
+							double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
+							//estado bus actual
+							double distanciaP2BusActual = p2.distance(eb.getPosicionActual(), "M");
+							if(distanciaP1BusActual>distanciaP1BusAnterior && distanciaP2BusActual<distanciaP2BusAnterior) {
+								//BetweenParadas Valido para sacar su tiempo...
+								//utilizare la posicion actual del bus
+								double distanciaP1P2 = p1.distance(p2.getCoordenada(), "M");
+								double porcentajeP2BusActual = distanciaP2BusActual*100/distanciaP1P2;//% para calcular el tiempo restante
+								double tiempotarda = validosParaEvaluar.get(j).getTiempoPromedio()*porcentajeP2BusActual/100;
+								boolean ban = true;
+								String idParadaSiguente = p2.getId();
+								while(ban) {
+									ban = false;
+									for(BetweenParada bParada : tcp.getListTime()) {
+										if(idParadaSiguente.equals(bParada.getIdparada1())) {
+											tiempotarda = tiempotarda + bParada.getTiempoPromedio();
+											idParadaSiguente = bParada.getIdparada2();
+											ban = true;
+											break;
 										}
 									}
-								}else if(distanciaP1BusActual==distanciaP1BusAnterior || distanciaP2BusActual==distanciaP2BusAnterior){
-									System.out.println("No se puede identificar... Buses en la misma posicion...");
+									if(idParadaSiguente.equals(idParada)) {
+										ban = false;
+										listTiempoBus.put(eb.getPlaca(), tiempotarda);
+										banSerch =false;
+									}
 								}
+							}else if(distanciaP1BusActual==distanciaP1BusAnterior || distanciaP2BusActual==distanciaP2BusAnterior){
+								System.out.println("No se puede identificar... Buses en la misma posicion...");
 							}
-						}	
+						}
 					}
 				}
 			}
 		}
-		return listTiempoBus;
+		if(!listTiempoBus.isEmpty()) {
+			return listTiempoBus;
+		}else {
+			throw new ResponseStatusException(
+				       HttpStatus.NOT_FOUND, "No se pudo realizar la Estimacion de Tiempos.");
+		}
 	}
-	//TODO Pasar aqui valores del bus y paradas para evaluar
+	
+	/**
+	 * Evalua si las {@link Parada} cercanas a un {@link Bus} pueden servir para el calculo de tiempos de un bus.
+	 * @param par - Lista de {@link Parada} cercanas a un {@link Bus}
+	 * @param tcp - Lista de tiempos ( {@link TimeControlParada} ) entre {@link Parada} ya calculados Previamente
+	 * @return Lista de Tiempos entre {@link Parada}
+	 */
 	public List<BetweenParada> findBetweenParadaForEvaluate(List<Parada> par, TimeControlParada tcp) {
 		List<BetweenParada> validosParaEvaluar = null;
 		for(Parada pAux:par) {//listas de paradas cercanas al bus
 			for(BetweenParada oneBP:tcp.getListTime()) {
 				if(oneBP.getIdparada1().equals(pAux.getId()) || oneBP.getIdparada2().equals(pAux.getId())) {
 					if(validosParaEvaluar==null) {
-						validosParaEvaluar = new ArrayList<BetweenParada>();
-						validosParaEvaluar.add(oneBP);
+						validosParaEvaluar = new ArrayList<BetweenParada>(Arrays.asList(oneBP));
 					}else {
 						boolean encontro = false;
 						for(int x =0;x<validosParaEvaluar.size();x++) {
@@ -368,16 +452,53 @@ public class BusService {
 		}
 		return validosParaEvaluar;
 	}
+
+	/**
+	 * Obtiene el {@link EstadoBus} Actual de los {@link Bus} pertenecientes a una Linea de {@link Cooperativa}
+	 * @param linea - Linea de la {@link Cooperativa}
+	 * @return Lista de {@link EstadoBusTemporal} de los {@link Bus}
+	 */
 	public List<EstadoBusTemporal> getEstadoActualBusByLinea(String linea) {
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);   
-        now.set(Calendar.HOUR_OF_DAY, 0);
         String pattern = "yyyy-MM-dd";
         DateFormat df = new SimpleDateFormat(pattern);
-        String todayAsString = df.format(now.getTime());
-        //todayAsString = "2019-05-26";
-        List<EstadoBusTemporal> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
-		return list;
+        String todayAsString = df.format(GlobalVariables.getFechaDMA());
+        Optional<List<EstadoBusTemporal>> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
+        list.get().removeIf(q -> ifBusDisponible(q.getCreationDate()));
+        return list.filter(a -> !a.isEmpty())
+				.orElseThrow(() -> new ResponseStatusException(
+								HttpStatus.NOT_FOUND, "No existe Estado de Bus disponible para la linea  "+linea+"."));
+	}
+	
+	/**
+	 * Comprobar si un bus esta disponible en el momento.
+	 * @param fechaUbicacion - Fecha a comprobar.
+	 * @return Verdadero o Falso.
+	 */
+	public boolean ifBusDisponible(Date fechaUbicacion) {
+		//fuera de los 10 segundos
+		if(Math.abs(((GlobalVariables.getFecha().getTime() - fechaUbicacion.getTime())/1000)-5) > 5)
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Elimina de manera permanente de la base de Datos un {@link Bus}
+	 * @param placa - Placa del {@link Bus} a eliminar
+	 */
+	public void deleteBusPhysical(String placa) {
+		String p = GlobalVariables.confirmPlaca(placa);
+		if(busRepository.existsById(p))
+			busRepository.deleteById(p);
+		else
+			throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND, "No existe Bus con la Placa "+placa+".");
+	}
+
+	/**
+	 * Elimina de manera Permanente todos los {@link Bus} registrados en la base de datos.
+	 */
+	public void deleteAllBusPhysical() {
+		busRepository.deleteAll();
 	}
 }
