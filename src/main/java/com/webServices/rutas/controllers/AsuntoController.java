@@ -62,7 +62,7 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#addAsunto(String)}
 	 */
 	@PostMapping
-	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void addAsunto(@RequestBody String asunto) {
 		asuntoService.addAsunto(asunto);
 	}
@@ -75,7 +75,7 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#updateAsunto(String, String)}
 	 */
 	@PutMapping("/{antes}")
-	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void updeteAsunto(@RequestBody String despues,@PathVariable String antes) {
 		asuntoService.updateAsunto(antes,despues);
 	}
@@ -87,7 +87,7 @@ public class AsuntoController {
 	 * @see {@link AsuntoService#deleteAsunto(Integer)}
 	 */
 	@DeleteMapping("/{asunto}")
-	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
 	public void deleteAsunto(@PathVariable String asunto) {
 		asuntoService.deleteAsunto(asunto);
 	}

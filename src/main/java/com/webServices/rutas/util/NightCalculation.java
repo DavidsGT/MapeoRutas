@@ -25,6 +25,7 @@ import com.webServices.rutas.repository.EstadoBusTemporalRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
+import com.webServices.rutas.services.BusService;
 @Component
 public class NightCalculation {
 	@Autowired
@@ -35,6 +36,8 @@ public class NightCalculation {
 	TimeControlParadaRepository timeControlParadaRepository;
 	@Autowired
 	private ParadaRepository paradaRepository;
+	@Autowired
+	private BusService busService;
 	@Scheduled(cron=GlobalVariables.timeScheduled, zone="America/Guayaquil")
 	public void timeBetweenStops() throws IOException{
 		//TODO crear index para mayor velocidad de consulta
@@ -122,5 +125,56 @@ public class NightCalculation {
 																				loc.getDeg_lon(), SW_NE_LOC.get(0).getRad_lat(),  
 																				SW_NE_LOC.get(0).getRad_lon(), SW_NE_LOC.get(1).getRad_lat(),
 																				SW_NE_LOC.get(1).getRad_lon(), GlobalVariables.distanceMaxBusesToParada,idHistorial);
+	}
+	
+	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
+	public void IniciarSimuladorLinea11_1() throws IOException, InterruptedException{
+		try {
+			busService.startSimulator(11, "ABC1234");
+		} catch (Exception e) {
+		}
+	}
+	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
+	public void IniciarSimuladorLinea8_1() throws IOException, InterruptedException{
+		try {
+			busService.startSimulator(8, "DEF1234");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
+	public void IniciarSimuladorLinea7_1() throws IOException, InterruptedException{
+		try {
+			busService.startSimulator(7, "GHI1234");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	@Scheduled(cron=GlobalVariables.timeSimulator2, zone="America/Guayaquil")
+	public void IniciarSimuladorLinea8_2() throws IOException, InterruptedException{
+		try {
+			busService.startSimulator(8, "DEF5678");
+		} catch (Exception e) {
+			
+		}
+		
+	}
+	@Scheduled(cron=GlobalVariables.timeSimulator2, zone="America/Guayaquil")
+	public void IniciarSimuladorLinea7_2() throws IOException, InterruptedException{
+		try {
+			busService.startSimulator(7, "GHI5678");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	@Scheduled(cron=GlobalVariables.timeSimulator3, zone="America/Guayaquil")
+	public void IniciarSimuladorLinea7_3() throws IOException, InterruptedException{
+		try {
+			busService.startSimulator(7, "GHI9012");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 	}
 }

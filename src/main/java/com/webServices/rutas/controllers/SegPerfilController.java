@@ -30,14 +30,15 @@ import com.webServices.rutas.services.SegPerfilService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SegPerfilController {
 	/**
-	 * Instancia de los Servicios para SegAcceso
+	 * Instancia de los Servicios para {@link SegPerfilService}
 	 */
 	@Autowired
 	private SegPerfilService segPerfilService;
 	
 	/**
-	 * Metodo que Mapea "/perfiles", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getAllSegPerfil()} y retorna datos de todos los Perfiles registrados
-	 * @return Lista de Perfiles
+	 * Metodo que Mapea "/perfiles", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getAllSegPerfil()} 
+	 * y retorna lista de {@link SegPerfil} registrados
+	 * @return Lista de {@link SegPerfil}
 	 * @see {@link SegPerfilService#getAllSegPerfil()}
 	 */
 	@GetMapping
@@ -48,7 +49,7 @@ public class SegPerfilController {
 	
 	/**
 	 * Metodo que Mapea "/perfiles/create", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#createPerfil(SegPerfil)} 
-	 * @param perfil - Datos de los perfiles a Registrar
+	 * @param perfil - Datos de los {@link SegPerfil} a Registrar
 	 * @see {@link SegPerfilService#createPerfil(SegPerfil)}
 	 */
 	@PostMapping("/create")
@@ -59,7 +60,7 @@ public class SegPerfilController {
 	
 	/**
 	 * Metodo que Mapea "/perfiles", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#addSegPerfil(SegPerfil)} 
-	 * y retorna Datos de una Perfil registrado
+	 * y retorna Datos de una {@link SegPerfil} registrado
 	 * @param SegPerfil - Datos de la perfil a Registrar
 	 * @see {@link SegPerfilService#addSegPerfil(SegPerfil)}
 	 */
@@ -70,10 +71,10 @@ public class SegPerfilController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/asuntos", RequestMethod es PUT, se enlaza al servicio {@link AsuntoService#updateAsunto(String, String)}.
+	 * Metodo que Mapea "/perfiles/{antes}", RequestMethod es PUT, se enlaza al servicio {@link PerfilService#updatePerfil(String, String)}.
 	 * Actualizar asunto.
-	 * @param despues - nuevo asunto
-	 * @param antes - Asunto a reemplazar
+	 * @param despues - nuevo Perfil
+	 * @param antes - Perfil a reemplazar
 	 * @see {@link AsuntoService#updateAsunto(String, String)}
 	 */
 	@PutMapping("/{antes}")
@@ -83,9 +84,9 @@ public class SegPerfilController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/perfiles/{id}", RequestMethod es DELETE, se enlaza al servicio {@link SegPerfilService#deleteSegPerfil(String)}.
+	 * Metodo que Mapea "/perfiles/{perfil}", RequestMethod es DELETE, se enlaza al servicio {@link SegPerfilService#deleteSegPerfil(String)}.
 	 * Eliminar un Perfil.
-	 * @param id - Id del Perfil
+	 * @param perfil - Perfil a eliminar
 	 * @see {@link SegPerfilService#deleteSegPerfil(String)}
 	 */
 	@DeleteMapping("/{perfil}")

@@ -20,9 +20,9 @@ import com.webServices.rutas.model.SegUsuario;
 import com.webServices.rutas.services.SegUsuarioService;
 
 /**
- * Clase que contiene los requestMapping de Usuario y los asocia a sus respectivos servicios en {@link SegUsuarioService}.
- * @author Davids Adrian Gonzalez Tigrero 
- * @see SegUsuarioService
+ * Clase que contiene los requestMapping de {@link SegUsuario} y los asocia a sus respectivos servicios en {@link SegUsuarioService}.
+ * @author Davids Adrian Gonzalez Tigrero
+ * @see {@link SegUsuarioService}
  * @version 1.0
  */
 @RestController
@@ -31,14 +31,14 @@ import com.webServices.rutas.services.SegUsuarioService;
 public class SegUsuarioController {
 	
 	/**
-	 * Instancia de los Servicios para Usuario
+	 * Instancia de los Servicios para {@link SegUsuario}
 	 */
 	@Autowired
 	private SegUsuarioService segUsuarioService;
 	/**
 	 * Metodo que Mapea "/usuarios", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getAllSegUsuario()}
-	 * y retorna datos de todos las Usuarios registrados
-	 * @return Lista de Usuarios
+	 * y retorna datos de todos las {@link SegUsuario} registrados
+	 * @return Lista de {@link SegUsuario}
 	 * @see {@link SegUsuarioService#getAllSegUsuario()}
 	 */
 	@GetMapping
@@ -49,8 +49,8 @@ public class SegUsuarioController {
 	
 	/**
 	 * Metodo que Mapea "/usuarios/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getAllSegUsuarioIgnoreEstado()} 
-	 * y retorna todos las Usuarios incluye eliminados logicamente.
-	 * @return Lista de Usuarios incluye eliminados logicamente.
+	 * y retorna todos las {@link SegUsuario} incluye eliminados logicamente.
+	 * @return Lista de {@link SegUsuario} incluye eliminados logicamente.
 	 * @see {@link SegUsuarioService#getAllSegUsuarioIgnoreEstado()}
 	 */
 	@GetMapping("/ignoreEstado")
@@ -61,9 +61,9 @@ public class SegUsuarioController {
 	
 	/**
 	 * Metodo que Mapea "/usuarios/{id}", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getSegUsuario(String)} 
-	 * y retorna el Usuario
-	 * @param id - Id del Usuario 
-	 * @return Usuario
+	 * y retorna el {@link SegUsuario}
+	 * @param id - Id del {@link SegUsuario} 
+	 * @return {@link SegUsuario}
 	 * @see {@link SegUsuarioService#getSegUsuario(String)} 
 	 */
 	@GetMapping("/{id}")
@@ -73,10 +73,23 @@ public class SegUsuarioController {
 	}
 	
 	/**
+	 * Metodo que Mapea "/usuarios/{id}/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getSegUsuarioIgnoreEstado(String)} 
+	 * y retorna el {@link SegUsuario}
+	 * @param id - Id del {@link SegUsuario} 
+	 * @return {@link SegUsuario}
+	 * @see {@link SegUsuarioService#getSegUsuarioIgnoreEstado(String)} 
+	 */
+	@GetMapping("/{id}/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public SegUsuario getUsuarioIgnoreEstado(@PathVariable String id) { 
+		return segUsuarioService.getSegUsuarioIgnoreEstado(id);
+	}
+	
+	/**
 	 * Metodo que Mapea "/usuarios", RequestMethod es POST, se enlaza al servicio {@link SegUsuarioService#addSegUsuario(SegUsuario)} 
-	 * y retorna Datos de una Usuario registrado
-	 * @param SegUsuario - Datos del Usuario a Registrar
-	 * @return Usuario Registrado
+	 * y retorna Datos de una {@link SegUsuario} registrado
+	 * @param segUsuario - Datos del {@link SegUsuario} a Registrar
+	 * @return {@link SegUsuario} Registrado
 	 * @see {@link SegUsuarioService#addSegUsuario(SegUsuario)}
 	 */
 	@PostMapping
@@ -87,9 +100,9 @@ public class SegUsuarioController {
 	
 	/**
 	 * Metodo que Mapea "/usuarios", RequestMethod es PUT, se enlaza al servicio {@link SegUsuarioService#updateSegUsuario(SegUsuario)}.
-	 * Actualizar Usuario.
-	 * @param segUsuario - Usuario a Actualizar
-	 * @return Usuario Actualizado
+	 * Actualizar {@link SegUsuario}.
+	 * @param segUsuario - {@link SegUsuario} a Actualizar
+	 * @return {@link SegUsuario} Actualizado
 	 * @see {@link SegUsuarioService#updateSegUsuario(SegUsuario)}.
 	 */
 	@PutMapping
@@ -100,8 +113,8 @@ public class SegUsuarioController {
 	
 	/**
 	 * Metodo que Mapea "/usuarios/{id}", RequestMethod es DELETE, se enlaza al servicio {@link SegUsuarioService#deleteSegUsuario(String)}.
-	 * Eliminar un Usuario.
-	 * @param id - Id del Usuario
+	 * Eliminar un {@link SegUsuario}.
+	 * @param id - Id del {@link SegUsuario}
 	 * @see {@link SegUsuarioService#deleteSegUsuario(String)}.
 	 */
 	@DeleteMapping("/{id}")
@@ -111,9 +124,15 @@ public class SegUsuarioController {
 		segUsuarioService.deleteSegUsuario(id);
 	}
 	
+	/**
+	 * Metodo que mapea "/usuarios/{usuario}/{clave}", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getIdUsuario(String, String)}
+	 * @param usuario - Nombre de Usuario
+	 * @param clave - Clave del Usuario
+	 * @return {@link SegUsuario}
+	 */
 	@GetMapping("/{usuario}/{clave}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	public SegUsuario getUsuarioByNameAndPass(@PathVariable String usuario,@PathVariable String clave) {
-		return segUsuarioService.getIdUsuario(usuario,clave);
+		return segUsuarioService.getUsuarioByNombreAndPass(usuario,clave);
 	}
 }

@@ -1,8 +1,5 @@
 package com.webServices.rutas.repository;
 
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,20 +7,18 @@ import org.springframework.data.couchbase.core.query.Dimensional;
 import org.springframework.data.couchbase.core.query.Query;
 import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
-import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.repository.query.Param;
 
 import com.webServices.rutas.model.Parada;
 
-@ViewIndexed(designDoc = "parada", viewName = "all")
+@ViewIndexed(designDoc = "Parada", viewName = "all")
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
+	
+	@Query("#{#n1ql.selectEntity} WHERE #{#n1ql.filter} AND meta().id = '#{#id}' AND estado=true")
+	Optional<Parada> findByIdAndEstadoIsTrue(@Param("id") String id);
+	
 	Optional<List<Parada>> findByEstadoIsTrue();
-	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada", dimensions = 2)
-	  @Retention(RetentionPolicy.RUNTIME)
-	  @interface IndexedByLocation {}
-	@IndexedByLocation
-	Iterable<Parada> findByCoordenadaWithin(Box x);
 	
 	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada")
 	Optional<List<Parada>> findByCoordenadaWithin(Circle p);
@@ -34,5 +29,7 @@ public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "
 			+ "FROM #{#n1ql.bucket} as c "
 			+ "WHERE lower(c.nombre) = lower('#{#nombre}') AND c.estado=true AND c.#{#n1ql.filter}")
-	boolean existsByNombreAndEstadoIsTrue(String nombre);
+	boolean existsByNombreAndEstadoIsTrue(@Param("nombre") String nombre);
+
+	Optional<Parada> findByNombreAndEstadoIsTrue(String nombre);
 }

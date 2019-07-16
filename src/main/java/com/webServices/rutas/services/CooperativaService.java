@@ -51,7 +51,8 @@ public class CooperativaService {
 	 * @return {@link Cooperativa}
 	 */
 	public Cooperativa getCooperativa(String id) {
-		return cooperativaRepository.findByIdAndEstadoIsTrue(id).orElseThrow(() -> new ResponseStatusException(
+		return cooperativaRepository.findByIdAndEstadoIsTrue(id)
+				.orElseThrow(() -> new ResponseStatusException(
 		           HttpStatus.NOT_FOUND, "No existe la Cooperativa."));
 	}
 	
@@ -94,7 +95,7 @@ public class CooperativaService {
 	 * @return {@link Cooperativa} agregado
 	 */
 	public Cooperativa addCooperativa(Cooperativa cooperativa) {
-		if(cooperativaRepository.existsByNombreAndEstadoIsTrue(cooperativa.getNombre()) && cooperativa.getId()==null)
+		if(cooperativaRepository.existsByNombreAndEstadoIsTrue(cooperativa.getNombre()) || cooperativa.getId()!=null)
 			throw new ResponseStatusException(
 			           HttpStatus.CONFLICT, "Ya existe Cooperativa con el Nombre:  "+cooperativa.getNombre()+".");
 		else return cooperativaRepository.save(cooperativa);
@@ -145,9 +146,9 @@ public class CooperativaService {
 	 * Elimina de manera Permanente todas las {@link Cooperativa} registrados en la base de datos.
 	 */
 	public void deleteAllCooperativaPhysical() {
-		busRepository.deleteAll();
 		List<Bus> b = (List<Bus>)busRepository.findAll();
 		b.stream().forEach(t -> t.setIdCooperativa(null));
 		busRepository.saveAll(b);
+		cooperativaRepository.deleteAll();
 	}
 }

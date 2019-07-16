@@ -13,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.Parada;
+import com.webServices.rutas.model.Ruta;
 import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.RutaRepository;
 
@@ -51,6 +53,28 @@ public class ParadaService {
 	}
 	
 	/**
+	 * Obtener datos de una {@link Parada} entregando su respectivo ID.
+	 * @param id - ID de la {@link Parada} que desee obtener los datos
+	 * @return {@link Parada}
+	 */
+	public Parada getParada(String id) {
+		return paradaRepository.findByIdAndEstadoIsTrue(id).orElseThrow(() -> new ResponseStatusException(
+		           HttpStatus.NOT_FOUND, "No existe la Parada."));
+	}
+	
+	/**
+	 * Obtener datos de una {@link Parada} entregando su respectiva ID.
+	 * Ignorando su estado eliminado
+	 * @param id - ID de la {@link Parada} que desee obtener los datos
+	 * @return {@link Parada}
+	 */
+	public Parada getParadaIgnoreEstado(String id) {
+		return paradaRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(
+				           HttpStatus.NOT_FOUND, "No existe Parada registrado con ID "+id+"."));
+	}
+	
+	/**
 	 * Obtener Lista de {@link Parada} Ignorando su estado Eliminado
 	 * @return Lista de {@link Parada}
 	 */
@@ -62,12 +86,22 @@ public class ParadaService {
 	}
 	
 	/**
+	 * Obtener datos de una {@link Parada} entregando su respectiva Nombre.
+	 * @param nombre - Nombre de la {@link Parada} que desee obtener los datos
+	 * @return {@link Parada}
+	 */
+	public Parada getParadaByNombre(String nombre) {
+		return paradaRepository.findByNombreAndEstadoIsTrue(nombre).orElseThrow(() -> new ResponseStatusException(
+		           HttpStatus.NOT_FOUND, "No existe la Parada con el nombre "+nombre+"."));
+	}
+	
+	/**
 	 * Agregar {@link Parada}
 	 * @param parada - {@link Parada} que desea guardar
 	 * @return {@link Parada} agregado
 	 */
 	public Parada addParada(Parada parada) {
-		if(paradaRepository.existsByNombreAndEstadoIsTrue(parada.getNombre()) && parada.getId() == null)
+		if(paradaRepository.existsByNombreAndEstadoIsTrue(parada.getNombre()) || parada.getId() != null)
 			throw new ResponseStatusException(
 			           HttpStatus.CONFLICT, "Ya existe Parada con el Nombre:  "+parada.getNombre()+".");
 		else return paradaRepository.save(parada);
@@ -86,43 +120,60 @@ public class ParadaService {
 	}
 	
 	/**
-	 * Elimina una Parada
-	 * @param placa - Id de la parada a Eliminar
+	 * Elimina una {@link Parada}
+	 * @param id - Id de la {@link Parada} a Eliminar
 	 */
 	public void deleteParada(String id) {
-		Parada c = paradaRepository.findById(id).get();
+		Parada c = getParada(id);
 		c.setEstado(false);
+		Ruta r = rutaRepository.findByListaParadasContains(id).get();
+		r.getListasParadas().removeIf(n -> n.equals(c.getId()));
+		rutaRepository.save(r);
 		paradaRepository.save(c);
 	}
-	public Parada getParadaById(String id) {
-		return paradaRepository.findById(id).get();
-	}
+	
+	/**
+	 * Obtiene lista de {@link Parada} cercanas a un {@link Point} que pertenecen a una linea de {@link Cooperativa}
+	 * @param punto - {@link Point}, Ubicación centrico. 
+	 * @param longitud - Radio de alcance a Buscar las {@link Parada}
+	 * @param linea - Linea de una {@link Cooperativa}
+	 * @return Lista de {@link Parada} cercanas a un punto pertenecientes a una linea de una {@link Cooperativa}
+	 */
 	public List<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
 		Circle circle = new Circle(punto,new Distance((longitud*GlobalVariables.coeficiente), Metrics.KILOMETERS));
 		List<String> idsParadas = rutaRepository.findById(linea).orElseThrow(() -> new ResponseStatusException(
 			       HttpStatus.NOT_FOUND, "No exsiste paradas para la Line "+linea+".")).getListasParadas();
 		Optional<List<Parada>> par = paradaRepository.findByCoordenadaWithin(circle);
-		par.get().stream()
+		par = Optional.of(par.get().stream()
 		            .filter(e -> idsParadas.contains(e.getId()))
-		            .collect(Collectors.toList());
+		            .collect(Collectors.toList()));
 		return par.filter(a -> !a.isEmpty()).orElseThrow(() -> new ResponseStatusException(
 			       HttpStatus.NOT_FOUND, "No exsiste paradas cercanas a su posicion de la linea "+linea+"."));
 	}
 	
-	//TODO debe consultar por linea y realizar el query geografico
+	/**
+	 * Obtiene lista de {@link Parada} cercanas a un {@link Point}.
+	 * @param punto - {@link Point}, Ubicación centrico.
+	 * @param longitud - Radio de alcance a Buscar las {@link Parada}
+	 * @return Lista de {@link Parada} cercanas a un punto.
+	 */
 	public Iterable<Parada> getAllParadaCercanasRadio(Point punto,Double longitud){
 		Circle circle = new Circle(punto,new Distance(longitud*GlobalVariables.coeficiente, Metrics.KILOMETERS));
-		return paradaRepository.findByCoordenadaWithin(circle).orElseThrow(() -> new ResponseStatusException(
+		return paradaRepository.findByCoordenadaWithin(circle).filter(a-> !a.isEmpty()).orElseThrow(() -> new ResponseStatusException(
 			       HttpStatus.NOT_FOUND, "No exsiste paradas cercanas."));
 	}
 	
 	/**
 	 * Elimina de manera permanente de la base de Datos una {@link Parada}
-	 * @param id - ID de la {@link Parada} a eliminar
+	 * @param id - ID del {@link Parada} a eliminar
 	 */
 	public void deleteParadaPhysical(String id) {
-		if(paradaRepository.existsById(id))
+		if(paradaRepository.existsById(id)) {
+			Ruta r = rutaRepository.findByListaParadasContains(id).get();
+			r.getListasParadas().removeIf(n -> n.equals(id));
+			rutaRepository.save(r);
 			paradaRepository.deleteById(id);
+		}
 		else
 			throw new ResponseStatusException(
 					HttpStatus.NOT_FOUND, "No existe Parada con ID: "+id+".");
@@ -132,6 +183,9 @@ public class ParadaService {
 	 * Elimina de manera Permanente todos las {@link Parada} registrados en la base de datos.
 	 */
 	public void deleteAllParadaPhysical() {
+		List<Ruta> r = (List<Ruta>) rutaRepository.findAll();
+		for(Ruta rt : r)
+			rt.setListasParadas(null);
 		paradaRepository.deleteAll();
 	}
 }

@@ -48,6 +48,45 @@ public class ParadaController {
 	}
 	
 	/**
+	 * Metodo que Mapea "/parada/{id}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParada(String)} 
+	 * y retorna el {@link Parada}
+	 * @param id - ID de la {@link Parada}
+	 * @return {@link Parada}
+	 * @see {@link ParadaService#getParada(String)}
+	 */
+	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public Parada getParada(@PathVariable String id){
+		return paradaService.getParada(id);
+	}
+	
+	/**
+	 * Metodo que Mapea "/parada/{id}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParada(String)} 
+	 * y retorna el {@link Parada} Ignorando su estado
+	 * @param id - ID de la {@link Parada}
+	 * @return {@link Parada}
+	 * @see {@link ParadaService#getParada(String)}
+	 */
+	@GetMapping("/{id}/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public Parada getParadaIgnoreEstado(@PathVariable String id){
+		return paradaService.getParadaIgnoreEstado(id);
+	}
+	
+	/**
+	 * Metodo que Mapea "/paradas/byNombre/{nombre}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParadaByNombre(String)} 
+	 * y retorna la {@link Parada}
+	 * @param nombre - nombre de la {@link Parada} que desee Informacion.
+	 * @return {@link Parada}
+	 * @see {@link ParadaService#getParadaByNombre(String)} 
+	 */
+	@GetMapping("/byNombre/{nombre}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
+	public Parada getParadaByNombre(@PathVariable String nombre) {
+		return paradaService.getParadaByNombre(nombre);
+	}
+	
+	/**
 	 * Metodo que Mapea "/paradas/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getAllParadaIgnoreEstado()} 
 	 * y retorna todos los {@link Parada} incluye eliminados logicamente.
 	 * @return Lista de {@link Parada} incluye eliminados logicamente

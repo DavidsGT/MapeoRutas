@@ -372,13 +372,13 @@ public class BusService {
 					}else {
 						for(int j=0;j<validosParaEvaluar.size();j++) {
 							//evaluar puntos con la primera parada
-							Parada p1 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada1());
+							Parada p1 = paradaService.getParada(validosParaEvaluar.get(j).getIdparada1());
 							//estado bus anterior
 							double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
 							//estado bus actual
 							double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
 							//evaluar puntos con la segunda parada
-							Parada p2 = paradaService.getParadaById(validosParaEvaluar.get(j).getIdparada2());
+							Parada p2 = paradaService.getParada(validosParaEvaluar.get(j).getIdparada2());
 							//estado bus anterior
 							double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
 							//estado bus actual

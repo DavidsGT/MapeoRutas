@@ -1,6 +1,5 @@
 package com.webServices.rutas.util;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,6 +21,8 @@ import javax.xml.transform.stream.StreamResult;
 import com.webServices.rutas.model.Parada;
 
 import org.springframework.data.geo.Point;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,8 +43,6 @@ public class Gpx {
             lat=String.valueOf(puntosPrueba.get(i).getX());
             lon=String.valueOf(puntosPrueba.get(i).getY());
             try{
-                
-            
             Element tpt  = document.createElement("trkpt");
             document.getDocumentElement().appendChild(tpt); 
             
@@ -95,40 +94,39 @@ public class Gpx {
             
             
         }
-     
-     public static Map<String, Object> decodeGPX(File is){
+     public static Map<String, Object> decodeGPX(byte[] is){
     	List<Point> ruta = new ArrayList<Point>();
      	List<Parada> paradas = new ArrayList<Parada>();
      	Map<String, Object> x = new HashMap<>();
      	DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        try {
-             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-             Document document = documentBuilder.parse(is);
-             NodeList nodelist_trkpt = document.getElementsByTagName("trkpt");
-             NodeList nodelist_wpt = document.getElementsByTagName("wpt");
-             for(int i = 0; i < nodelist_trkpt.getLength(); i++){
-                 Node node = nodelist_trkpt.item(i);
-                 NamedNodeMap attributes = node.getAttributes();
-                 ruta.add(new Point(Double.parseDouble(attributes.getNamedItem("lon").getTextContent()),
-                		 			Double.parseDouble(attributes.getNamedItem("lat").getTextContent())));
-             }
-             for(int i = 0; i < nodelist_wpt.getLength(); i++){
-                 Node node = nodelist_wpt.item(i);
-                 NamedNodeMap attributes = node.getAttributes();
-                 NodeList datos = node.getChildNodes();
-                 String newName = "";
-                 String newImagen = "0";
-                 String newLatitude = attributes.getNamedItem("lat").getTextContent();
-                 String newLongitude = attributes.getNamedItem("lon").getTextContent();
-                 for(int j = 0; j < datos.getLength(); j++){
-                 	Node dat = datos.item(j);
-                 	String etq = dat.getNodeName();
-                 	if(etq.equals("name")) {
-                 		newName = dat.getFirstChild().getNodeValue();
-                 	}
-                 	if(etq.equals("extensions")) {
-                 		NodeList nodelist_ext = dat.getChildNodes();
-                 		NodeList nodelist_extch = nodelist_ext.item(1).getChildNodes();
+        DocumentBuilder documentBuilder;
+		try {
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(new ByteArrayInputStream(is));
+            NodeList nodelist_trkpt = document.getElementsByTagName("trkpt");
+            NodeList nodelist_wpt = document.getElementsByTagName("wpt");
+            for(int i = 0; i < nodelist_trkpt.getLength(); i++){
+            	NamedNodeMap attributes = nodelist_trkpt.item(i).getAttributes();
+                ruta.add(new Point(Double.parseDouble(attributes.getNamedItem("lon").getTextContent()),
+               		 			Double.parseDouble(attributes.getNamedItem("lat").getTextContent())));
+            }
+            for(int i = 0; i < nodelist_wpt.getLength(); i++){
+                Node node = nodelist_wpt.item(i);
+                NamedNodeMap attributes = node.getAttributes();
+                NodeList datos = node.getChildNodes();
+                String newName = "";
+                String newImagen = "0";
+                String newLatitude = attributes.getNamedItem("lat").getTextContent();
+                String newLongitude = attributes.getNamedItem("lon").getTextContent();
+                for(int j = 0; j < datos.getLength(); j++){
+                	Node dat = datos.item(j);
+                	String etq = dat.getNodeName();
+                	if(etq.equals("name")) {
+                		newName = dat.getFirstChild().getNodeValue();
+                	}
+                	if(etq.equals("extensions")) {
+                		NodeList nodelist_ext = dat.getChildNodes();
+                		NodeList nodelist_extch = nodelist_ext.item(1).getChildNodes();
                  		Node n = nodelist_extch.item(3);
                  		if(n != null) {
                  			newImagen = n.getTextContent();
@@ -142,16 +140,17 @@ public class Gpx {
              }
              x.put("ruta", douglasPeucker(ruta,0.000025));
              x.put("parada", paradas);
-         } catch (ParserConfigurationException e) {
-             e.printStackTrace();
-         } catch (FileNotFoundException e) {
-             e.printStackTrace();
-         } catch (SAXException e) {
-             e.printStackTrace();
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
-         return x;
+		} catch (SAXException e) {
+			throw new ResponseStatusException(
+			           HttpStatus.CONFLICT, "Archivo no valido, posiblemente no sea Archivo GPX.");
+		} catch (IOException e) {
+			throw new ResponseStatusException(
+			           HttpStatus.CONFLICT, "Conflicto Interno Comuniquese con el Proveedor.");
+		}catch (ParserConfigurationException e1) {
+			throw new ResponseStatusException(
+			           HttpStatus.CONFLICT, "Conflicto Interno, Comuniquese con el Proveedor.");
+		}
+        return x;
      }
      public static List<Point> douglasPeucker(List<Point> puntos,double epsilon){
          int maxIndex=0;

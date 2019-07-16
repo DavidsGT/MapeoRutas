@@ -14,8 +14,12 @@ import com.webServices.rutas.model.Cooperativa;
 @ViewIndexed(designDoc = "cooperativa", viewName = "all")
 public interface CooperativaRepository extends CouchbaseRepository<Cooperativa, String>{
 	Optional<Cooperativa> findByNombreAndEstadoIsTrue(String nombre);
+	
 	Optional<List<Cooperativa>> findByEstadoIsTrue();
-	Optional<Cooperativa> findByIdAndEstadoIsTrue(String id);
+	
+	@Query("#{#n1ql.selectEntity} WHERE #{#n1ql.filter} AND meta().id = '#{#id}' AND estado=true")
+	Optional<Cooperativa> findByIdAndEstadoIsTrue(@Param("id") String id);
+	
 	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "
 			+ "FROM #{#n1ql.bucket} as c "
 			+ "WHERE lower(c.nombre) = lower('#{#nombre}') AND c.estado=true AND c.#{#n1ql.filter}")

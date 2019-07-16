@@ -74,6 +74,19 @@ public class CooperativaController {
 	}
 	
 	/**
+	 * Metodo que Mapea "/cooperativas/{id}/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getCooperativaIgnoreEstado(String)} 
+	 * y retorna la {@link Cooperativa} ignorando su estado
+	 * @param id - Id de la {@link Cooperativa}
+	 * @return {@link Cooperativa}
+	 * @see {@link CooperativaService#getCooperativaIgnoreEstado(String)} 
+	 */
+	@GetMapping("/{id}/ignoreEstado")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
+	public Cooperativa getCooperativaIgnoreEstado(@PathVariable String id) {
+		return cooperativaService.getCooperativaIgnoreEstado(id);
+	}
+	
+	/**
 	 * Metodo que Mapea "/cooperativas/byNombre/{nombre}", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getCooperativaByNombre(String)} 
 	 * y retorna la {@link Cooperativa}
 	 * @param nombre - nombre de la {@link Cooperativa} que desee Informacion.
@@ -125,10 +138,10 @@ public class CooperativaController {
 	}
 
 	/**
-	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativa(String)}.
+	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativaPhysical(String)}.
 	 * Eliminar una {@link Cooperativa}.
 	 * @param id - Id de la {@link Cooperativa}
-	 * @see {@link CooperativaService#deleteCooperativa(String)}
+	 * @see {@link CooperativaService#deleteCooperativaPhysical(String)}
 	 */
 	@DeleteMapping("/{id}/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Cooperativa eliminado con exito.")
@@ -138,10 +151,10 @@ public class CooperativaController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativa(String)}.
+	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteAllCooperativaPhysical()}.
 	 * Eliminar una {@link Cooperativa}.
 	 * @param id - Id de la {@link Cooperativa}
-	 * @see {@link CooperativaService#deleteCooperativa(String)}
+	 * @see {@link CooperativaService#deleteAllCooperativaPhysical()}
 	 */
 	@DeleteMapping("/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Cooperativa eliminado con exito.")

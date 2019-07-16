@@ -42,6 +42,7 @@ public class Reporte {
 	private Boolean estado;
 	
     public Reporte() {
+    	this.fecha = GlobalVariables.getFecha();
     	this.estado = true;
     }
 
@@ -53,7 +54,7 @@ public class Reporte {
 		this.asunto = asunto;
 		this.numeroDisco = numeroDisco;
 		this.ubicacion = ubicacion;
-		this.fecha = fecha;
+		this.fecha = GlobalVariables.getFecha();
 		this.idCooperativa = idCooperativa;
 		this.mensaje = mensaje;
 		this.estado = true;
