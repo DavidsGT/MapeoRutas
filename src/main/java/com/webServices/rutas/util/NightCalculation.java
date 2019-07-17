@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.couchbase.client.java.env.CouchbaseEnvironment;
+import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.GeoLocation;
@@ -40,14 +42,16 @@ public class NightCalculation {
 	private BusService busService;
 	@Scheduled(cron=GlobalVariables.timeScheduled, zone="America/Guayaquil")
 	public void timeBetweenStops() throws IOException{
+		CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder().autoreleaseAfter(5000).build();
 		//TODO crear index para mayor velocidad de consulta
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
-        //Recorrer los historiales del los buses
+		//Recorrer los historiales del los buses
         for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
         	System.out.println("Para el bus: " + oneHistorial.getPlaca());
-        	List<EstadoBus> listEstadosHistorial = oneHistorial.getListaEstados1();
-        	listEstadosHistorial.addAll(oneHistorial.getListaEstados2());
-        	listEstadosHistorial.addAll(oneHistorial.getListaEstados3());
+        	HistorialEstadoBus op =historialEstadoBusRepository.findByIdCustom(oneHistorial.getId());
+        	List<EstadoBus> listEstadosHistorial = op.getListaEstados1();
+        	listEstadosHistorial.addAll(op.getListaEstados2());
+        	listEstadosHistorial.addAll(op.getListaEstados3());
         	//Guardar temporalmente para poder evaluar por SpatialView
         	//buscar las paradas pertenecientes a la linea que esta haciendo el recorrido
         	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHistorial.getLinea()));

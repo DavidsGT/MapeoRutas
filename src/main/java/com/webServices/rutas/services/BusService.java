@@ -475,7 +475,6 @@ public class BusService {
 	 * @return Verdadero o Falso.
 	 */
 	public boolean ifBusDisponible(Date fechaUbicacion) {
-		//fuera de los 10 segundos
 		if(Math.abs(((GlobalVariables.getFecha().getTime() - fechaUbicacion.getTime())/1000)-5) > 5)
 			return true;
 		else

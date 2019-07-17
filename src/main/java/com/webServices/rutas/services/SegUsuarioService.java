@@ -76,7 +76,7 @@ public class SegUsuarioService {
 	 * @return {@link SegUsuario} agregado
 	 */
 	public SegUsuario addSegUsuario(SegUsuario segUsuario) {
-		SegUsuario u = segUsuarioRepository.findByUsuarioOrEmail(segUsuario.getUsuario(),segUsuario.getEmail()).get();
+		SegUsuario u = segUsuarioRepository.findByUsuarioOrEmail(segUsuario.getUsuario(),segUsuario.getEmail()).orElse(null);
 		if(u == null)
 			return segUsuarioRepository.save(segUsuario);
 		else {

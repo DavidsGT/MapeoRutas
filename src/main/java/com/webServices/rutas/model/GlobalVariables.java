@@ -13,8 +13,8 @@ public class GlobalVariables {
 	public static final int horaFinalSimulador = 20;//El simulador acaba en este tiempo
 	public static final int horaInicioSimulador = 8;
 	public static final int secondSimulatorSave = 5;//cada segundo guarda un dato de avance del bus de manera aleatoria
-	public static final String timeScheduled  = "0 30 20 * * ?";//Hora que se lanza para el calculo de tiempos entre parada
-	public static final String fechaNightCalculation  = "";//Si esta vacio coge el tiempo actual a menos q en este campo se especifique con una fecha yyyy-MM-dd
+	public static final String timeScheduled  = "15 8 1 * * ?";//Hora que se lanza para el calculo de tiempos entre parada
+	public static final String fechaNightCalculation  = "2019-07-16";//Si esta vacio coge el tiempo actual a menos q en este campo se especifique con una fecha yyyy-MM-dd
 	public static final int limitListEstados = 4000;
 	public static final String timeSimulator1 = "0 0 8 * * ?";
 	public static final String timeSimulator2 = "0 20 8 * * ?";

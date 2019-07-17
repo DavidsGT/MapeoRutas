@@ -51,15 +51,10 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 			+ "WHERE h.placa= '#{#placa}' AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
 	Optional<List<EstadoBusTemporal>> findLastEstadoBusByPlaca(@Param("creadoEn") String creadoEn,@Param("placa") String placa);
 	
-	@Query("SELECT h.*, META(h).id AS _ID, META(h).cas AS _CAS "
+	@Query("SELECT META(h).id AS _ID, META(h).cas AS _CAS "
 			+ "FROM #{#n1ql.bucket} as h "
 			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
 	List<HistorialEstadoBus> findByCreadoEn(@Param("creadoEn") String creadoEn);
-	
-	@Query("SELECT META(h).id AS id , META(h).id AS _ID, META(h).cas AS _CAS "
-			+ "FROM #{#n1ql.bucket} as h "
-			+ "WHERE MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
-	List<String> findByCreadoEnGetId(@Param("creadoEn") String creadoEn);
 	
 	//6378.1 - radio aproximado de la tierra
 	//17200.45
@@ -80,4 +75,8 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 																@Param("NE_loc_rad_lon") double NE_loc_rad_lon,
 																@Param("distance") double distance,
 																@Param("idHistorial") String idHistorial);
+	@Query("SELECT h.*, META(h).id AS _ID, META(h).cas AS _CAS "
+			+ "FROM #{#n1ql.bucket} as h "
+			+ "WHERE meta(h).id = '#{#id}' AND h.#{#n1ql.filter} LIMIT 1")
+	HistorialEstadoBus findByIdCustom(@Param("id") String id);
 }
