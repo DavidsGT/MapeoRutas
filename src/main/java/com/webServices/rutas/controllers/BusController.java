@@ -26,6 +26,7 @@ import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingExcep
 import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
+import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.services.BusService;
 
 /**
@@ -314,5 +315,10 @@ public class BusController {
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
 	public void getTraficBus() throws ParseException, InterruptedException{
 		busService.getTraficBus();
+	}
+	@PostMapping("/timeControlParada/{linea}")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	public TimeControlParada addTimeControl(@PathVariable String linea){
+		return busService.crearTimeControlParada(linea);
 	}
 }

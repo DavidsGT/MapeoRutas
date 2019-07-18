@@ -51,7 +51,7 @@ public class ParadaService {
 				.orElseThrow(() -> new ResponseStatusException(
 				           HttpStatus.NOT_FOUND, "No existen Paradas Registrados."));
 	}
-	
+
 	/**
 	 * Obtener datos de una {@link Parada} entregando su respectivo ID.
 	 * @param id - ID de la {@link Parada} que desee obtener los datos

@@ -47,24 +47,24 @@ public class NightCalculation {
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
 		//Recorrer los historiales del los buses
         for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
-        	System.out.println("Para el bus: " + oneHistorial.getPlaca());
+        	System.out.println("Para el bus: " + oneHistorial.getId());
         	HistorialEstadoBus op =historialEstadoBusRepository.findByIdCustom(oneHistorial.getId());
         	List<EstadoBus> listEstadosHistorial = op.getListaEstados1();
         	listEstadosHistorial.addAll(op.getListaEstados2());
         	listEstadosHistorial.addAll(op.getListaEstados3());
         	//Guardar temporalmente para poder evaluar por SpatialView
         	//buscar las paradas pertenecientes a la linea que esta haciendo el recorrido
-        	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(oneHistorial.getLinea()));
+        	List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(String.valueOf(op.getLinea()));
         	//Buscar TimeCoontrol para esta linea
-        	TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(oneHistorial.getLinea()))
-        											.orElse(new TimeControlParada(String.valueOf(oneHistorial.getLinea()),paradasByLinea));
+        	TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(String.valueOf(op.getLinea()))
+        											.orElse(new TimeControlParada(String.valueOf(op.getLinea()),paradasByLinea));
         	//Recorro las paradas
         	for(int i = 0; i <= paradasByLinea.size()-1; i++) {
         		Parada p = paradasByLinea.get(i);
         		//por cada parada pregunto si existen buses cercanos a menos de 3 metros a la redonda
         		List<EstadoBusTemporal> busesCercanos = new ArrayList<>();
         		for(int t=1;t<=3;t++){
-        			List<EstadoBusTemporal> list = findBusesCercanos(p, oneHistorial.getId(),"listaEstados"+String.valueOf(t));
+        			List<EstadoBusTemporal> list = findBusesCercanos(p, op.getId(),"listaEstados"+String.valueOf(t));
         			if(t>1) {
         				int it=t-1;
         				list.forEach(s -> s.setIdx(s.getIdx()+(GlobalVariables.limitListEstados*it)));

@@ -34,6 +34,7 @@ import com.webServices.rutas.model.Ruta;
 import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.repository.BusRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
+import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 
@@ -44,6 +45,8 @@ import com.webServices.rutas.repository.TimeControlParadaRepository;
  */
 @Service
 public class BusService {
+	@Autowired
+	private ParadaRepository paradaRepository;
 	/**
 	 * Instancia para los servicios de {@link Parada}
 	 * @see {@link ParadaService}
@@ -499,5 +502,12 @@ public class BusService {
 	 */
 	public void deleteAllBusPhysical() {
 		busRepository.deleteAll();
+	}
+	
+	public TimeControlParada crearTimeControlParada(String linea) {
+		List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(linea);
+		TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(linea)
+				.orElse(new TimeControlParada(linea,paradasByLinea));
+		return timeControlParadaRepository.save(timeControlParada);
 	}
 }
