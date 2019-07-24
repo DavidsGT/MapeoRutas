@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.couchbase.client.java.env.CouchbaseEnvironment;
-import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.GeoLocation;
@@ -42,7 +40,6 @@ public class NightCalculation {
 	private BusService busService;
 	@Scheduled(cron=GlobalVariables.timeScheduled, zone="America/Guayaquil")
 	public void timeBetweenStops() throws IOException{
-		CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder().autoreleaseAfter(5000).build();
 		//TODO crear index para mayor velocidad de consulta
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
 		//Recorrer los historiales del los buses
@@ -136,14 +133,6 @@ public class NightCalculation {
 		try {
 			busService.startSimulator(11, "ABC1234");
 		} catch (Exception e) {
-		}
-	}
-	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
-	public void IniciarSimuladorLinea8_1() throws IOException, InterruptedException{
-		try {
-			busService.startSimulator(8, "DEF1234");
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
