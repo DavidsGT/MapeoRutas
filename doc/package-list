@@ -1,0 +1,8 @@
+com.webServices.rutas
+com.webServices.rutas.configurations
+com.webServices.rutas.controllers
+com.webServices.rutas.exception
+com.webServices.rutas.model
+com.webServices.rutas.repository
+com.webServices.rutas.services
+com.webServices.rutas.util

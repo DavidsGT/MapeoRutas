@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	/**
 	 * Hace uso de la clase {@link CustomUserDetailsService} para la utentificacion de usuarios en los servicios web
-	 * @see {@link CustomUserDetailsService}
+	 * @see CustomUserDetailsService
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	/**
 	 * Metodo que configura las respuesta en caso de malas credenciales.
-	 * @see {@link CustomBasicAuthenticationEntryPoint}
+	 * @see CustomBasicAuthenticationEntryPoint
 	 * @return {@link CustomBasicAuthenticationEntryPoint}
 	 */
 	@Bean

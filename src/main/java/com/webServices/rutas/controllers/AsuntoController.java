@@ -21,7 +21,7 @@ import com.webServices.rutas.services.AsuntoService;
  * Contiene los requestMapping de {@link Asunto} y los asocia a sus respectivos servicios en {@link AsuntoService}.
  * @author Davids Adrian Gonzalez Tigrero
  * @version 1.0
- * @see {@link AsuntoService}
+ * @see AsuntoService
  */
 @RestController
 @RequestMapping("asuntos")
@@ -37,7 +37,7 @@ public class AsuntoController {
 	/**
 	 * Metodo que Mapea "/asuntos", RequestMethod es GET, se enlaza al servicio {@link AsuntoService#getAllAsunto()} y retorna datos de todos los Asuntos registrados
 	 * @return Lista de Asuntos
-	 * @see {@link AsuntoService#getAllAsunto()}
+	 * @see AsuntoService#getAllAsunto()
 	 */
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
@@ -48,7 +48,7 @@ public class AsuntoController {
 	/**
 	 * Metodo que Mapea "/asuntos/create", RequestMethod es POST, se enlaza al servicio {@link AsuntoService#createAsunto(Asunto)} 
 	 * @param asunto - Datos del Asunto a Registrar
-	 * @see {@link AsuntoService#createAsunto(Asunto)}
+	 * @see AsuntoService#createAsunto(Asunto)
 	 */
 	@PostMapping("/create")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -59,7 +59,7 @@ public class AsuntoController {
 	/**
 	 * Metodo que Mapea "/asuntos", RequestMethod es POST, se enlaza al servicio {@link AsuntoService#addAsunto(String)} 
 	 * @param asunto - Datos del Asunto a Registrar
-	 * @see {@link AsuntoService#addAsunto(String)}
+	 * @see AsuntoService#addAsunto(String)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -72,7 +72,7 @@ public class AsuntoController {
 	 * Actualizar asunto. 
 	 * @param despues - nuevo asunto
 	 * @param antes - Asunto a reemplazar
-	 * @see {@link AsuntoService#updateAsunto(String, String)}
+	 * @see AsuntoService#updateAsunto(String, String)
 	 */
 	@PutMapping("/{antes}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -84,7 +84,7 @@ public class AsuntoController {
 	 * Metodo que Mapea "/asuntos/{id}", RequestMethod es DELETE, se enlaza al servicio {@link AsuntoService#deleteAsunto(Integer)}.
 	 * Eliminar un Asunto.
 	 * @param id - Id del asunto a eliminar
-	 * @see {@link AsuntoService#deleteAsunto(Integer)}
+	 * @see AsuntoService#deleteAsunto(Integer)
 	 */
 	@DeleteMapping("/{asunto}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")

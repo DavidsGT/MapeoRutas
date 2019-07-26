@@ -54,7 +54,7 @@ public class RutaService {
 	
 	/**
 	 * Obtener datos de una {@link Ruta} entregando su respectivo ID.
-	 * @param id - ID de la {@link Ruta} que desee obtener los datos
+	 * @param linea - Linea de la {@link Ruta} que desee obtener los datos
 	 * @return {@link Ruta}
 	 */
 	public Ruta getRuta(String linea) {

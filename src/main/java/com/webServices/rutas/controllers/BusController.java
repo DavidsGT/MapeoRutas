@@ -316,9 +316,4 @@ public class BusController {
 	public void getTraficBus() throws ParseException, InterruptedException{
 		busService.getTraficBus();
 	}
-	@PostMapping("/timeControlParada/{linea}")
-	@PreAuthorize("hasRole('ADMINISTRATOR')")
-	public TimeControlParada addTimeControl(@PathVariable String linea){
-		return busService.crearTimeControlParada(linea);
-	}
 }

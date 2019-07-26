@@ -242,6 +242,7 @@ public class BusService {
 	 * Añade un nuevo {@link EstadoBus} en un respectivo Dia
 	 * @param estadoBus - {@link EstadoBus} a guardar
 	 * @param placa - Placa del {@link Bus}
+	 * @param linea - Linea de {@link Cooperativa}
 	 */
 	public void updateEstadoBus(EstadoBus estadoBus,String placa,int linea) {
 		if(rutaRepository.existsById(String.valueOf(linea))) {
@@ -286,11 +287,12 @@ public class BusService {
 	 * Añade un nuevo {@link EstadoBus} en un respectivo dia pero entregando un cadena Json
 	 * @param valor - Cadena Json del {@link EstadoBus}
 	 * @param placa - Placa del {@link Bus}
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String)}
-	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
+	 * @param linea - Linea de {@link Cooperativa}
+	 * @throws JsonParseException - Objeto no puede ser transformado a Json
+	 * @throws JsonMappingException - El objeto Json no puede ser transformado a la Entidad
+	 * @throws IOException - Errores Internos Desconocidos
+	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, int)}
+	 * @see BusService#updateEstadoBus(EstadoBus, String, int)
 	 */
 	public void updateEstadoBusGET(String valor, int linea, String placa) throws JsonParseException, JsonMappingException, IOException {
         Gson mapper = new Gson();
@@ -302,8 +304,8 @@ public class BusService {
 	 * Añade un nuevo {@link EstadoBus} en un respectivo dia pero entregando valores que representan este pero seguido de comas
 	 * @param valor - datos del {@link EstadoBus} seguido de comas
 	 * @param placa - Placa del {@link Bus}
-	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String)}
-	 * @see {@link BusService#updateEstadoBus(EstadoBus, String)}
+	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, int)}
+	 * @see BusService#updateEstadoBus(EstadoBus, String, int)
 	 */
 	public void updateEstadoBusGETAlternative(String valor, String placa) {
 		String[] attrib = valor.split(",");
@@ -325,7 +327,7 @@ public class BusService {
 	 * Inicia la simulación de un {@link Bus} de una linea de una {@link Cooperativa}
 	 * @param linea - Linea de {@link Cooperativa}
 	 * @param placa - Placa de {@link Bus}
-	 * @throws InterruptedException
+	 * @throws InterruptedException - Proceso interrumpido
 	 */
 	public void startSimulator(int linea, String placa) throws InterruptedException{
 		Ruta rs = rutaRepository.findById(String.valueOf(linea)).orElseThrow(() -> new ResponseStatusException(
@@ -350,7 +352,7 @@ public class BusService {
 	 * @param idParada - Id de una {@link Parada}
 	 * @param linea - Linea de {@link Cooperativa}
 	 * @return Placa de {@link Bus} con sus respectivos tiempos de llegada a la {@link Parada}
-	 * @throws InterruptedException
+	 * @throws InterruptedException - Proceso Interrumpido
 	 */
 	public Map<String, Double> getCalculateTimeToStop(String idParada, String linea) throws InterruptedException {
 		TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea).orElseThrow(() -> new ResponseStatusException(
@@ -502,12 +504,5 @@ public class BusService {
 	 */
 	public void deleteAllBusPhysical() {
 		busRepository.deleteAll();
-	}
-	
-	public TimeControlParada crearTimeControlParada(String linea) {
-		List<Parada> paradasByLinea = (List<Parada>) paradaRepository.findAllByLinea(linea);
-		TimeControlParada timeControlParada = timeControlParadaRepository.findByLinea(linea)
-				.orElse(new TimeControlParada(linea,paradasByLinea));
-		return timeControlParadaRepository.save(timeControlParada);
 	}
 }
