@@ -23,7 +23,7 @@ import com.webServices.rutas.services.ParadaService;
  * Contiene los requestMapping de {@link Parada} y los asocia a sus respectivos servicios en {@link ParadaService}.
  * @author Davids Adrian Gonzalez Tigrero
  * @version 1.0
- * @see {@link ParadaService}
+ * @see ParadaService
  */
 @RestController
 @RequestMapping("paradas")
@@ -39,7 +39,7 @@ public class ParadaController {
 	/**
 	 * Metodo que Mapea "/paradas", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getAllParada()} y retorna datos de todos las {@link Parada} registradas
 	 * @return Lista de {@link Parada}
-	 * @see {@link ParadaService#getAllParada()}
+	 * @see ParadaService#getAllParada()
 	 */
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
@@ -52,7 +52,7 @@ public class ParadaController {
 	 * y retorna el {@link Parada}
 	 * @param id - ID de la {@link Parada}
 	 * @return {@link Parada}
-	 * @see {@link ParadaService#getParada(String)}
+	 * @see ParadaService#getParada(String)
 	 */
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
@@ -65,7 +65,7 @@ public class ParadaController {
 	 * y retorna el {@link Parada} Ignorando su estado
 	 * @param id - ID de la {@link Parada}
 	 * @return {@link Parada}
-	 * @see {@link ParadaService#getParada(String)}
+	 * @see ParadaService#getParada(String)
 	 */
 	@GetMapping("/{id}/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
@@ -78,7 +78,7 @@ public class ParadaController {
 	 * y retorna la {@link Parada}
 	 * @param nombre - nombre de la {@link Parada} que desee Informacion.
 	 * @return {@link Parada}
-	 * @see {@link ParadaService#getParadaByNombre(String)} 
+	 * @see ParadaService#getParadaByNombre(String)
 	 */
 	@GetMapping("/byNombre/{nombre}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -90,7 +90,7 @@ public class ParadaController {
 	 * Metodo que Mapea "/paradas/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getAllParadaIgnoreEstado()} 
 	 * y retorna todos los {@link Parada} incluye eliminados logicamente.
 	 * @return Lista de {@link Parada} incluye eliminados logicamente
-	 * @see {@link ParadaService#getAllParadaIgnoreEstado())}
+	 * @see ParadaService#getAllParadaIgnoreEstado()
 	 */
 	@GetMapping("/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -117,12 +117,12 @@ public class ParadaController {
 	 * y retorna Datos de una {@link Parada} registrada
 	 * @param parada - Datos de la {@link Parada} a Registrar
 	 * @return {@link Parada} Registrado
-	 * @see {@link ParadaService#addParada(Parada)}
+	 * @see ParadaService#addParada(Parada)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public void addParada(@RequestBody Parada parada) {
-		paradaService.addParada(parada);
+	public Parada addParada(@RequestBody Parada parada) {
+		return paradaService.addParada(parada);
 	}
 	
 	/**
@@ -130,7 +130,7 @@ public class ParadaController {
 	 * Actualizar {@link Parada}.
 	 * @param parada - {@link Parada} a Actualizar
 	 * @return {@link Parada} Actualizada
-	 * @see {@link ParadaService#updateParada(Parada)}
+	 * @see ParadaService#updateParada(Parada)
 	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -142,7 +142,7 @@ public class ParadaController {
 	 * Metodo que Mapea "/paradas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link ParadaService#deleteParada(String)}.
 	 * Eliminar una {@link Parada}.
 	 * @param id - ID de la {@link Parada} a eliminar
-	 * @see {@link ParadaService#deleteParada(String)}
+	 * @see ParadaService#deleteParada(String)
 	 */
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Parada eliminado con exito.")
@@ -152,13 +152,14 @@ public class ParadaController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/paradas/{linea}/radio/{radio}/point/{point}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParadasCercanasRadio(Point, Double, int)}
+	 * Metodo que Mapea "/paradas/{linea}/radio/{radio}/point/{point}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParadasCercanasRadio(Point, Double, String)}
 	 * y retorna una lista de {@link Parada} que estan en el radio dado.
 	 * @param x - Representa la Latitud
 	 * @param y - Representa la Lotitud
 	 * @param radio - Representa el radio dado en Kilometros a buscar
 	 * @param linea - Representa la Linea del {@link Bus} a Buscar sus {@link Parada}
 	 * @return Lista de {@link Parada} cercanas al punto y radio Dado.
+	 * @see ParadaService#getParadasCercanasRadio(Point, Double, String)
 	 */
 	@GetMapping("/{linea}/radio/{radio}/point/x={x},y={y}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
@@ -170,7 +171,7 @@ public class ParadaController {
 	 * Metodo que Mapea "/paradas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link ParadaService#deleteParadaPhysical(String)}.
 	 * Eliminar una {@link Parada}.
 	 * @param id - Id de la {@link Parada}
-	 * @see {@link ParadaService#deleteParadaPhysical(String)}
+	 * @see ParadaService#deleteParadaPhysical(String)
 	 */
 	@DeleteMapping("/{id}/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Parada eliminada de la Base de Datos con exito.")
@@ -182,8 +183,7 @@ public class ParadaController {
 	/**
 	 * Metodo que Mapea "/paradas/physical", RequestMethod es DELETE, se enlaza al servicio {@link ParadaService#deleteAllParadaPhysical()}.
 	 * Eliminar una {@link Parada}.
-	 * @param id - Id de la {@link Parada}
-	 * @see {@link ParadaService#deleteAllParadaPhysical()}
+	 * @see ParadaService#deleteAllParadaPhysical()
 	 */
 	@DeleteMapping("/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Paradas eliminadas de la Base de Datos con exito.")

@@ -22,7 +22,7 @@ import com.webServices.rutas.services.SegUsuarioService;
 /**
  * Clase que contiene los requestMapping de {@link SegUsuario} y los asocia a sus respectivos servicios en {@link SegUsuarioService}.
  * @author Davids Adrian Gonzalez Tigrero
- * @see {@link SegUsuarioService}
+ * @see SegUsuarioService
  * @version 1.0
  */
 @RestController
@@ -39,7 +39,7 @@ public class SegUsuarioController {
 	 * Metodo que Mapea "/usuarios", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getAllSegUsuario()}
 	 * y retorna datos de todos las {@link SegUsuario} registrados
 	 * @return Lista de {@link SegUsuario}
-	 * @see {@link SegUsuarioService#getAllSegUsuario()}
+	 * @see SegUsuarioService#getAllSegUsuario()
 	 */
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -51,7 +51,7 @@ public class SegUsuarioController {
 	 * Metodo que Mapea "/usuarios/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getAllSegUsuarioIgnoreEstado()} 
 	 * y retorna todos las {@link SegUsuario} incluye eliminados logicamente.
 	 * @return Lista de {@link SegUsuario} incluye eliminados logicamente.
-	 * @see {@link SegUsuarioService#getAllSegUsuarioIgnoreEstado()}
+	 * @see SegUsuarioService#getAllSegUsuarioIgnoreEstado()
 	 */
 	@GetMapping("/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -64,7 +64,7 @@ public class SegUsuarioController {
 	 * y retorna el {@link SegUsuario}
 	 * @param id - Id del {@link SegUsuario} 
 	 * @return {@link SegUsuario}
-	 * @see {@link SegUsuarioService#getSegUsuario(String)} 
+	 * @see SegUsuarioService#getSegUsuario(String)
 	 */
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -77,7 +77,7 @@ public class SegUsuarioController {
 	 * y retorna el {@link SegUsuario}
 	 * @param id - Id del {@link SegUsuario} 
 	 * @return {@link SegUsuario}
-	 * @see {@link SegUsuarioService#getSegUsuarioIgnoreEstado(String)} 
+	 * @see SegUsuarioService#getSegUsuarioIgnoreEstado(String)
 	 */
 	@GetMapping("/{id}/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -90,7 +90,7 @@ public class SegUsuarioController {
 	 * y retorna Datos de una {@link SegUsuario} registrado
 	 * @param segUsuario - Datos del {@link SegUsuario} a Registrar
 	 * @return {@link SegUsuario} Registrado
-	 * @see {@link SegUsuarioService#addSegUsuario(SegUsuario)}
+	 * @see SegUsuarioService#addSegUsuario(SegUsuario)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
@@ -103,11 +103,11 @@ public class SegUsuarioController {
 	 * Actualizar {@link SegUsuario}.
 	 * @param segUsuario - {@link SegUsuario} a Actualizar
 	 * @return {@link SegUsuario} Actualizado
-	 * @see {@link SegUsuarioService#updateSegUsuario(SegUsuario)}.
+	 * @see SegUsuarioService#updateSegUsuario(SegUsuario)
 	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
-	public SegUsuario updateSegUsuario(@RequestBody SegUsuario segUsuario,@PathVariable String id) {
+	public SegUsuario updateSegUsuario(@RequestBody SegUsuario segUsuario) {
 		return segUsuarioService.updateSegUsuario(segUsuario);
 	}
 	
@@ -115,7 +115,7 @@ public class SegUsuarioController {
 	 * Metodo que Mapea "/usuarios/{id}", RequestMethod es DELETE, se enlaza al servicio {@link SegUsuarioService#deleteSegUsuario(String)}.
 	 * Eliminar un {@link SegUsuario}.
 	 * @param id - Id del {@link SegUsuario}
-	 * @see {@link SegUsuarioService#deleteSegUsuario(String)}.
+	 * @see SegUsuarioService#deleteSegUsuario(String)
 	 */
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value = HttpStatus.OK, reason = "Usuario Eliminado Correctamente")
@@ -125,7 +125,7 @@ public class SegUsuarioController {
 	}
 	
 	/**
-	 * Metodo que mapea "/usuarios/{usuario}/{clave}", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getIdUsuario(String, String)}
+	 * Metodo que mapea "/usuarios/{usuario}/{clave}", RequestMethod es GET, se enlaza al servicio {@link SegUsuarioService#getUsuarioByNombreAndPass(String, String)}
 	 * @param usuario - Nombre de Usuario
 	 * @param clave - Clave del Usuario
 	 * @return {@link SegUsuario}

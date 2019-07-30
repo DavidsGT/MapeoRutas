@@ -39,7 +39,7 @@ public class SegPerfilController {
 	 * Metodo que Mapea "/perfiles", RequestMethod es GET, se enlaza al servicio {@link SegPerfilService#getAllSegPerfil()} 
 	 * y retorna lista de {@link SegPerfil} registrados
 	 * @return Lista de {@link SegPerfil}
-	 * @see {@link SegPerfilService#getAllSegPerfil()}
+	 * @see SegPerfilService#getAllSegPerfil()
 	 */
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -50,7 +50,7 @@ public class SegPerfilController {
 	/**
 	 * Metodo que Mapea "/perfiles/create", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#createPerfil(SegPerfil)} 
 	 * @param perfil - Datos de los {@link SegPerfil} a Registrar
-	 * @see {@link SegPerfilService#createPerfil(SegPerfil)}
+	 * @see SegPerfilService#createPerfil(SegPerfil)
 	 */
 	@PostMapping("/create")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -59,10 +59,10 @@ public class SegPerfilController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/perfiles", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#addSegPerfil(SegPerfil)} 
+	 * Metodo que Mapea "/perfiles", RequestMethod es POST, se enlaza al servicio {@link SegPerfilService#addSegPerfil(String)} 
 	 * y retorna Datos de una {@link SegPerfil} registrado
-	 * @param SegPerfil - Datos de la perfil a Registrar
-	 * @see {@link SegPerfilService#addSegPerfil(SegPerfil)}
+	 * @param segPerfil - Datos de la perfil a Registrar
+	 * @see SegPerfilService#addSegPerfil(String)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -71,11 +71,11 @@ public class SegPerfilController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/perfiles/{antes}", RequestMethod es PUT, se enlaza al servicio {@link PerfilService#updatePerfil(String, String)}.
+	 * Metodo que Mapea "/perfiles/{antes}", RequestMethod es PUT, se enlaza al servicio {@link SegPerfilService#updateSegPerfil(String, String)}.
 	 * Actualizar asunto.
 	 * @param despues - nuevo Perfil
 	 * @param antes - Perfil a reemplazar
-	 * @see {@link AsuntoService#updateAsunto(String, String)}
+	 * @see SegPerfilService#updateSegPerfil(String, String)
 	 */
 	@PutMapping("/{antes}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -87,7 +87,7 @@ public class SegPerfilController {
 	 * Metodo que Mapea "/perfiles/{perfil}", RequestMethod es DELETE, se enlaza al servicio {@link SegPerfilService#deleteSegPerfil(String)}.
 	 * Eliminar un Perfil.
 	 * @param perfil - Perfil a eliminar
-	 * @see {@link SegPerfilService#deleteSegPerfil(String)}
+	 * @see SegPerfilService#deleteSegPerfil(String)
 	 */
 	@DeleteMapping("/{perfil}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")

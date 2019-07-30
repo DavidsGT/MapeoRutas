@@ -25,7 +25,7 @@ import com.webServices.rutas.services.RutaService;
 /**
  * Clase que contiene los requestMapping de {@link Ruta} y los asocia a sus respectivos servicios en {@link RutaService}.
  * @author Davids Adrian Gonzalez Tigrero 
- * @see {@linkRutaService}
+ * @see RutaService
  * @version 1.0
  */
 @RestController
@@ -40,10 +40,10 @@ public class RutaController {
 	private RutaService rutaService;
 	
 	/**
-	 * Metodo que Mapea "/rutas", RequestMethod es GET, se enlaza al servicio {@link RutaService#getAllRuta())}
+	 * Metodo que Mapea "/rutas", RequestMethod es GET, se enlaza al servicio {@link RutaService#getAllRuta()}
 	 * y retorna la Lista de {@link Ruta} registrados
 	 * @return Lista de Rutas
-	 * @see {@link RutaService#getAllRuta()}
+	 * @see RutaService#getAllRuta()
 	 */
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
 	@GetMapping
@@ -55,7 +55,7 @@ public class RutaController {
 	 * Metodo que Mapea "/rutas/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link RutaService#getAllRutaIgnoreEstado()} 
 	 * y retorna Lista de {@link Ruta} incluye eliminados logicamente.
 	 * @return Lista de {@link Ruta} incluye eliminados logicamente.
-	 * @see {@link RutaService#getAllRutaIgnoreEstado()}
+	 * @see RutaService#getAllRutaIgnoreEstado()
 	 */
 	@GetMapping("/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -68,7 +68,7 @@ public class RutaController {
 	 * y retorna la {@link Ruta}
 	 * @param linea - Linea de la {@link Ruta}
 	 * @return {@link Ruta}
-	 * @see {@link RutaService#getRuta(String)} 
+	 * @see RutaService#getRuta(String)
 	 */
 	@GetMapping("/{linea}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
@@ -81,7 +81,7 @@ public class RutaController {
 	 * y retorna la {@link Ruta} ignorando su estado
 	 * @param linea - Linea de la {@link Ruta}
 	 * @return {@link Ruta}
-	 * @see {@link RutaService#getRutaIgnoreEstado(String)} 
+	 * @see RutaService#getRutaIgnoreEstado(String)
 	 */
 	@GetMapping("/{linea}/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -95,7 +95,7 @@ public class RutaController {
 	 * @param file - Archivo GPX de donde escogera la Ruta y sus Paradas
 	 * @param linea - Linea a la que pertenece esta {@link Ruta}.
 	 * @return {@link Ruta} Registrada
-	 * @see {@link RutaService#addRutaWithGPX(MultipartFile, String)}
+	 * @see RutaService#addRutaWithGPX(MultipartFile, String)
 	 * @throws IOException - en caso de que el archivo no sea GPX
 	 */
 	@PostMapping("/archivoGPX")
@@ -110,7 +110,7 @@ public class RutaController {
 	 * @param file - Archivo GPX de donde escogera la Ruta y sus Paradas
 	 * @param linea - Linea a la que pertenece esta {@link Ruta}.
 	 * @return {@link Ruta} Registrada
-	 * @see {@link RutaService#addRutaWithGPX(MultipartFile, String)}
+	 * @see RutaService#addRutaWithGPX(MultipartFile, String)
 	 * @throws IOException - en caso de que el archivo no sea GPX
 	 */
 	@PutMapping("/archivoGPX")
@@ -124,7 +124,7 @@ public class RutaController {
 	 * y retorna {@link Ruta} registrada
 	 * @param ruta - {@link Ruta} a Registrar
 	 * @return {@link Ruta} Registrada
-	 * @see {@link RutaService#addRuta(Ruta)}
+	 * @see RutaService#addRuta(Ruta)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -136,7 +136,8 @@ public class RutaController {
 	 * Metodo que Mapea "/rutas", RequestMethod es PUT, se enlaza al servicio {@link RutaService#updateRuta(Ruta)}.
 	 * Actualizar {@link Ruta}.
 	 * @param ruta - {@link Ruta} a Actualizar
-	 * @see {@link RutaService#updateRuta(Ruta)}
+	 * @see RutaService#updateRuta(Ruta)
+	 * @return {@link Ruta}
 	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -148,7 +149,7 @@ public class RutaController {
 	 * Metodo que Mapea "/rutas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link RutaService#deleteRuta(String)}.
 	 * Eliminar una {@link Ruta}.
 	 * @param id - Id de {@link Ruta}
-	 * @see {@link RutaService#deleteRuta(String)}
+	 * @see RutaService#deleteRuta(String)
 	 */
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Ruta eliminado con exito.")
@@ -161,7 +162,7 @@ public class RutaController {
 	 * Metodo que Mapea "/rutas/{id}/physical", RequestMethod es DELETE, se enlaza al servicio {@link RutaService#deleteRutaPhysical(String)}.
 	 * Eliminar una {@link Ruta} de la Base de Datos.
 	 * @param id - ID de {@link Ruta}
-	 * @see {@link RutaService#deleteRutaPhysical(String)}.
+	 * @see RutaService#deleteRutaPhysical(String)
 	 */
 	@DeleteMapping("/{id}/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Ruta eliminado con exito.")
@@ -173,7 +174,7 @@ public class RutaController {
 	/**
 	 * Metodo que Mapea "/rutas/physical", RequestMethod es DELETE, se enlaza al servicio {@link RutaService#deleteAllRutaPhysical()}.
 	 * Eliminar todos los {@link Ruta} de la Base de Datos.
-	 * @see {@link RutaService#deleteAllRutaPhysical()}.
+	 * @see RutaService#deleteAllRutaPhysical()
 	 */
 	@DeleteMapping("/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Todos las Rutas eliminadas con exito.")

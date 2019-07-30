@@ -22,7 +22,7 @@ import com.webServices.rutas.services.CooperativaService;
 /**
  * Clase que contiene los requestMapping de {@link Cooperativa} y los asocia a sus respectivos servicios en {@link CooperativaService}.
  * @author Davids Adrian Gonzalez Tigrero 
- * @see {@link CooperativaService}
+ * @see CooperativaService
  * @version 1.0
  */
 @RestController
@@ -40,7 +40,7 @@ public class CooperativaController {
 	 * Metodo que Mapea "/cooperativas", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getAllCooperativa()}
 	 * y retorna lista de {@link Cooperativa} registrados
 	 * @return Lista de {@link Cooperativa}
-	 * @see {@link CooperativaService#getAllCooperativa()}
+	 * @see CooperativaService#getAllCooperativa()
 	 */
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
@@ -52,7 +52,7 @@ public class CooperativaController {
 	 * Metodo que Mapea "/cooperativas/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link CooperativaService#getAllCooperativaIgnoreEstado()} 
 	 * y retorna lista de {@link Cooperativa} incluye eliminados logicamente.
 	 * @return Lista de {@link Cooperativa} incluye eliminados logicamente.
-	 * @see {@link CooperativaService#getAllCooperativaIgnoreEstado()}
+	 * @see CooperativaService#getAllCooperativaIgnoreEstado()
 	 */
 	@GetMapping("/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -65,7 +65,7 @@ public class CooperativaController {
 	 * y retorna la {@link Cooperativa}
 	 * @param id - Id de la {@link Cooperativa}
 	 * @return {@link Cooperativa}
-	 * @see {@link CooperativaService#getCooperativa(String)} 
+	 * @see CooperativaService#getCooperativa(String)
 	 */
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -78,7 +78,7 @@ public class CooperativaController {
 	 * y retorna la {@link Cooperativa} ignorando su estado
 	 * @param id - Id de la {@link Cooperativa}
 	 * @return {@link Cooperativa}
-	 * @see {@link CooperativaService#getCooperativaIgnoreEstado(String)} 
+	 * @see CooperativaService#getCooperativaIgnoreEstado(String)
 	 */
 	@GetMapping("/{id}/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -91,7 +91,7 @@ public class CooperativaController {
 	 * y retorna la {@link Cooperativa}
 	 * @param nombre - nombre de la {@link Cooperativa} que desee Informacion.
 	 * @return {@link Cooperativa}
-	 * @see {@link CooperativaService#getCooperativaByNombre(String)}
+	 * @see CooperativaService#getCooperativaByNombre(String)
 	 */
 	@GetMapping("/byNombre/{nombre}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -100,11 +100,11 @@ public class CooperativaController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/cooperativas", RequestMethod es POST, se enlaza al servicio {@link CooperativaService#addCooperativa(Cooperativa))} 
+	 * Metodo que Mapea "/cooperativas", RequestMethod es POST, se enlaza al servicio {@link CooperativaService#addCooperativa(Cooperativa)} 
 	 * y retorna {@link Cooperativa} registrada
 	 * @param cooperativa - {@link Cooperativa} a Registrar
 	 * @return {@link Cooperativa} Registrada
-	 * @see {@link CooperativaService#addCooperativa(Cooperativa))}
+	 * @see CooperativaService#addCooperativa(Cooperativa)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -116,7 +116,8 @@ public class CooperativaController {
 	 * Metodo que Mapea "/cooperativas", RequestMethod es PUT, se enlaza al servicio {@link CooperativaService#updateCooperativa(Cooperativa)}.
 	 * Actualizar {@link Cooperativa}.
 	 * @param cooperativa - {@link Cooperativa} a Actualizar
-	 * @see {@link CooperativaService#updateCooperativa(Cooperativa)}
+	 * @see CooperativaService#updateCooperativa(Cooperativa)
+	 * @return {@link Cooperativa}
 	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -128,7 +129,7 @@ public class CooperativaController {
 	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativa(String)}.
 	 * Eliminar una {@link Cooperativa}.
 	 * @param id - Id de la {@link Cooperativa}
-	 * @see {@link CooperativaService#deleteCooperativa(String)}
+	 * @see CooperativaService#deleteCooperativa(String)
 	 */
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Cooperativa eliminado con exito.")
@@ -141,7 +142,7 @@ public class CooperativaController {
 	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteCooperativaPhysical(String)}.
 	 * Eliminar una {@link Cooperativa}.
 	 * @param id - Id de la {@link Cooperativa}
-	 * @see {@link CooperativaService#deleteCooperativaPhysical(String)}
+	 * @see CooperativaService#deleteCooperativaPhysical(String)
 	 */
 	@DeleteMapping("/{id}/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Cooperativa eliminado con exito.")
@@ -153,8 +154,7 @@ public class CooperativaController {
 	/**
 	 * Metodo que Mapea "/cooperativas/{id}", RequestMethod es DELETE, se enlaza al servicio {@link CooperativaService#deleteAllCooperativaPhysical()}.
 	 * Eliminar una {@link Cooperativa}.
-	 * @param id - Id de la {@link Cooperativa}
-	 * @see {@link CooperativaService#deleteAllCooperativaPhysical()}
+	 * @see CooperativaService#deleteAllCooperativaPhysical()
 	 */
 	@DeleteMapping("/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Cooperativa eliminado con exito.")

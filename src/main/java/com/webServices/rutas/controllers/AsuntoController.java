@@ -81,10 +81,10 @@ public class AsuntoController {
 	}
 
 	/**
-	 * Metodo que Mapea "/asuntos/{id}", RequestMethod es DELETE, se enlaza al servicio {@link AsuntoService#deleteAsunto(Integer)}.
+	 * Metodo que Mapea "/asuntos/{id}", RequestMethod es DELETE, se enlaza al servicio {@link AsuntoService#deleteAsunto(String)}.
 	 * Eliminar un Asunto.
-	 * @param id - Id del asunto a eliminar
-	 * @see AsuntoService#deleteAsunto(Integer)
+	 * @param asunto - Asunto a eliminar
+	 * @see AsuntoService#deleteAsunto(String)
 	 */
 	@DeleteMapping("/{asunto}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")

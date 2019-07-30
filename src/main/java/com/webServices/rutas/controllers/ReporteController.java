@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.Reporte;
 import com.webServices.rutas.services.ReporteService;
 
 /**
  * Contiene los requestMapping de {@link Reporte} y los asocia a sus respectivos servicios en {@link ReporteService}.
  * @author Davids Adrian Gonzalez Tigrero 
- * @see {@link ReporteService}
+ * @see ReporteService
  * @version 1.0
  */
 @RestController
@@ -42,7 +43,7 @@ public class ReporteController {
 	 * Metodo que Mapea "/reportes", RequestMethod es GET, se enlaza al servicio {@link ReporteService#getAllReporte()}
 	 * y retorna lista de {@link Reporte} registradas
 	 * @return Lista de {@link Reporte}
-	 * @see {@link ReporteService#getAllReporte()}
+	 * @see ReporteService#getAllReporte()
 	 */
 	@GetMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -54,7 +55,7 @@ public class ReporteController {
 	 * Metodo que Mapea "/reportes/ignoreEstado", RequestMethod es GET, se enlaza al servicio {@link ReporteService#getAllReporteIgnoreEstado()} 
 	 * y retorna lista de {@link Reporte} incluye eliminados logicamente.
 	 * @return Lista de {@link Reporte} incluye eliminados logicamente.
-	 * @see {@link ReporteService#getAllReporteIgnoreEstado()}
+	 * @see ReporteService#getAllReporteIgnoreEstado()
 	 */
 	@GetMapping("/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -67,7 +68,7 @@ public class ReporteController {
 	 * y retorna el {@link Reporte}
 	 * @param id - ID del {@link Reporte} 
 	 * @return {@link Reporte}
-	 * @see {@link ReporteService#getReporte(String)} 
+	 * @see ReporteService#getReporte(String)
 	 */
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
@@ -80,7 +81,7 @@ public class ReporteController {
 	 * y retorna la {@link Reporte} ignorando su estado
 	 * @param id - Id de la {@link Reporte}
 	 * @return {@link Reporte}
-	 * @see {@link ReporteService#getReporteIgnoreEstado(String)} 
+	 * @see ReporteService#getReporteIgnoreEstado(String)
 	 */
 	@GetMapping("/{id}/ignoreEstado")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -95,7 +96,7 @@ public class ReporteController {
 	 * @param fechaIni - Fecha de Inicio
 	 * @param fechaFin - Fecha de Fin
 	 * @return Lista de {@link Reporte}
-	 * @see {@link ReporteService#getReporteByCooperativaAndBetweenDate(String, Date, Date)}
+	 * @see ReporteService#getReporteByCooperativaAndBetweenDate(String, Date, Date)
 	 */
 	@GetMapping("/cooperativa/{idCooperativa}/between/{fechaIni}:{fechaFin}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -111,7 +112,7 @@ public class ReporteController {
 	 * @param fechaIni - Fecha de Inicio
 	 * @param fechaFin - Fecha de Fin
 	 * @return Lista de {@link Reporte}
-	 * @see {@link ReporteService#getReporteBetweenDate(Date, Date)}
+	 * @see ReporteService#getReporteBetweenDate(Date, Date)
 	 */
 	@GetMapping("between/{fechaIni}:{fechaFin}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -125,7 +126,7 @@ public class ReporteController {
 	 * y retorna Datos de una {@link Reporte} registrada
 	 * @param reporte - Datos de la {@link Reporte} a Registrar
 	 * @return {@link Reporte} Registrado
-	 * @see {@link ReporteService#addReporte(Reporte)}
+	 * @see ReporteService#addReporte(Reporte)
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
@@ -138,7 +139,7 @@ public class ReporteController {
 	 * Actualizar {@link Reporte}.
 	 * @param reporte - {@link Reporte} a Actualizar
 	 * @return {@link Reporte} Actualizada
-	 * @see {@link ReporteService#updateReporte(Reporte)}
+	 * @see ReporteService#updateReporte(Reporte)
 	 */
 	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL')")
@@ -150,7 +151,7 @@ public class ReporteController {
 	 * Metodo que Mapea "/reportes/{id}", RequestMethod es DELETE, se enlaza al servicio {@link ReporteService#deleteReporte(String)}.
 	 * Eliminar un {@link Reporte}.
 	 * @param id - Id del {@link Reporte}
-	 * @see {@link ReporteService#deleteReporte(String)}
+	 * @see ReporteService#deleteReporte(String)
 	 */
 	@DeleteMapping("/{id}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Reporte eliminado con exito.")
@@ -163,7 +164,7 @@ public class ReporteController {
 	 * Metodo que Mapea "/reportes/{id}/physical", RequestMethod es DELETE, se enlaza al servicio {@link ReporteService#deleteReportePhysical(String)}.
 	 * Eliminar una {@link Reporte} de la Base de Datos.
 	 * @param id - ID de la {@link Reporte}
-	 * @see {@link ReporteService#deleteReportePhysical(String)}.
+	 * @see ReporteService#deleteReportePhysical(String)
 	 */
 	@DeleteMapping("/{id}/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Reporte eliminado con exito.")
@@ -175,7 +176,7 @@ public class ReporteController {
 	/**
 	 * Metodo que Mapea "/reportes/physical", RequestMethod es DELETE, se enlaza al servicio {@link ReporteService#deleteAllReportePhysical()}.
 	 * Eliminar todos los {@link Reporte} de la Base de Datos.
-	 * @see {@link ReporteService#deleteAllReportePhysical()}.
+	 * @see ReporteService#deleteAllReportePhysical()
 	 */
 	@DeleteMapping("/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Todos los Reportes eliminados con exito.")

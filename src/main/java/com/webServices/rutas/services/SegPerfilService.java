@@ -37,7 +37,7 @@ public class SegPerfilService{
 	
 	/**
 	 * Añade un Perfil nuevo.
-	 * @param perfil - Perfil a añadir
+	 * @param segPerfil - Perfil a añadir
 	 */
 	public void addSegPerfil(String segPerfil) {
 		SegPerfil aux = segPerfilRepository.findById("Perfiles").get();

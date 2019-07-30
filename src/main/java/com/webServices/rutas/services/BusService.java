@@ -318,7 +318,7 @@ public class BusService {
 	}
 
 	//Obtener trafico de buses online
-	public void getTraficBus() throws ParseException, InterruptedException {
+	public void getTraficBus() {
 		//String r = rutaRepository.findById("11").get().getRutaGeoJson();
 		//return r;
 	}

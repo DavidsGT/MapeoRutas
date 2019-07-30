@@ -158,7 +158,7 @@ public class RutaService {
 	
 	/**
 	 * Elimina una {@link Ruta}
-	 * @param id - Id de la {@link Ruta} a Eliminar
+	 * @param linea - Linea de Cooperativa de la {@link Ruta} a Eliminar
 	 */
 	public void deleteRuta(String linea) {
 		Ruta c = getRuta(linea);
