@@ -21,11 +21,10 @@ public class CustomBasicAuthenticationEntryPoint extends BasicAuthenticationEntr
     public void commence(final HttpServletRequest request, 
             final HttpServletResponse response, 
             final AuthenticationException authException) throws IOException, ServletException {
-        //Authentication failed, send error response.
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.addHeader("WWW-Authenticate", "Basic realm=" + getRealmName() + "");
+        response.addHeader("Content-Type", "application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();
-        writer.println("HTTP Status 401 : " + authException.getMessage());
+        writer.println(authException.getMessage());
     }
 	@Override
     public void afterPropertiesSet() throws Exception {

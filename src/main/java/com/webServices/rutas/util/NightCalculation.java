@@ -130,44 +130,14 @@ public class NightCalculation {
 	
 	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
 	public void IniciarSimuladorLinea11_1() throws IOException, InterruptedException{
-		try {
-			busService.startSimulator(11, "ABC1234");
-		} catch (Exception e) {
-		}
-	}
-	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
-	public void IniciarSimuladorLinea7_1() throws IOException, InterruptedException{
-		try {
-			busService.startSimulator(7, "GHI1234");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		busService.startSimulator(11, "ABC1234");
 	}
 	@Scheduled(cron=GlobalVariables.timeSimulator2, zone="America/Guayaquil")
 	public void IniciarSimuladorLinea8_2() throws IOException, InterruptedException{
-		try {
 			busService.startSimulator(8, "DEF5678");
-		} catch (Exception e) {
-			
-		}
-		
-	}
-	@Scheduled(cron=GlobalVariables.timeSimulator2, zone="America/Guayaquil")
-	public void IniciarSimuladorLinea7_2() throws IOException, InterruptedException{
-		try {
-			busService.startSimulator(7, "GHI5678");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
 	}
 	@Scheduled(cron=GlobalVariables.timeSimulator3, zone="America/Guayaquil")
 	public void IniciarSimuladorLinea7_3() throws IOException, InterruptedException{
-		try {
 			busService.startSimulator(7, "GHI9012");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
 	}
 }

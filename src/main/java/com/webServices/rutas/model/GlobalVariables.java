@@ -17,8 +17,8 @@ public class GlobalVariables {
 	public static final String fechaNightCalculation  = "";//Si esta vacio coge el tiempo actual a menos q en este campo se especifique con una fecha yyyy-MM-dd
 	public static final int limitListEstados = 3000;
 	public static final String timeSimulator1 = "0 0 8 * * ?";
-	public static final String timeSimulator2 = "0 20 8 * * ?";
-	public static final String timeSimulator3 = "0 40 8 * * ?";
+	public static final String timeSimulator2 = "0 21 8 * * ?";
+	public static final String timeSimulator3 = "0 42 8 * * ?";
 	public static String confirmPlaca(String placa) {
 		return placa.replace("-","")
 					.toUpperCase();
