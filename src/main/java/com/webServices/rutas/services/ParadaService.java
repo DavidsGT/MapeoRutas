@@ -3,6 +3,7 @@ package com.webServices.rutas.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
@@ -187,5 +188,18 @@ public class ParadaService {
 		for(Ruta rt : r)
 			rt.setListasParadas(null);
 		paradaRepository.deleteAll();
+	}
+	/**
+	 * Obtener lista de {@link Parada} que pertenecen a un {@link Ruta}
+	 * @param linea - linea de la {@link Cooperativa}
+	 * @return - Lista de {@link Parada}
+	 */
+	public Iterable<Parada> getAllParadaByLinea(String linea) {
+		Ruta ruta = rutaRepository.findById(linea).orElseThrow(()->new ResponseStatusException(
+					HttpStatus.NOT_FOUND, "No existe Linea "+linea+"."));
+		Optional<List<Parada>> par = Optional.of((List<Parada>)paradaRepository.findAllById(ruta.getListasParadas()));
+		par.get().removeIf(r -> !r.getEstado());
+		return par.filter(a -> !a.isEmpty()).orElseThrow(() -> new ResponseStatusException(
+			       HttpStatus.NOT_FOUND, "No exsiste paradas de la linea "+linea+"."));
 	}
 }

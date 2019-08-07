@@ -60,7 +60,7 @@ public class RutaService {
 	public Ruta getRuta(String linea) {
 		return rutaRepository.findByLineaAndEstadoIsTrue(linea)
 				.orElseThrow(() -> new ResponseStatusException(
-		           HttpStatus.NOT_FOUND, "No existe el Reporte."));
+		           HttpStatus.NOT_FOUND, "No existe la ruta para la Linea "+linea+"."));
 	}
 	
 	/**

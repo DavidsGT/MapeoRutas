@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Bus;
+import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.services.ParadaService;
 
@@ -113,6 +114,34 @@ public class ParadaController {
 	}
 	
 	/**
+	 * Metodo que Mapea "/paradas/byLinea/{linea}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getAllParadaByLinea(String)} 
+	 * y retorna Lista de {@link Parada} pertenecientes a una linea de cooperativa.
+	 * @param linea - Linea de {@link Cooperativa}
+	 * @return - Lista de {@link Parada}
+	 */
+	@GetMapping("/byLinea/{linea}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public Iterable<Parada> getAllParadaByLinea(@PathVariable String linea){
+		return paradaService.getAllParadaByLinea(linea);
+	}
+
+	/**
+	 * Metodo que Mapea "/paradas/{linea}/radio/{radio}/point/{point}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParadasCercanasRadio(Point, Double, String)}
+	 * y retorna una lista de {@link Parada} que estan en el radio dado.
+	 * @param x - Representa la Latitud
+	 * @param y - Representa la Lotitud
+	 * @param radio - Representa el radio dado en Kilometros a buscar
+	 * @param linea - Representa la Linea del {@link Bus} a Buscar sus {@link Parada}
+	 * @return Lista de {@link Parada} cercanas al punto y radio Dado.
+	 * @see ParadaService#getParadasCercanasRadio(Point, Double, String)
+	 */
+	@GetMapping("/{linea}/radio/{radio}/point/x={x},y={y}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
+	public Iterable<Parada> getParadasCercanasRadio(@PathVariable double x,@PathVariable double y,@PathVariable Double radio,@PathVariable String linea) {
+		return paradaService.getParadasCercanasRadio(new Point(x,y),radio,linea);
+	}
+
+	/**
 	 * Metodo que Mapea "/paradas", RequestMethod es POST, se enlaza al servicio {@link ParadaService#addParada(Parada)} 
 	 * y retorna Datos de una {@link Parada} registrada
 	 * @param parada - Datos de la {@link Parada} a Registrar
@@ -149,22 +178,6 @@ public class ParadaController {
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
 	public void deleteParada(@PathVariable String id) {
 		paradaService.deleteParada(id);
-	}
-	
-	/**
-	 * Metodo que Mapea "/paradas/{linea}/radio/{radio}/point/{point}", RequestMethod es GET, se enlaza al servicio {@link ParadaService#getParadasCercanasRadio(Point, Double, String)}
-	 * y retorna una lista de {@link Parada} que estan en el radio dado.
-	 * @param x - Representa la Latitud
-	 * @param y - Representa la Lotitud
-	 * @param radio - Representa el radio dado en Kilometros a buscar
-	 * @param linea - Representa la Linea del {@link Bus} a Buscar sus {@link Parada}
-	 * @return Lista de {@link Parada} cercanas al punto y radio Dado.
-	 * @see ParadaService#getParadasCercanasRadio(Point, Double, String)
-	 */
-	@GetMapping("/{linea}/radio/{radio}/point/x={x},y={y}")
-	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB') or hasRole('USER_MOVIL')")
-	public Iterable<Parada> getParadasCercanasRadio(@PathVariable double x,@PathVariable double y,@PathVariable Double radio,@PathVariable String linea) {
-		return paradaService.getParadasCercanasRadio(new Point(x,y),radio,linea);
 	}
 	
 	/**

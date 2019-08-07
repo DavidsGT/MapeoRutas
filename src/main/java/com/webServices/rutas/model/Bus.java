@@ -23,7 +23,7 @@ public class Bus {
 	@Min(value=0,message="El valor minimo es 0")
 	@Max(value=300,message="El valor maximo es 300")
 	@Field
-	private int numero;
+	private int numeroDisco;
 	@Field
 	@Min(value=22,message="El valor minimo es 22")
 	@Max(value=45,message="El valor maximo es 45")
@@ -36,10 +36,10 @@ public class Bus {
 		super();
 		this.estado = true;
 	}
-	public Bus(String id, String placa, int numero, int capacidad, String cooperativa, String type, List<EstadoBus> estadoBus) {
+	public Bus(String id, String placa, int numeroDisco, int capacidad, String cooperativa, String type, List<EstadoBus> estadoBus) {
 		super();
 		this.placa = GlobalVariables.confirmPlaca(placa);
-		this.numero = numero;
+		this.numeroDisco = numeroDisco;
 		this.capacidad = capacidad;
 		this.idCooperativa = cooperativa;
 		this.estado = true;
@@ -62,11 +62,11 @@ public class Bus {
 	public void setPlaca(String placa) {
 		this.placa = GlobalVariables.confirmPlaca(placa);
 	}
-	public int getNumero() {
-		return numero;
+	public int getNumeroDisco() {
+		return numeroDisco;
 	}
-	public void setNumero(int numero) {
-		this.numero = numero;
+	public void setNumero(int numeroDisco) {
+		this.numeroDisco = numeroDisco;
 	}
 	public int getCapacidad() {
 		return capacidad;
@@ -82,7 +82,7 @@ public class Bus {
 	}
 	@Override
 	public String toString() {
-		return "Bus [id=" + id + ", placa=" + placa + ", numero=" + numero + ", capacidad=" + capacidad
+		return "Bus [id=" + id + ", placa=" + placa + ", numeroDisco=" + numeroDisco + ", capacidad=" + capacidad
 				+ ", idCooperativa=" + idCooperativa + ", estado=" + estado + "]";
 	}
 }
