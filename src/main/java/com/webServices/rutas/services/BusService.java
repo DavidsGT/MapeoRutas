@@ -33,8 +33,8 @@ import com.webServices.rutas.model.Parada;
 import com.webServices.rutas.model.Ruta;
 import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.repository.BusRepository;
+import com.webServices.rutas.repository.EstadoBusTemporalRepository;
 import com.webServices.rutas.repository.HistorialEstadoBusRepository;
-import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.RutaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 
@@ -45,8 +45,6 @@ import com.webServices.rutas.repository.TimeControlParadaRepository;
  */
 @Service
 public class BusService {
-	@Autowired
-	private ParadaRepository paradaRepository;
 	/**
 	 * Instancia para los servicios de {@link Parada}
 	 * @see {@link ParadaService}
@@ -88,6 +86,9 @@ public class BusService {
 	 */
 	@Autowired
 	private RutaRepository rutaRepository;
+	
+	@Autowired
+	private EstadoBusTemporalRepository estadoBusTemporalRepository;
 	
 	/**
 	 * Obtener datos de un {@link Bus} entregando su respectiva placa.
@@ -245,7 +246,15 @@ public class BusService {
 	public void updateEstadoBus(EstadoBus estadoBus,String placa,int linea) {
 		if(rutaRepository.existsById(String.valueOf(linea))) {
 			if(busRepository.existsById(placa)) {
-				
+				Bus bus = getBus(placa);
+				if(bus.getIdEstadoActualTemporal()==null) {
+					EstadoBusTemporal ebt = estadoBusTemporalRepository.save(new EstadoBusTemporal(estadoBus,linea,placa));
+					bus.setIdEstadoActualTemporal(ebt.getId());
+				}else {
+					EstadoBusTemporal ebt = estadoBusTemporalRepository.findById(bus.getIdEstadoActualTemporal()).orElse(new EstadoBusTemporal(estadoBus,linea,placa));
+					ebt.updateEstadoBus(estadoBus,linea,placa);
+					estadoBusTemporalRepository.save(ebt);
+				}
 				HistorialEstadoBus h;
 				Date now = GlobalVariables.getFechaDMA();
 				if(historialEstadoBusRepository.existsById(now+"::"+placa)) {
@@ -265,7 +274,6 @@ public class BusService {
 		        		}
 		        	}
 				}else {
-					
 					h = new HistorialEstadoBus();
 		        	h.setPlaca(placa);
 		        	h.setListaEstados1(new ArrayList<>(Arrays.asList(estadoBus)));
@@ -273,7 +281,6 @@ public class BusService {
 		        	h.setListaEstados3(new ArrayList<>());
 		        	h.setLinea(linea);
 				}
-				EstadoBusTemporal estadoBusTemporal = new EstadoBusTemporal(estadoBus,linea,placa);
 				historialEstadoBusRepository.save(h);
 			}else {
 				throw new ResponseStatusException(

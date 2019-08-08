@@ -130,4 +130,14 @@ public class EstadoBusTemporal {
 				+ ", cantidadUsuarios=" + cantidadUsuarios + ", posicionActual=" + posicionActual + ", estadoPuerta="
 				+ estadoPuerta + ", idx=" + idx + ", linea=" + linea + "]";
 	}
+	public void updateEstadoBus(EstadoBus eb, int linea, String placa) {
+		this.cantidadUsuarios = eb.getCantidadUsuarios();
+		this.creationDate = eb.getCreationDate();
+		this.estadoPuerta = eb.getEstadoPuerta();
+		this.linea = linea;
+		this.placa = placa;
+		this.posicionAnterior = this.posicionActual; 
+		this.posicionActual = eb.getPosicionActual();
+		this.velocidad = eb.getVelocidad();
+	}
 }

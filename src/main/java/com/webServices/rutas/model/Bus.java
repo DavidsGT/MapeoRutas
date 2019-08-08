@@ -31,6 +31,8 @@ public class Bus {
 	@Field
 	private String idCooperativa;
 	@Field
+	private String idEstadoActualTemporal;
+	@Field
 	private Boolean estado;
 	public Bus() {
 		super();
@@ -50,6 +52,13 @@ public class Bus {
 	public void setIdCooperativa(String idCooperativa) {
 		this.idCooperativa = idCooperativa;
 	}
+	
+	public String getIdEstadoActualTemporal() {
+		return idEstadoActualTemporal;
+	}
+	public void setIdEstadoActualTemporal(String idEstadoActualTemporal) {
+		this.idEstadoActualTemporal = idEstadoActualTemporal;
+	}
 	public Boolean getEstado() {
 		return estado;
 	}
@@ -65,7 +74,7 @@ public class Bus {
 	public int getNumeroDisco() {
 		return numeroDisco;
 	}
-	public void setNumero(int numeroDisco) {
+	public void setNumeroDisco(int numeroDisco) {
 		this.numeroDisco = numeroDisco;
 	}
 	public int getCapacidad() {
@@ -80,6 +89,7 @@ public class Bus {
 	public void setId(String id) {
 		this.id = GlobalVariables.confirmPlaca(id);
 	}
+	
 	@Override
 	public String toString() {
 		return "Bus [id=" + id + ", placa=" + placa + ", numeroDisco=" + numeroDisco + ", capacidad=" + capacidad
