@@ -52,6 +52,16 @@ public class EstadoBusTemporal {
 	public EstadoBusTemporal() {
 		super();
 	}
+	
+	public EstadoBusTemporal(EstadoBus eb, int linea, String placa) {
+		this.cantidadUsuarios = eb.getCantidadUsuarios();
+		this.creationDate = eb.getCreationDate();
+		this.estadoPuerta = eb.getEstadoPuerta();
+		this.linea = linea;
+		this.placa = placa;
+		this.posicionActual = eb.getPosicionActual();
+		this.velocidad = eb.getVelocidad();
+	}
 	public Date getCreationDate() {
 		return creationDate;
 	}

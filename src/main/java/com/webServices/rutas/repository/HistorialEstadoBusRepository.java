@@ -36,7 +36,8 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 			+ "        ELSE OBJECT_CONCAT(h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-1],{'posicionAnterior':h.listaEstados1[ARRAY_COUNT(h.listaEstados1)-2].posicionActual},{'idx':ARRAY_COUNT(h.listaEstados1)-1})"
 			+ "        END"
 			+ "   END "
-			+ "WHERE h.linea= #{#linea} AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
+			+ "WHERE h.linea= #{#linea} AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}"
+			+ "& timeout=900000ms")
 	Optional<List<EstadoBusTemporal>> findLastEstadoBusByLinea(@Param("creadoEn") String creadoEn,@Param("linea") String linea);
 	
 	@Query("SELECT OBJECT_CONCAT(u,{'placa':h.placa},{'_ID':META(h).id},{'_CAS':META(h).cas}).* "
@@ -49,7 +50,7 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 			+ "        END"
 			+ "   END "
 			+ "WHERE h.placa= '#{#placa}' AND MILLIS_TO_STR(h.creadoEn ,'1111-11-11') = '#{#creadoEn}' AND h.#{#n1ql.filter}")
-	Optional<List<EstadoBusTemporal>> findLastEstadoBusByPlaca(@Param("creadoEn") String creadoEn,@Param("placa") String placa);
+	Optional<EstadoBusTemporal> findLastEstadoBusByPlaca(@Param("creadoEn") String creadoEn,@Param("placa") String placa);
 	
 	@Query("SELECT META(h).id AS _ID, META(h).cas AS _CAS "
 			+ "FROM #{#n1ql.bucket} as h "
@@ -64,7 +65,8 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
     "(RADIANS(er.posicionActual.y) >=  #{#SW_loc_rad_lat}  and RADIANS(er.posicionActual.y) <= #{#NE_loc_rad_lat}) and " +
     "(RADIANS(er.posicionActual.x) >= #{#SW_loc_rad_lon} #{#meridian180condition} RADIANS(er.posicionActual.x) <= #{#NE_loc_rad_lon} ) AND " +
     " acos(sin( RADIANS( #{#loc_deg_lat} )) * sin (RADIANS(er.posicionActual.y)) + cos( RADIANS( #{#loc_deg_lat} )) " 
-    + " * cos(RADIANS(er.posicionActual.y)) * cos (RADIANS(er.posicionActual.x) - RADIANS( #{#loc_deg_lon} ))) <= #{#distance}/6378  AND m.#{#n1ql.filter} AND meta(m).id = '#{#idHistorial}'")
+    + " * cos(RADIANS(er.posicionActual.y)) * cos (RADIANS(er.posicionActual.x) - RADIANS( #{#loc_deg_lon} ))) <= #{#distance}/6378  AND m.#{#n1ql.filter} AND meta(m).id = '#{#idHistorial}'"
+    + "& timeout=900000ms")
 	List<EstadoBusTemporal> findByListaEstadosInPosicionWithIn( @Param("lista") String lista,
 																@Param("meridian180condition") String meridian180condition,
 																@Param("loc_deg_lat") double loc_deg_lat, 

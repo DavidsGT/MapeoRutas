@@ -217,11 +217,9 @@ public class BusService {
 			String pattern = "yyyy-MM-dd";
 	        DateFormat df = new SimpleDateFormat(pattern);
 	        String todayAsString = df.format(GlobalVariables.getFechaDMA());
-	        Optional<List<EstadoBusTemporal>> list = historialEstadoBusRepository.findLastEstadoBusByPlaca(todayAsString, p);
-	        list.get().removeIf(q -> ifBusDisponible(q.getCreationDate()));
-	        return list.filter(a -> !a.isEmpty())
-					.orElseThrow(() -> new ResponseStatusException(
-									HttpStatus.NOT_FOUND, "Bus no disponible por el momento.")).get(0);
+	        Optional<EstadoBusTemporal> list = historialEstadoBusRepository.findLastEstadoBusByPlaca(todayAsString, p);
+	        return list.orElseThrow(() -> new ResponseStatusException(
+									HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
 		}else
 			throw new ResponseStatusException(
 			           HttpStatus.NOT_FOUND, "No existe el Bus con Placa "+p+".");
@@ -247,6 +245,7 @@ public class BusService {
 	public void updateEstadoBus(EstadoBus estadoBus,String placa,int linea) {
 		if(rutaRepository.existsById(String.valueOf(linea))) {
 			if(busRepository.existsById(placa)) {
+				
 				HistorialEstadoBus h;
 				Date now = GlobalVariables.getFechaDMA();
 				if(historialEstadoBusRepository.existsById(now+"::"+placa)) {
@@ -266,6 +265,7 @@ public class BusService {
 		        		}
 		        	}
 				}else {
+					
 					h = new HistorialEstadoBus();
 		        	h.setPlaca(placa);
 		        	h.setListaEstados1(new ArrayList<>(Arrays.asList(estadoBus)));
@@ -273,6 +273,7 @@ public class BusService {
 		        	h.setListaEstados3(new ArrayList<>());
 		        	h.setLinea(linea);
 				}
+				EstadoBusTemporal estadoBusTemporal = new EstadoBusTemporal(estadoBus,linea,placa);
 				historialEstadoBusRepository.save(h);
 			}else {
 				throw new ResponseStatusException(
@@ -473,17 +474,21 @@ public class BusService {
 				.orElseThrow(() -> new ResponseStatusException(
 								HttpStatus.NOT_FOUND, "No existe Estado de Bus disponible para la linea  "+linea+"."));
 	}
-	
+
 	/**
 	 * Comprobar si un bus esta disponible en el momento.
 	 * @param fechaUbicacion - Fecha a comprobar.
 	 * @return Verdadero o Falso.
 	 */
 	public boolean ifBusDisponible(Date fechaUbicacion) {
-		if(Math.abs(((GlobalVariables.getFecha().getTime() - fechaUbicacion.getTime())/1000)-5) > 5)
+		try {
+			if(Math.abs(((GlobalVariables.getFecha().getTime() - fechaUbicacion.getTime())/1000)-5) > 5)
+				return true;
+			else
+				return false;
+		} catch (Exception e) {
 			return true;
-		else
-			return false;
+		}
 	}
 
 	/**
