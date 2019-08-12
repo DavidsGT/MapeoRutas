@@ -2,6 +2,7 @@ package com.webServices.rutas.model;
 
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 import org.springframework.data.geo.Point;
 
 import com.couchbase.client.java.repository.annotation.Field;
@@ -11,7 +12,10 @@ import com.couchbase.client.java.repository.annotation.Id;
  * @author Davids Adrian Gonzalez Tigrero
  */
 public class Parada {
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
+	@IdPrefix
+	private String prefix = "parada";
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
+	@Field
 	private String id;
 	@Field
 	private String nombre;

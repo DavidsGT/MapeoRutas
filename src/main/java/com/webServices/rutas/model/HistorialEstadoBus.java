@@ -1,15 +1,12 @@
 package com.webServices.rutas.model;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
 import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
-import org.springframework.data.couchbase.core.mapping.id.IdSuffix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
@@ -21,18 +18,16 @@ import com.couchbase.client.java.repository.annotation.Id;
  */
 @Document
 public class HistorialEstadoBus {
-	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES,delimiter = "::")
+	@IdPrefix
+	private String prefix = "historialEstadoBus";
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
-	@IdPrefix(order=0)
-	private Date fecha;
 	@Field
 	private Date creadoEn;
-	@IdSuffix(order=0)
-	private String placaId;
 	@Field
 	private String placa;
 	@Field
-	private int linea;
+	private String linea;
 	@Field
 	private List<EstadoBus> listaEstados1;
 	@Field
@@ -41,24 +36,13 @@ public class HistorialEstadoBus {
 	private List<EstadoBus> listaEstados3;
 	public HistorialEstadoBus(String placa, List<EstadoBus> listaEstados) {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, 0);
-		this.fecha = now.getTime();
 		this.placa = placa;
-		this.placaId = placa;
 		this.listaEstados1 = listaEstados;
-		this.creadoEn = now.getTime();
+		this.creadoEn = GlobalVariables.getFechaDMA();
 	}
 	public HistorialEstadoBus() {
 		super();
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        this.fecha = now.getTime();
-        this.creadoEn = now.getTime();
+        this.creadoEn = GlobalVariables.getFechaDMA();
 	}
 	public String getId() {
 		return id;
@@ -66,18 +50,11 @@ public class HistorialEstadoBus {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public Date getFecha() {
-		return fecha;
-	}
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
 	public String getPlaca() {
 		return placa;
 	}
 	public void setPlaca(String placa) {
 		this.placa = placa;
-		this.placaId = placa;
 	}
 	public List<EstadoBus> getListaEstados1() {
 		return listaEstados1;
@@ -103,10 +80,10 @@ public class HistorialEstadoBus {
 	public void setCreadoEn(Date creadoEn) {
 		this.creadoEn = creadoEn;
 	}
-	public int getLinea() {
+	public String getLinea() {
 		return linea;
 	}
-	public void setLinea(int linea) {
+	public void setLinea(String linea) {
 		this.linea = linea;
 	}
 }

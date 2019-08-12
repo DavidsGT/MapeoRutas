@@ -6,6 +6,7 @@ import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
 import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 import org.springframework.data.geo.Point;
 
 import com.couchbase.client.java.repository.annotation.Field;
@@ -16,9 +17,11 @@ import com.couchbase.client.java.repository.annotation.Id;
  */
 @Document
 public class Ruta {
-	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES)
+	@IdPrefix
+	private String prefix = "Ruta";
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
-	@Field @IdAttribute
+	@Field
 	private String linea;
 	@Field
     private List<Point> listasPuntos;

@@ -3,7 +3,6 @@ package com.webServices.rutas.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
@@ -189,6 +188,7 @@ public class ParadaService {
 			rt.setListasParadas(null);
 		paradaRepository.deleteAll();
 	}
+
 	/**
 	 * Obtener lista de {@link Parada} que pertenecen a un {@link Ruta}
 	 * @param linea - linea de la {@link Cooperativa}

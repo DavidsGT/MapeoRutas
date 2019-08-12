@@ -3,12 +3,15 @@ package com.webServices.rutas.model;
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Cooperativa {
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
+	@IdPrefix
+	private String prefix = "cooperativa";
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
 	@Field
 	private String nombre;

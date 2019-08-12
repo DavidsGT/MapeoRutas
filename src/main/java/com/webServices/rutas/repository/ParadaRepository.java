@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.webServices.rutas.model.Parada;
 
-@ViewIndexed(designDoc = "Parada", viewName = "all")
+@ViewIndexed(designDoc = "parada", viewName = "all")
 public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	
 	@Query("#{#n1ql.selectEntity} WHERE #{#n1ql.filter} AND meta().id = '#{#id}' AND estado=true")

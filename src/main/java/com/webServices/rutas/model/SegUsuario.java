@@ -5,13 +5,16 @@ import javax.validation.constraints.Email;
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 
 @Document
 public class SegUsuario {
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE)
+	@IdPrefix
+	private String prefix = "usuario";
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
 	@Field
 	private String perfil;
@@ -52,7 +55,7 @@ public class SegUsuario {
 		return id;
 	}
 	public void setId(String id) {
-		this.id = id;
+		this.id = "Usuario::"+id;
 	}
 	public String getUsuario() {
 		return usuario;

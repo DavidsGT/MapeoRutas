@@ -215,23 +215,18 @@ public class BusService {
 	public EstadoBusTemporal getEstadoActualBus(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
 		if(busRepository.existsById(placa)) {
-			String pattern = "yyyy-MM-dd";
-	        DateFormat df = new SimpleDateFormat(pattern);
-	        String todayAsString = df.format(GlobalVariables.getFechaDMA());
-	        Optional<EstadoBusTemporal> list = historialEstadoBusRepository.findLastEstadoBusByPlaca(todayAsString, p);
-	        return list.orElseThrow(() -> new ResponseStatusException(
-									HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
+			return estadoBusTemporalRepository.findByplaca(placa)
+				.filter(estado -> ifBusDisponible(estado.getCreationDate()))
+				.orElseThrow(() -> new ResponseStatusException(
+						HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
 		}else
 			throw new ResponseStatusException(
 			           HttpStatus.NOT_FOUND, "No existe el Bus con Placa "+p+".");
 	}
 	
 	public List<EstadoBusTemporal> getAllEstadoActualBus() {
-		String pattern = "yyyy-MM-dd";
-        DateFormat df = new SimpleDateFormat(pattern);
-        String todayAsString = df.format(GlobalVariables.getFechaDMA());
-        Optional<List<EstadoBusTemporal>> list = historialEstadoBusRepository.findLastEstadoBus(todayAsString);
-        list.get().removeIf(q -> ifBusDisponible(q.getCreationDate()));
+		Optional<List<EstadoBusTemporal>> list = Optional.of((List<EstadoBusTemporal>)estadoBusTemporalRepository.findAll());
+        list.get().removeIf(q -> !ifBusDisponible(q.getCreationDate()));
         return list.filter(a -> !a.isEmpty())
 				.orElseThrow(() -> new ResponseStatusException(
 								HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
@@ -243,7 +238,7 @@ public class BusService {
 	 * @param placa - Placa del {@link Bus}
 	 * @param linea - Linea de {@link Cooperativa}
 	 */
-	public void updateEstadoBus(EstadoBus estadoBus,String placa,int linea) {
+	public void updateEstadoBus(EstadoBus estadoBus,String placa,String linea) {
 		if(rutaRepository.existsById(String.valueOf(linea))) {
 			if(busRepository.existsById(placa)) {
 				Bus bus = getBus(placa);
@@ -253,8 +248,10 @@ public class BusService {
 				}else {
 					EstadoBusTemporal ebt = estadoBusTemporalRepository.findById(bus.getIdEstadoActualTemporal()).orElse(new EstadoBusTemporal(estadoBus,linea,placa));
 					ebt.updateEstadoBus(estadoBus,linea,placa);
-					estadoBusTemporalRepository.save(ebt);
+					ebt = estadoBusTemporalRepository.save(ebt);
+					bus.setIdEstadoActualTemporal(ebt.getId());
 				}
+				busRepository.save(bus);
 				HistorialEstadoBus h;
 				Date now = GlobalVariables.getFechaDMA();
 				if(historialEstadoBusRepository.existsById(now+"::"+placa)) {
@@ -302,7 +299,7 @@ public class BusService {
 	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, int)}
 	 * @see BusService#updateEstadoBus(EstadoBus, String, int)
 	 */
-	public void updateEstadoBusGET(String valor, int linea, String placa) throws JsonParseException, JsonMappingException, IOException {
+	public void updateEstadoBusGET(String valor, String linea, String placa) throws JsonParseException, JsonMappingException, IOException {
         Gson mapper = new Gson();
 		EstadoBus estadoBus = mapper.fromJson(valor, EstadoBus.class);
 		updateEstadoBus(estadoBus, placa, linea);
@@ -321,7 +318,7 @@ public class BusService {
 										Integer.parseInt(attrib[1]),
 										new Point(Double.parseDouble(attrib[2]),Double.parseDouble(attrib[3])),
 										Boolean.parseBoolean(attrib[4]));
-		int linea = Integer.parseInt(attrib[5]);
+		String linea = attrib[5];
 		updateEstadoBus(estadoBus, placa, linea);
 	}
 
@@ -337,7 +334,7 @@ public class BusService {
 	 * @param placa - Placa de {@link Bus}
 	 * @throws InterruptedException - Proceso interrumpido
 	 */
-	public void startSimulator(int linea, String placa) throws InterruptedException{
+	public void startSimulator(String linea, String placa) throws InterruptedException{
 		Ruta rs = rutaRepository.findById(String.valueOf(linea)).orElseThrow(() -> new ResponseStatusException(
 				       HttpStatus.CONFLICT, "No se puede iniciar el Simulador Linea no existente."));
 		ThreadLocalRandom alea1 = ThreadLocalRandom.current();
@@ -472,11 +469,8 @@ public class BusService {
 	 * @return Lista de {@link EstadoBusTemporal} de los {@link Bus}
 	 */
 	public List<EstadoBusTemporal> getEstadoActualBusByLinea(String linea) {
-        String pattern = "yyyy-MM-dd";
-        DateFormat df = new SimpleDateFormat(pattern);
-        String todayAsString = df.format(GlobalVariables.getFechaDMA());
-        Optional<List<EstadoBusTemporal>> list = historialEstadoBusRepository.findLastEstadoBusByLinea(todayAsString, linea);
-        list.get().removeIf(q -> ifBusDisponible(q.getCreationDate()));
+		Optional<List<EstadoBusTemporal>> list = estadoBusTemporalRepository.findByLinea(linea);
+        list.get().removeIf(q -> !ifBusDisponible(q.getCreationDate()));
         return list.filter(a -> !a.isEmpty())
 				.orElseThrow(() -> new ResponseStatusException(
 								HttpStatus.NOT_FOUND, "No existe Estado de Bus disponible para la linea  "+linea+"."));
@@ -490,11 +484,11 @@ public class BusService {
 	public boolean ifBusDisponible(Date fechaUbicacion) {
 		try {
 			if(Math.abs(((GlobalVariables.getFecha().getTime() - fechaUbicacion.getTime())/1000)-5) > 5)
-				return true;
+				return false; //no disponible
 			else
-				return false;
+				return true; //disponible
 		} catch (Exception e) {
-			return true;
+			return false;
 		}
 	}
 

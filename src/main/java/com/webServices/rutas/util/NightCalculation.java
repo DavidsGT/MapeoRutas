@@ -45,7 +45,7 @@ public class NightCalculation {
 		//Recorrer los historiales del los buses
         for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
         	System.out.println("Para el bus: " + oneHistorial.getId());
-        	HistorialEstadoBus op =historialEstadoBusRepository.findByIdCustom(oneHistorial.getId());
+        	HistorialEstadoBus op = historialEstadoBusRepository.findById(oneHistorial.getId()).get();
         	List<EstadoBus> listEstadosHistorial = op.getListaEstados1();
         	listEstadosHistorial.addAll(op.getListaEstados2());
         	listEstadosHistorial.addAll(op.getListaEstados3());
@@ -130,14 +130,14 @@ public class NightCalculation {
 	
 	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
 	public void IniciarSimuladorLinea11_1() throws IOException, InterruptedException{
-		busService.startSimulator(11, "ABC1234");
+		busService.startSimulator("11", "ABC1234");
 	}
 	@Scheduled(cron=GlobalVariables.timeSimulator2, zone="America/Guayaquil")
 	public void IniciarSimuladorLinea8_2() throws IOException, InterruptedException{
-			busService.startSimulator(8, "DEF5678");
+			busService.startSimulator("8", "DEF5678");
 	}
 	@Scheduled(cron=GlobalVariables.timeSimulator3, zone="America/Guayaquil")
 	public void IniciarSimuladorLinea7_3() throws IOException, InterruptedException{
-			busService.startSimulator(7, "GHI9012");
+			busService.startSimulator("7", "GHI9012");
 	}
 }

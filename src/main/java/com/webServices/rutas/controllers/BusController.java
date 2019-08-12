@@ -186,7 +186,7 @@ public class BusController {
 	@PutMapping("/{placa}/estado/{linea}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
-	public void updateEstadoBus(@RequestBody EstadoBus estadoBus,@PathVariable String placa, @PathVariable int linea) {
+	public void updateEstadoBus(@RequestBody EstadoBus estadoBus,@PathVariable String placa, @PathVariable String linea) {
 		busService.updateEstadoBus(estadoBus,placa,linea);
 	}
 	
@@ -206,7 +206,7 @@ public class BusController {
 	@GetMapping("/{placa}/estado/{linea}/{valor}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('BUS_DEVICE')")
-	public void updateEstadoBusGET(@PathVariable String valor,@PathVariable int linea,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
+	public void updateEstadoBusGET(@PathVariable String valor,@PathVariable String linea,@PathVariable String placa) throws JsonParseException, JsonMappingException, IOException {
 		busService.updateEstadoBusGET(valor,linea,placa);
 	}
 	
@@ -290,7 +290,7 @@ public class BusController {
 	 */
 	@PostMapping("/simulador/{linea}/{placa}")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
-	public void startSimulatorBus(@PathVariable int linea,@PathVariable String placa) throws InterruptedException {
+	public void startSimulatorBus(@PathVariable String linea,@PathVariable String placa) throws InterruptedException {
 		busService.startSimulator(linea, placa);
 	}
 	

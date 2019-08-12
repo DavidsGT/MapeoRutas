@@ -10,12 +10,16 @@ import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
 import org.springframework.data.couchbase.core.mapping.id.IdAttribute;
+import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Bus {
-	@Id @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES)
+	@IdPrefix
+	private String prefix = "bus";
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
+	@Field	
 	private String id;
 	@Size(max=7, min=6, message = "Debe contener de 6 a 7 Caracteres")
 	@Field @IdAttribute
