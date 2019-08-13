@@ -39,10 +39,10 @@ public class AsuntoService {
 	 * Añade un asunto nuevo para ser usado en {@link Reporte}.
 	 * @param asunto - Asunto a añadir
 	 */
-	public void addAsunto(String asunto) {
+	public Asunto addAsunto(String asunto) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
 		aux.getAsuntos().add(asunto);
-		asuntoRepository.save(aux);
+		return asuntoRepository.save(aux);
 	}
 	
 	/**
@@ -50,27 +50,27 @@ public class AsuntoService {
 	 * @param before - Asunto a cambiar
 	 * @param after - Asunto nuevo
 	 */
-	public void updateAsunto(String before,String after) {
+	public Asunto updateAsunto(String before,String after) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
 		Collections.replaceAll(aux.getAsuntos(),before,after);
-		asuntoRepository.save(aux);
+		return asuntoRepository.save(aux);
 	}
 	
 	/**
 	 * Elimina un Asunto
 	 * @param asunto - Asunto a eliminar
 	 */
-	public void deleteAsunto(String asunto) {
+	public Asunto deleteAsunto(String asunto) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
 		aux.getAsuntos().remove(asunto);
-		asuntoRepository.save(aux);
+		return asuntoRepository.save(aux);
 	}
 	
 	/**
 	 * Crea Asuntos, es utilizado solo la primera vez del registro
 	 * @param asunto - {@link Asunto} a registrar
 	 */
-	public void createAsunto(Asunto asunto) {
-		asuntoRepository.save(asunto);
+	public Asunto createAsunto(Asunto asunto) {
+		return asuntoRepository.save(asunto);
 	}
 }

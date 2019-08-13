@@ -95,11 +95,22 @@ public class BusService {
 	 * @param placa - Placa del {@link Bus} que desee obtener los datos
 	 * @return {@link Bus}
 	 */
-	public Bus getBus(String placa) {
+	public Bus getBusByPlaca(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
 		return busRepository.findByPlacaAndEstadoIsTrue(p)
 				.orElseThrow(() -> new ResponseStatusException(
 				           HttpStatus.NOT_FOUND, "No existe Bus registrado con la placa "+p+"."));
+	}
+	
+	/**
+	 * Obtener datos de un {@link Bus} entregando su respectiva ID.
+	 * @param id - ID del {@link Bus} que desee obtener los datos
+	 * @return {@link Bus}
+	 */
+	public Bus getBus(String id) {
+		return busRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(
+				           HttpStatus.NOT_FOUND, "No existe Bus registrado con el ID "+id+"."));
 	}
 	
 	/**
@@ -110,7 +121,7 @@ public class BusService {
 	 */
 	public Bus getBusIgnoreEstado(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
-		return busRepository.findById(p)
+		return busRepository.findByPlaca(p)
 				.orElseThrow(() -> new ResponseStatusException(
 				           HttpStatus.NOT_FOUND, "No existe Bus registrado con la placa "+p+"."));
 	}
@@ -143,7 +154,7 @@ public class BusService {
 	 * @return {@link Bus} agregado
 	 */
 	public Bus addBus(Bus bus) {
-		if(busRepository.existsById(bus.getPlaca()))
+		if(busRepository.existsByPlacaAndEstadoIsTrue(bus.getPlaca()) && bus.getId() == null)
 			throw new ResponseStatusException(
 			           HttpStatus.CONFLICT, "El bus con placas "+bus.getPlaca()+" ya se encuentra Registrado.");
 		else return busRepository.save(bus);
@@ -155,7 +166,7 @@ public class BusService {
 	 * @return {@link Bus} actualizado
 	 */
 	public Bus updateBus(Bus bus) {
-		if(!busRepository.existsById(bus.getPlaca())) 
+		if(!busRepository.existsById(bus.getId()))
 			throw new ResponseStatusException(
 			           HttpStatus.CONFLICT, "El bus con placas "+bus.getPlaca()+" no se encuentra Registrado.");
 		else return busRepository.save(bus);
@@ -168,7 +179,7 @@ public class BusService {
 	 */
 	public void deleteBus(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
-		Bus c = getBus(p);
+		Bus c = getBusByPlaca(p);
 		c.setEstado(false);
 		busRepository.save(c);
 	}
@@ -179,7 +190,7 @@ public class BusService {
 	 * @return Listado de {@link Bus} de una {@link Cooperativa}
 	 */
 	public Iterable<Bus> getBusesByIdCooperativa(String idCooperativa){
-		Cooperativa c= cooperativaService.getCooperativa(idCooperativa);
+		Cooperativa c = cooperativaService.getCooperativa(idCooperativa);
 		return busRepository.findByIdCooperativaAndEstadoIsTrue(idCooperativa)
 							.filter(a -> !a.isEmpty())
 							.orElseThrow(()-> new ResponseStatusException(
@@ -194,8 +205,8 @@ public class BusService {
 	 */
 	public List<EstadoBus> getHistorialEstadoBusAllByPlacaByFecha(String placa,Date fecha){
 		String p = GlobalVariables.confirmPlaca(placa);
-		if(busRepository.existsById(p)) {
-			HistorialEstadoBus h = historialEstadoBusRepository.findById(fecha+"::"+p)
+		if(busRepository.existsByPlacaAndEstadoIsTrue(p)) {
+			HistorialEstadoBus h = historialEstadoBusRepository.findByCreadoEnAndPlaca(fecha,p)
 					.orElseThrow(()->new ResponseStatusException(
 					           HttpStatus.NOT_FOUND, "No existe Historial para el Bus con Placa "+p+"."));
 				List<EstadoBus> allH = h.getListaEstados1();
@@ -214,8 +225,8 @@ public class BusService {
 	 */
 	public EstadoBusTemporal getEstadoActualBus(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
-		if(busRepository.existsById(placa)) {
-			return estadoBusTemporalRepository.findByplaca(placa)
+		if(busRepository.existsByPlacaAndEstadoIsTrue(placa)) {
+			return estadoBusTemporalRepository.findByPlaca(placa)
 				.filter(estado -> ifBusDisponible(estado.getCreationDate()))
 				.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
@@ -239,8 +250,8 @@ public class BusService {
 	 * @param linea - Linea de {@link Cooperativa}
 	 */
 	public void updateEstadoBus(EstadoBus estadoBus,String placa,String linea) {
-		if(rutaRepository.existsById(String.valueOf(linea))) {
-			if(busRepository.existsById(placa)) {
+		if(rutaRepository.existsByLineaAndEstadoIsTrue(linea)) {
+			if(busRepository.existsByPlacaAndEstadoIsTrue(placa)) {
 				Bus bus = getBus(placa);
 				if(bus.getIdEstadoActualTemporal()==null) {
 					EstadoBusTemporal ebt = estadoBusTemporalRepository.save(new EstadoBusTemporal(estadoBus,linea,placa));
@@ -254,8 +265,8 @@ public class BusService {
 				busRepository.save(bus);
 				HistorialEstadoBus h;
 				Date now = GlobalVariables.getFechaDMA();
-				if(historialEstadoBusRepository.existsById(now+"::"+placa)) {
-					h = historialEstadoBusRepository.findById(now+"::"+placa).get();
+				if(historialEstadoBusRepository.existsByPlacaAndCreadoEn(placa,now)) {
+					h = historialEstadoBusRepository.findByCreadoEnAndPlaca(now,placa).get();
 					if(h.getListaEstados1().size()<GlobalVariables.limitListEstados) {
 		        		h.getListaEstados1().add(estadoBus);
 		        	}else {
@@ -335,7 +346,7 @@ public class BusService {
 	 * @throws InterruptedException - Proceso interrumpido
 	 */
 	public void startSimulator(String linea, String placa) throws InterruptedException{
-		Ruta rs = rutaRepository.findById(String.valueOf(linea)).orElseThrow(() -> new ResponseStatusException(
+		Ruta rs = rutaRepository.findByLineaAndEstadoIsTrue(linea).orElseThrow(() -> new ResponseStatusException(
 				       HttpStatus.CONFLICT, "No se puede iniciar el Simulador Linea no existente."));
 		ThreadLocalRandom alea1 = ThreadLocalRandom.current();
 		int count = alea1.nextInt(1, 4);
@@ -360,77 +371,81 @@ public class BusService {
 	 * @throws InterruptedException - Proceso Interrumpido
 	 */
 	public Map<String, Double> getCalculateTimeToStop(String idParada, String linea) throws InterruptedException {
-		TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea).orElseThrow(() -> new ResponseStatusException(
+		if(rutaRepository.existsByParadaInLinea(linea,idParada)) {
+			TimeControlParada tcp = timeControlParadaRepository.findByLinea(linea).orElseThrow(() -> new ResponseStatusException(
 				       HttpStatus.NOT_FOUND, "No exsiste historial de Tiempos a Paradas para la Line "+linea+"."));
-		List<EstadoBusTemporal> listEstadoBus = getEstadoActualBusByLinea(linea);
-		Map<String,Double> listTiempoBus = new HashMap<String, Double>();
-		for(EstadoBusTemporal eb : listEstadoBus) {
-			Double sumKm = 0.0;
-			boolean banSerch =true;
-			while(banSerch){
-				sumKm = sumKm + 0.1;
-				List<Parada> par;
-				try {
-					par = paradaService.getParadasCercanasRadio(eb.getPosicionActual(), sumKm, linea);
-				} catch (Exception e) {
-					par = null;
-				}
-				if(par!=null) {
-					List<BetweenParada> validosParaEvaluar = findBetweenParadaForEvaluate(par,tcp);
-					if(validosParaEvaluar == null) {
-						banSerch =true;
-					}else {
-						for(int j=0;j<validosParaEvaluar.size();j++) {
-							//evaluar puntos con la primera parada
-							Parada p1 = paradaService.getParada(validosParaEvaluar.get(j).getIdparada1());
-							//estado bus anterior
-							double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
-							//estado bus actual
-							double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
-							//evaluar puntos con la segunda parada
-							Parada p2 = paradaService.getParada(validosParaEvaluar.get(j).getIdparada2());
-							//estado bus anterior
-							double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
-							//estado bus actual
-							double distanciaP2BusActual = p2.distance(eb.getPosicionActual(), "M");
-							if(distanciaP1BusActual>distanciaP1BusAnterior && distanciaP2BusActual<distanciaP2BusAnterior) {
-								//BetweenParadas Valido para sacar su tiempo...
-								//utilizare la posicion actual del bus
-								double distanciaP1P2 = p1.distance(p2.getCoordenada(), "M");
-								double porcentajeP2BusActual = distanciaP2BusActual*100/distanciaP1P2;//% para calcular el tiempo restante
-								double tiempotarda = validosParaEvaluar.get(j).getTiempoPromedio()*porcentajeP2BusActual/100;
-								boolean ban = true;
-								String idParadaSiguente = p2.getId();
-								while(ban) {
-									ban = false;
-									for(BetweenParada bParada : tcp.getListTime()) {
-										if(idParadaSiguente.equals(bParada.getIdparada1())) {
-											tiempotarda = tiempotarda + bParada.getTiempoPromedio();
-											idParadaSiguente = bParada.getIdparada2();
-											ban = true;
-											break;
+			List<EstadoBusTemporal> listEstadoBus = getEstadoActualBusByLinea(linea);
+			Map<String,Double> listTiempoBus = new HashMap<String, Double>();
+			for(EstadoBusTemporal eb : listEstadoBus) {
+				Double sumKm = 0.0;
+				boolean banSerch =true;
+				while(banSerch){
+					sumKm = sumKm + 0.1;
+					List<Parada> par;
+					try {
+						par = paradaService.getParadasCercanasRadio(eb.getPosicionActual(), sumKm, linea);
+					} catch (Exception e) {
+						par = null;
+					}
+					if(par!=null) {
+						List<BetweenParada> validosParaEvaluar = findBetweenParadaForEvaluate(par,tcp);
+						if(validosParaEvaluar == null) {
+							banSerch =true;
+						}else {
+							for(int j=0;j<validosParaEvaluar.size();j++) {
+								//evaluar puntos con la primera parada
+								Parada p1 = paradaService.getParada(validosParaEvaluar.get(j).getIdparada1());
+								//estado bus anterior
+								double distanciaP1BusAnterior = p1.distance(eb.getPosicionAnterior(), "M");
+								//estado bus actual
+								double distanciaP1BusActual = p1.distance(eb.getPosicionActual(), "M");
+								//evaluar puntos con la segunda parada
+								Parada p2 = paradaService.getParada(validosParaEvaluar.get(j).getIdparada2());
+								//estado bus anterior
+								double distanciaP2BusAnterior = p2.distance(eb.getPosicionAnterior(), "M");
+								//estado bus actual
+								double distanciaP2BusActual = p2.distance(eb.getPosicionActual(), "M");
+								if(distanciaP1BusActual>distanciaP1BusAnterior && distanciaP2BusActual<distanciaP2BusAnterior) {
+									//BetweenParadas Valido para sacar su tiempo...
+									//utilizare la posicion actual del bus
+									double distanciaP1P2 = p1.distance(p2.getCoordenada(), "M");
+									double porcentajeP2BusActual = distanciaP2BusActual*100/distanciaP1P2;//% para calcular el tiempo restante
+									double tiempotarda = validosParaEvaluar.get(j).getTiempoPromedio()*porcentajeP2BusActual/100;
+									boolean ban = true;
+									String idParadaSiguente = p2.getId();
+									while(ban) {
+										ban = false;
+										for(BetweenParada bParada : tcp.getListTime()) {
+											if(idParadaSiguente.equals(bParada.getIdparada1())) {
+												tiempotarda = tiempotarda + bParada.getTiempoPromedio();
+												idParadaSiguente = bParada.getIdparada2();
+												ban = true;
+												break;
+											}
+										}
+										if(idParadaSiguente.equals(idParada)) {
+											ban = false;
+											listTiempoBus.put(eb.getPlaca(), tiempotarda);
+											banSerch =false;
 										}
 									}
-									if(idParadaSiguente.equals(idParada)) {
-										ban = false;
-										listTiempoBus.put(eb.getPlaca(), tiempotarda);
-										banSerch =false;
-									}
+								}else if(distanciaP1BusActual==distanciaP1BusAnterior || distanciaP2BusActual==distanciaP2BusAnterior){
+									System.out.println("No se puede identificar... Buses en la misma posicion...");
 								}
-							}else if(distanciaP1BusActual==distanciaP1BusAnterior || distanciaP2BusActual==distanciaP2BusAnterior){
-								System.out.println("No se puede identificar... Buses en la misma posicion...");
 							}
 						}
 					}
 				}
 			}
-		}
-		if(!listTiempoBus.isEmpty()) {
-			return listTiempoBus;
-		}else {
+			if(!listTiempoBus.isEmpty()) {
+				return listTiempoBus;
+			}else {
+				throw new ResponseStatusException(
+					       HttpStatus.NOT_FOUND, "No se pudo realizar la Estimacion de Tiempos.");
+			}
+		}else
 			throw new ResponseStatusException(
-				       HttpStatus.NOT_FOUND, "No se pudo realizar la Estimacion de Tiempos.");
-		}
+				       HttpStatus.NOT_FOUND, "Parada no pertenece a la Linea "+ linea +".");
 	}
 	
 	/**
@@ -511,4 +526,6 @@ public class BusService {
 	public void deleteAllBusPhysical() {
 		busRepository.deleteAll();
 	}
+
+	
 }

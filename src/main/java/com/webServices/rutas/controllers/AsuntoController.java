@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webServices.rutas.model.Asunto;
@@ -52,8 +53,8 @@ public class AsuntoController {
 	 */
 	@PostMapping("/create")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
-	public void createAsunto(@RequestBody Asunto asunto) {
-		asuntoService.createAsunto(asunto);
+	public Asunto createAsunto(@RequestBody Asunto asunto) {
+		return asuntoService.createAsunto(asunto);
 	}
 	
 	/**
@@ -63,8 +64,8 @@ public class AsuntoController {
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public void addAsunto(@RequestBody String asunto) {
-		asuntoService.addAsunto(asunto);
+	public Asunto addAsunto(@RequestParam("nuevo") String nuevo) {
+		return asuntoService.addAsunto(nuevo);
 	}
 
 	/**
@@ -74,10 +75,10 @@ public class AsuntoController {
 	 * @param antes - Asunto a reemplazar
 	 * @see AsuntoService#updateAsunto(String, String)
 	 */
-	@PutMapping("/{antes}")
+	@PutMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public void updeteAsunto(@RequestBody String despues,@PathVariable String antes) {
-		asuntoService.updateAsunto(antes,despues);
+	public Asunto updeteAsunto(@RequestParam("anterior") String antes,@RequestParam("nuevo") String despues) {
+		return asuntoService.updateAsunto(antes,despues);
 	}
 
 	/**
@@ -86,9 +87,9 @@ public class AsuntoController {
 	 * @param asunto - Asunto a eliminar
 	 * @see AsuntoService#deleteAsunto(String)
 	 */
-	@DeleteMapping("/{asunto}")
+	@DeleteMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
-	public void deleteAsunto(@PathVariable String asunto) {
-		asuntoService.deleteAsunto(asunto);
+	public Asunto deleteAsunto(@RequestParam("eliminar") String asunto) {
+		return asuntoService.deleteAsunto(asunto);
 	}
 }

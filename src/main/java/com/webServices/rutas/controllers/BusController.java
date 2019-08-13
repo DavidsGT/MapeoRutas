@@ -27,7 +27,6 @@ import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
-import com.webServices.rutas.model.TimeControlParada;
 import com.webServices.rutas.services.BusService;
 
 /**
@@ -79,10 +78,22 @@ public class BusController {
 	 * @return Datos del Bus
 	 * @see BusService#getBus(String)
 	 */
-	@GetMapping("/{placa}")
+	@GetMapping("/byPlaca/{placa}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
-	public Bus getBus(@PathVariable String placa) {
-		return busService.getBus(placa);
+	public Bus getBusByPlaca(@PathVariable String placa) {
+		return busService.getBusByPlaca(placa);
+	}
+	/**
+	 * Metodo que Mapea "/buses/{placa}", RequestMethod es GET, se enlaza al servicio {@link BusService#getBus(String)} 
+	 * y retorna Bus
+	 * @param placa - Numero de PLACA del bus que desea los datos
+	 * @return Datos del Bus
+	 * @see BusService#getBus(String)
+	 */
+	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_MOVIL') or hasRole('USER_WEB')")
+	public Bus getBus(@PathVariable String id) {
+		return busService.getBus(id);
 	}
 	
 	/**
@@ -261,11 +272,11 @@ public class BusController {
 	 * @param placa - PLACA del bus al que se desea eliminar
 	 * @see BusService#deleteBusPhysical(String)
 	 */
-	@DeleteMapping("/{placa}/physical")
+	@DeleteMapping("/{id}/physical")
 	@ResponseStatus(value=HttpStatus.OK, reason="Bus eliminado de la Base de Datos correctamente.")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
-	public void deleteBusPhysical(@PathVariable String placa) {
-		busService.deleteBusPhysical(placa);
+	public void deleteBusPhysical(@PathVariable String id) {
+		busService.deleteBusPhysical(id);
 	}
 	
 	/**

@@ -1,13 +1,16 @@
 package com.webServices.rutas.repository;
 
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.couchbase.core.query.Query;
 import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import org.springframework.data.repository.query.Param;
 
+import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.HistorialEstadoBus;
 
@@ -38,4 +41,10 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 																@Param("NE_loc_rad_lon") double NE_loc_rad_lon,
 																@Param("distance") double distance,
 																@Param("idHistorial") String idHistorial);
+
+	Optional<HistorialEstadoBus> findByCreadoEnAndPlaca(Date fecha, String p);
+	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "
+			+ "FROM #{#n1ql.bucket} as c "
+			+ "WHERE lower(c.placa) = lower('#{#placa}') AND c.creadoEn = '#{#creadoEn}' AND c.#{#n1ql.filter}")
+	boolean existsByPlacaAndCreadoEn(@Param("placa") String placa,@Param("creadoEn") Date creadoEn);
 }

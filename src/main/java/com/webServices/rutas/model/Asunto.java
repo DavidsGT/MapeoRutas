@@ -17,6 +17,7 @@ public class Asunto {
 	
 	public Asunto() {
 		super();
+		this.id = "Asuntos";
 	}
 	public Asunto(String id, List<String> asuntos) {
 		super();

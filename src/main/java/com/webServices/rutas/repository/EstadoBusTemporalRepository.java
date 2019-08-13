@@ -14,7 +14,7 @@ public interface EstadoBusTemporalRepository  extends CouchbaseRepository<Estado
 	@Dimensional(designDocument = "spatialView_estadoBusTemporal", spatialViewName = "spatialView_estadoBusTemporal", dimensions = 2)
 	List<EstadoBusTemporal> findByPosicionActualWithin(Circle p);
 
-	Optional<EstadoBusTemporal> findByplaca(String placa);
+	Optional<EstadoBusTemporal> findByPlaca(String placa);
 
 	Optional<List<EstadoBusTemporal>> findByLinea(String linea);
 }

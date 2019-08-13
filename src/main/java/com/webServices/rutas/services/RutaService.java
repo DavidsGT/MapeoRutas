@@ -170,14 +170,14 @@ public class RutaService {
 	 * Elimina de manera permanente de la base de Datos una {@link Ruta}
 	 * @param linea - Linea del {@link Ruta} a eliminar
 	 */
-	public void deleteRutaPhysical(String linea) {
-		if(rutaRepository.existsById(linea)) {
-			Ruta r = rutaRepository.findById(linea).get();
+	public void deleteRutaPhysical(String id) {
+		if(rutaRepository.existsById(id)) {
+			Ruta r = rutaRepository.findById(id).get();
 			paradaRepository.deleteAll(paradaRepository.findAllById(r.getListasParadas()));
-			rutaRepository.deleteById(linea);
+			rutaRepository.deleteById(id);
 		}else {
 			throw new ResponseStatusException(
-					HttpStatus.NOT_FOUND, "No existe Ruta para la Linea "+linea+".");
+					HttpStatus.NOT_FOUND, "No existe Ruta con ID "+id+".");
 		}
 	}
 	

@@ -18,8 +18,7 @@ import com.couchbase.client.java.repository.annotation.Id;
 public class Bus {
 	@IdPrefix
 	private String prefix = "bus";
-	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
-	@Field	
+	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")  
 	private String id;
 	@Size(max=7, min=6, message = "Debe contener de 6 a 7 Caracteres")
 	@Field @IdAttribute
@@ -91,7 +90,7 @@ public class Bus {
 		return id;
 	}
 	public void setId(String id) {
-		this.id = GlobalVariables.confirmPlaca(id);
+		this.id = id;
 	}
 	
 	@Override

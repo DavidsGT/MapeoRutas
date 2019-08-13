@@ -20,4 +20,10 @@ public interface RutaRepository extends CouchbaseRepository<Ruta, String>{
 			+ "FROM #{#n1ql.bucket} as c "
 			+ "WHERE lower(c.linea) = lower('#{#linea}') AND c.estado=true AND c.#{#n1ql.filter}")
 	boolean existsByLineaAndEstadoIsTrue(@Param("linea") String linea);
+	
+	@Query("SELECT ARRAY_CONTAINS(t.listasParadas, '#{#idParada}')" + 
+			"FROM #{#n1ql.bucket} as t" + 
+			"WHERE t.#{#n1ql.filter} AND t.linea = #{#linea}" + 
+			"LIMIT 1;")
+	boolean existsByParadaInLinea(@Param("linea") String linea,@Param("idParada") String idParada);
 }
