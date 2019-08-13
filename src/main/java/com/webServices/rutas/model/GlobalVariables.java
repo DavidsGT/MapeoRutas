@@ -35,13 +35,16 @@ public class GlobalVariables {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 		return now.getTime();
 	}
+	private static final Boolean validarSimulador = false;
 	public static Boolean validateSimulator() {
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
-		if(now.get(Calendar.HOUR_OF_DAY) < horaFinalSimulador && now.get(Calendar.HOUR_OF_DAY) >= horaInicioSimulador) {
-			return true;
-		}else {
-			throw new ResponseStatusException(
-				       HttpStatus.CONFLICT, "Simulador fuera de tiempo.");
-		}
+		if(validarSimulador) {
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
+			if(now.get(Calendar.HOUR_OF_DAY) < horaFinalSimulador && now.get(Calendar.HOUR_OF_DAY) >= horaInicioSimulador) {
+				return true;
+			}else {
+				throw new ResponseStatusException(
+					       HttpStatus.CONFLICT, "Simulador fuera de tiempo.");
+			}
+		}else return true;
 	}
 }

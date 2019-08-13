@@ -31,5 +31,5 @@ public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 			+ "WHERE lower(c.nombre) = lower('#{#nombre}') AND c.estado=true AND c.#{#n1ql.filter}")
 	boolean existsByNombreAndEstadoIsTrue(@Param("nombre") String nombre);
 
-	Optional<Parada> findByNombreAndEstadoIsTrue(String nombre);
+	Optional<Iterable<Parada>> findByNombreContainsAndEstadoIsTrue(String nombre);
 }

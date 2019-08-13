@@ -13,7 +13,7 @@ import com.webServices.rutas.model.Cooperativa;
 
 @ViewIndexed(designDoc = "cooperativa", viewName = "all")
 public interface CooperativaRepository extends CouchbaseRepository<Cooperativa, String>{
-	Optional<Cooperativa> findByNombreAndEstadoIsTrue(String nombre);
+	Optional<Iterable<Cooperativa>> findByNombreContainsAndEstadoIsTrue(String nombre);
 	
 	Optional<List<Cooperativa>> findByEstadoIsTrue();
 	

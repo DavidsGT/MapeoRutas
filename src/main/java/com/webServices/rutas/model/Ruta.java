@@ -18,7 +18,7 @@ import com.couchbase.client.java.repository.annotation.Id;
 @Document
 public class Ruta {
 	@IdPrefix
-	private String prefix = "Ruta";
+	private String prefix = "ruta";
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
 	@Field

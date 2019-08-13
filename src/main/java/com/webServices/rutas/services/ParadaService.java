@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.google.common.collect.Iterables;
 import com.webServices.rutas.model.Cooperativa;
 import com.webServices.rutas.model.GlobalVariables;
 import com.webServices.rutas.model.Parada;
@@ -90,8 +91,8 @@ public class ParadaService {
 	 * @param nombre - Nombre de la {@link Parada} que desee obtener los datos
 	 * @return {@link Parada}
 	 */
-	public Parada getParadaByNombre(String nombre) {
-		return paradaRepository.findByNombreAndEstadoIsTrue(nombre).orElseThrow(() -> new ResponseStatusException(
+	public Iterable<Parada> getParadaByNombre(String nombre) {
+		return paradaRepository.findByNombreContainsAndEstadoIsTrue(nombre).filter(p ->Iterables.size(p)>0).orElseThrow(() -> new ResponseStatusException(
 		           HttpStatus.NOT_FOUND, "No existe la Parada con el nombre "+nombre+"."));
 	}
 	

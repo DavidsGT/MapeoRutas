@@ -83,7 +83,7 @@ public class ParadaController {
 	 */
 	@GetMapping("/byNombre/{nombre}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public Parada getParadaByNombre(@PathVariable String nombre) {
+	public Iterable<Parada> getParadaByNombre(@PathVariable String nombre) {
 		return paradaService.getParadaByNombre(nombre);
 	}
 	

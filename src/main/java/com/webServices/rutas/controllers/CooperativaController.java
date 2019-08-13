@@ -95,7 +95,7 @@ public class CooperativaController {
 	 */
 	@GetMapping("/byNombre/{nombre}")
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
-	public Cooperativa getCooperativaByNombre(@PathVariable String nombre) {
+	public Iterable<Cooperativa> getCooperativaByNombre(@PathVariable String nombre) {
 		return cooperativaService.getCooperativaByNombre(nombre);
 	}
 	

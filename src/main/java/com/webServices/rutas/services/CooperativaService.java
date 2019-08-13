@@ -73,8 +73,8 @@ public class CooperativaService {
 	 * @param nombre - Nombre de la {@link Cooperativa} que desee obtener los datos
 	 * @return {@link Cooperativa}
 	 */
-	public Cooperativa getCooperativaByNombre(String nombre) {
-		return cooperativaRepository.findByNombreAndEstadoIsTrue(nombre).orElseThrow(() -> new ResponseStatusException(
+	public Iterable<Cooperativa> getCooperativaByNombre(String nombre) {
+		return cooperativaRepository.findByNombreContainsAndEstadoIsTrue(nombre).orElseThrow(() -> new ResponseStatusException(
 		           HttpStatus.NOT_FOUND, "No existe la Cooperativa con el nombre "+nombre+"."));
 	}
 	

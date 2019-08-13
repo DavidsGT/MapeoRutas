@@ -45,6 +45,6 @@ public interface HistorialEstadoBusRepository  extends CouchbaseRepository<Histo
 	Optional<HistorialEstadoBus> findByCreadoEnAndPlaca(Date fecha, String p);
 	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "
 			+ "FROM #{#n1ql.bucket} as c "
-			+ "WHERE lower(c.placa) = lower('#{#placa}') AND c.creadoEn = '#{#creadoEn}' AND c.#{#n1ql.filter}")
-	boolean existsByPlacaAndCreadoEn(@Param("placa") String placa,@Param("creadoEn") Date creadoEn);
+			+ "WHERE lower(c.placa) = lower('#{#placa}') AND c.creadoEn = #{#creadoEn} AND c.#{#n1ql.filter}")
+	boolean existsByPlacaAndCreadoEn(@Param("placa") String placa,@Param("creadoEn") long creadoEn);
 }

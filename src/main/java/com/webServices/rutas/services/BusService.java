@@ -166,10 +166,14 @@ public class BusService {
 	 * @return {@link Bus} actualizado
 	 */
 	public Bus updateBus(Bus bus) {
-		if(!busRepository.existsById(bus.getId()))
+		if(bus.getId() != null) {
+			if(!busRepository.existsById(bus.getId()))
+				throw new ResponseStatusException(
+				           HttpStatus.CONFLICT, "El bus con placas "+bus.getPlaca()+" no se encuentra Registrado.");
+			else return busRepository.save(bus);
+		}else
 			throw new ResponseStatusException(
 			           HttpStatus.CONFLICT, "El bus con placas "+bus.getPlaca()+" no se encuentra Registrado.");
-		else return busRepository.save(bus);
 		
 	}
 
@@ -225,8 +229,9 @@ public class BusService {
 	 */
 	public EstadoBusTemporal getEstadoActualBus(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
-		if(busRepository.existsByPlacaAndEstadoIsTrue(placa)) {
-			return estadoBusTemporalRepository.findByPlaca(placa)
+		System.out.println("es : "+busRepository.existsByPlacaAndEstadoIsTrue(p));
+		if(busRepository.existsByPlacaAndEstadoIsTrue(p)) {
+			return estadoBusTemporalRepository.findByPlaca(p)
 				.filter(estado -> ifBusDisponible(estado.getCreationDate()))
 				.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.NOT_FOUND, "Bus no disponible por el momento."));
@@ -250,9 +255,10 @@ public class BusService {
 	 * @param linea - Linea de {@link Cooperativa}
 	 */
 	public void updateEstadoBus(EstadoBus estadoBus,String placa,String linea) {
+		placa = GlobalVariables.confirmPlaca(placa);
 		if(rutaRepository.existsByLineaAndEstadoIsTrue(linea)) {
 			if(busRepository.existsByPlacaAndEstadoIsTrue(placa)) {
-				Bus bus = getBus(placa);
+				Bus bus = getBusByPlaca(placa);
 				if(bus.getIdEstadoActualTemporal()==null) {
 					EstadoBusTemporal ebt = estadoBusTemporalRepository.save(new EstadoBusTemporal(estadoBus,linea,placa));
 					bus.setIdEstadoActualTemporal(ebt.getId());
@@ -265,7 +271,7 @@ public class BusService {
 				busRepository.save(bus);
 				HistorialEstadoBus h;
 				Date now = GlobalVariables.getFechaDMA();
-				if(historialEstadoBusRepository.existsByPlacaAndCreadoEn(placa,now)) {
+				if(historialEstadoBusRepository.existsByPlacaAndCreadoEn(placa,now.getTime())) {
 					h = historialEstadoBusRepository.findByCreadoEnAndPlaca(now,placa).get();
 					if(h.getListaEstados1().size()<GlobalVariables.limitListEstados) {
 		        		h.getListaEstados1().add(estadoBus);
@@ -511,13 +517,12 @@ public class BusService {
 	 * Elimina de manera permanente de la base de Datos un {@link Bus}
 	 * @param placa - Placa del {@link Bus} a eliminar
 	 */
-	public void deleteBusPhysical(String placa) {
-		String p = GlobalVariables.confirmPlaca(placa);
-		if(busRepository.existsById(p))
-			busRepository.deleteById(p);
+	public void deleteBusPhysical(String id) {
+		if(busRepository.existsById(id))
+			busRepository.deleteById(id);
 		else
 			throw new ResponseStatusException(
-					HttpStatus.NOT_FOUND, "No existe Bus con la Placa "+placa+".");
+					HttpStatus.NOT_FOUND, "No existe Bus con ID "+id+".");
 	}
 
 	/**

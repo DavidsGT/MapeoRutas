@@ -36,7 +36,7 @@ public class HistorialEstadoBus {
 	private List<EstadoBus> listaEstados3;
 	public HistorialEstadoBus(String placa, List<EstadoBus> listaEstados) {
 		super();
-		this.placa = placa;
+		this.placa = GlobalVariables.confirmPlaca(placa);;
 		this.listaEstados1 = listaEstados;
 		this.creadoEn = GlobalVariables.getFechaDMA();
 	}
@@ -54,7 +54,7 @@ public class HistorialEstadoBus {
 		return placa;
 	}
 	public void setPlaca(String placa) {
-		this.placa = placa;
+		this.placa = GlobalVariables.confirmPlaca(placa);;
 	}
 	public List<EstadoBus> getListaEstados1() {
 		return listaEstados1;
