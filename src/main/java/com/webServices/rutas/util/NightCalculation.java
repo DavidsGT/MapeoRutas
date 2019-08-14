@@ -26,6 +26,7 @@ import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 import com.webServices.rutas.services.BusService;
+
 @Component
 public class NightCalculation {
 	@Autowired

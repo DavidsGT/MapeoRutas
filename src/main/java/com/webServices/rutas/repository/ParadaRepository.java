@@ -23,7 +23,7 @@ public interface ParadaRepository extends CouchbaseRepository<Parada, String>{
 	@Dimensional(designDocument = "spatialView_parada", spatialViewName = "spatialView_parada")
 	Optional<List<Parada>> findByCoordenadaWithin(Circle p);
 	
-	@Query("SELECT t.*, META(t).id AS _ID, META(t).cas AS _CAS FROM #{#n1ql.bucket} AS p USE KEYS '#{#linea}' JOIN #{#n1ql.bucket} AS t ON KEYS ARRAY paradaId FOR paradaId IN p.listasParadas END where t.#{#n1ql.filter} or p.`_class` = \"com.webServices.rutas.model.Ruta\";")
+	@Query("SELECT t.*, META(t).id AS _ID, META(t).cas AS _CAS FROM #{#n1ql.bucket} AS p JOIN #{#n1ql.bucket} AS t ON KEYS ARRAY paradaId FOR paradaId IN p.listasParadas END where p.linea = '#{#linea}' AND (t.#{#n1ql.filter} or p.`_class` = \"com.webServices.rutas.model.Ruta\");")
 	Iterable<Parada> findAllByLinea(@Param("linea") String linea);
 
 	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "

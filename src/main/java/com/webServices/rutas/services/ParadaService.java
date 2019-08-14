@@ -142,7 +142,7 @@ public class ParadaService {
 	 */
 	public List<Parada> getParadasCercanasRadio(Point punto,Double longitud,String linea){
 		Circle circle = new Circle(punto,new Distance((longitud*GlobalVariables.coeficiente), Metrics.KILOMETERS));
-		List<String> idsParadas = rutaRepository.findById(linea).orElseThrow(() -> new ResponseStatusException(
+		List<String> idsParadas = rutaRepository.findByLineaAndEstadoIsTrue(linea).orElseThrow(() -> new ResponseStatusException(
 			       HttpStatus.NOT_FOUND, "No exsiste paradas para la Line "+linea+".")).getListasParadas();
 		Optional<List<Parada>> par = paradaRepository.findByCoordenadaWithin(circle);
 		par = Optional.of(par.get().stream()

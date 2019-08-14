@@ -229,7 +229,6 @@ public class BusService {
 	 */
 	public EstadoBusTemporal getEstadoActualBus(String placa) {
 		String p = GlobalVariables.confirmPlaca(placa);
-		System.out.println("es : "+busRepository.existsByPlacaAndEstadoIsTrue(p));
 		if(busRepository.existsByPlacaAndEstadoIsTrue(p)) {
 			return estadoBusTemporalRepository.findByPlaca(p)
 				.filter(estado -> ifBusDisponible(estado.getCreationDate()))

@@ -100,7 +100,6 @@ public class EstadoBusTemporal {
 	public void setEstadoPuerta(Boolean estadoPuerta) {
 		this.estadoPuerta = estadoPuerta;
 	}
-	
 	public String getPlaca() {
 		return placa;
 	}
