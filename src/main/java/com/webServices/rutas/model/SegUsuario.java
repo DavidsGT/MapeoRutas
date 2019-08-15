@@ -55,7 +55,7 @@ public class SegUsuario {
 		return id;
 	}
 	public void setId(String id) {
-		this.id = "Usuario::"+id;
+		this.id = id;
 	}
 	public String getUsuario() {
 		return usuario;

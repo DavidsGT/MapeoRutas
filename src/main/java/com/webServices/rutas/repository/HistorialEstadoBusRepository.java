@@ -10,7 +10,6 @@ import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.HistorialEstadoBus;
 

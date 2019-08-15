@@ -45,7 +45,6 @@ public class NightCalculation {
 		List<HistorialEstadoBus> allHistorialEstadoBus = getHistorialDelDia();
 		//Recorrer los historiales del los buses
         for(HistorialEstadoBus oneHistorial : allHistorialEstadoBus) {
-        	System.out.println("Para el bus: " + oneHistorial.getId());
         	HistorialEstadoBus op = historialEstadoBusRepository.findById(oneHistorial.getId()).get();
         	List<EstadoBus> listEstadosHistorial = op.getListaEstados1();
         	listEstadosHistorial.addAll(op.getListaEstados2());
