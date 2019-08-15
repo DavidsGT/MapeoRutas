@@ -29,7 +29,7 @@ import com.webServices.rutas.services.ReporteService;
  * @version 1.0
  */
 @RestController
-@RequestMapping("reportes")
+@RequestMapping("denuncias")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ReporteController {
 	

@@ -196,7 +196,7 @@ public class ParadaService {
 	 * @return - Lista de {@link Parada}
 	 */
 	public Iterable<Parada> getAllParadaByLinea(String linea) {
-		Ruta ruta = rutaRepository.findById(linea).orElseThrow(()->new ResponseStatusException(
+		Ruta ruta = rutaRepository.findByLineaAndEstadoIsTrue(linea).orElseThrow(()->new ResponseStatusException(
 					HttpStatus.NOT_FOUND, "No existe Linea "+linea+"."));
 		Optional<List<Parada>> par = Optional.of((List<Parada>)paradaRepository.findAllById(ruta.getListasParadas()));
 		par.get().removeIf(r -> !r.getEstado());

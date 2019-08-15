@@ -1,5 +1,7 @@
 package com.webServices.rutas.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -46,5 +48,11 @@ public class GlobalVariables {
 					       HttpStatus.CONFLICT, "Simulador fuera de tiempo.");
 			}
 		}else return true;
+	}
+	public static Date convertToDateLocal(Date utcDate) {
+		DateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		utcFormat.setTimeZone(TimeZone.getTimeZone("America/Guayaquil"));
+		
+		return null;
 	}
 }
