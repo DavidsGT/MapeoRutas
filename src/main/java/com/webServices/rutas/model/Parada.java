@@ -17,15 +17,27 @@ public class Parada {
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	@Field
 	private String id;
+	
+	/**
+	 * Nombre de Parada
+	 */
 	@Field
 	private String nombre;
+	
+	/**
+	 * Url de Foto.
+	 */
 	@Field
 	private String urlFoto;
+	
+	/**
+	 * Posición de Parada.
+	 */
 	@Field
     private Point coordenada;
 	@Field
     private Boolean estado;
-	public Parada(String nombre, String urlFoto, Point coordenada) {
+	public Parada(String nombre, String urlFoto,Point coordenada) {
 		super();
 		this.nombre = nombre;
 		this.urlFoto = urlFoto;

@@ -7,11 +7,18 @@ import org.springframework.data.couchbase.core.mapping.Document;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
-
+/**
+ * Representa los asuntos utilizados en Denuncias.
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 @Document
 public class Asunto {
 	@Id
 	private String id;
+	/**
+	 * Lista de Asuntos para poder Registrar una Denuncia.
+	 */
 	@Field
 	private List<String> asuntos = new ArrayList<String>();
 	

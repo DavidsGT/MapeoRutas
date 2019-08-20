@@ -3,14 +3,30 @@ package com.webServices.rutas.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+/**
+ * Representa el tiempo existente entre {@link Parada} utilizado en {@link TimeControlParada}
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 public class BetweenParada {
-	
+	/**
+	 * Id de la {@link Parada} de comienzo de recorrido.
+	 */
+	@NotNull(message = "Especifique Parada de comienzo de recorido.")
 	private String idparada1;
-	
+	/**
+	 * Id de la {@link Parada} de terminación de recorrido.
+	 */
+	@NotNull(message = "Especifique Parada de terminación de recorrido.")
 	private String idparada2;
-	
+	/**
+	 * Tiempo promedio que duró el recorrido.
+	 */
 	private Long tiempoPromedio;
-	
+	/**
+	 * Historial de tiempos entre las paradas.
+	 */
 	private List<Long> listTiempo = new ArrayList<Long>();
 	
 	public BetweenParada(String idparada1, String idparada2) {

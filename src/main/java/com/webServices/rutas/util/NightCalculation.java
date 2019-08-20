@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.webServices.rutas.model.Bus;
 import com.webServices.rutas.model.EstadoBus;
 import com.webServices.rutas.model.EstadoBusTemporal;
 import com.webServices.rutas.model.GeoLocation;
@@ -27,18 +28,48 @@ import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 import com.webServices.rutas.services.BusService;
 
+/**
+ * Calculo de Tiempos entre paradas.
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 @Component
 public class NightCalculation {
+	
+	/**
+	 * Instancia de Repositorio de {@link HistorialEstadoBus}
+	 */
 	@Autowired
 	HistorialEstadoBusRepository historialEstadoBusRepository;
+	
+	/**
+	 * Instancia de Repositorio de {@link EstadoBusTemporal}
+	 */
 	@Autowired
 	EstadoBusTemporalRepository estadoBusTemporalRepository;
+	
+	/**
+	 * Instancia de Repositorio de {@link TimeControlParada}
+	 */
 	@Autowired
 	TimeControlParadaRepository timeControlParadaRepository;
+	
+	/**
+	 * Instancia de Repositorio de {@link Parada}
+	 */
 	@Autowired
 	private ParadaRepository paradaRepository;
+	
+	/**
+	 * Instancia a los Servicios de {@link Bus}
+	 */
 	@Autowired
 	private BusService busService;
+	
+	/**
+	 * Calculo de Tiempos entre paradas.
+	 * @throws IOException - Error en tiempo de Ejecución.
+	 */
 	@Scheduled(cron=GlobalVariables.timeScheduled, zone="America/Guayaquil")
 	public void timeBetweenStops() throws IOException{
 		//TODO crear index para mayor velocidad de consulta
@@ -105,6 +136,13 @@ public class NightCalculation {
     		timeControlParada = timeControlParadaRepository.save(timeControlParada);
         }
 	}
+	
+	/**
+	 * Obtener Listas de Ids de los historiales por Dia.
+	 * @return - Lista de Tiempos.
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	private List<HistorialEstadoBus> getHistorialDelDia() throws FileNotFoundException, UnsupportedEncodingException {
 		String todayAsString;
         if(GlobalVariables.fechaNightCalculation.equals("")) {
@@ -116,28 +154,53 @@ public class NightCalculation {
         }
         return historialEstadoBusRepository.findByCreadoEn(todayAsString);
 	}
+	
+	/**
+	 * Buscar Lista de {@link EstadoBus} cercanos a una Parada.
+	 * @param p - Parada 
+	 * @param idHistorial - ID de Historial.
+	 * @param listado - Buscar en Listado 1, 2, 3.
+	 * @return Lista de {@link EstadoBusTemporal} cercanos a una Parada.
+	 */
 	private List<EstadoBusTemporal> findBusesCercanos(Parada p,String idHistorial,String listado) {
 		double lat = p.getCoordenada().getY();
 		double lon = p.getCoordenada().getX();
 		GeoLocation loc = new GeoLocation(lat,lon);
-		List<GeoLocation> SW_NE_LOC = loc.bounding_locations(GlobalVariables.distanceMaxBusesToParada);
+		List<GeoLocation> SW_NE_LOC = loc.bounding_locations(GlobalVariables.radioMaxBusesToParada);
 		String meridian180condition = (SW_NE_LOC.get(0).getRad_lon() > SW_NE_LOC.get(1).getRad_lon()) ? " OR " : " AND ";
 		return historialEstadoBusRepository.findByListaEstadosInPosicionWithIn(listado,meridian180condition, loc.getDeg_lat(),  
 																				loc.getDeg_lon(), SW_NE_LOC.get(0).getRad_lat(),  
 																				SW_NE_LOC.get(0).getRad_lon(), SW_NE_LOC.get(1).getRad_lat(),
-																				SW_NE_LOC.get(1).getRad_lon(), GlobalVariables.distanceMaxBusesToParada,idHistorial);
+																				SW_NE_LOC.get(1).getRad_lon(), GlobalVariables.radioMaxBusesToParada,idHistorial);
 	}
 	
+	/**
+	 * Simulador Diario para la linea 11.
+	 * @throws IOException - Error en Tiempo de Ejecución.
+	 * @throws InterruptedException - Metodo Interrumpido.
+	 */
 	@Scheduled(cron=GlobalVariables.timeSimulator1, zone="America/Guayaquil")
-	public void IniciarSimuladorLinea11_1() throws IOException, InterruptedException{
+	public void IniciarSimuladorLinea11() throws IOException, InterruptedException{
 		busService.startSimulator("11", "ABC1234");
 	}
+	
+	/**
+	 * Simulador Diario para la linea 8.
+	 * @throws IOException - Error en Tiempo de Ejecución.
+	 * @throws InterruptedException - Metodo Interrumpido.
+	 */
 	@Scheduled(cron=GlobalVariables.timeSimulator2, zone="America/Guayaquil")
-	public void IniciarSimuladorLinea8_2() throws IOException, InterruptedException{
+	public void IniciarSimuladorLinea8() throws IOException, InterruptedException{
 			busService.startSimulator("8", "DEF5678");
 	}
+	
+	/**
+	 * Simulador Diario para la linea 7.
+	 * @throws IOException - Error en Tiempo de Ejecución.
+	 * @throws InterruptedException - Metodo Interrumpido.
+	 */
 	@Scheduled(cron=GlobalVariables.timeSimulator3, zone="America/Guayaquil")
-	public void IniciarSimuladorLinea7_3() throws IOException, InterruptedException{
+	public void IniciarSimuladorLinea7() throws IOException, InterruptedException{
 			busService.startSimulator("7", "GHI9012");
 	}
 }

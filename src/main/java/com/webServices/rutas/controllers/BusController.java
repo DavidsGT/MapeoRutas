@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
@@ -83,10 +84,10 @@ public class BusController {
 		return busService.getBusByPlaca(placa);
 	}
 	/**
-	 * Metodo que Mapea "/buses/{placa}", RequestMethod es GET, se enlaza al servicio {@link BusService#getBus(String)} 
+	 * Metodo que Mapea "/buses/{id}", RequestMethod es GET, se enlaza al servicio {@link BusService#getBus(String)} 
 	 * y retorna Bus
-	 * @param placa - Numero de PLACA del bus que desea los datos
-	 * @return Datos del Bus
+	 * @param id - ID del bus que desea los datos
+	 * @return {@link Bus}
 	 * @see BusService#getBus(String)
 	 */
 	@GetMapping("/{id}")
@@ -187,11 +188,11 @@ public class BusController {
 	}
 
 	/**
-	 * Metodo que Mapea "/buses/{placa}/estado", RequestMethod es PUT, se enlaza al servicio {@link BusService#updateEstadoBus(EstadoBus, String, int)}
+	 * Metodo que Mapea "/buses/{placa}/estado", RequestMethod es PUT, se enlaza al servicio {@link BusService#updateEstadoBus(EstadoBus, String, String)}
 	 * @param estadoBus - Estado del Bus a Actualizar (Velocidad, Num. Pasajero, Ruta Actual)
 	 * @param placa - Placa del Bus a actualizar su estado Actual
 	 * @param linea - Linea de {@link Cooperativa}
-	 * @see BusService#updateEstadoBus(EstadoBus, String, int)
+	 * @see BusService#updateEstadoBus(EstadoBus, String, String)
 	 */
 	@PutMapping("/{placa}/estado/{linea}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
@@ -201,17 +202,17 @@ public class BusController {
 	}
 	
 	/**
-	 * Metodo  que Mapea "/buses/{placa}/estado/{valor}", RequestMethod es GET, se enlaza al servicio {@link BusService#updateEstadoBusGET(String, int, String)}.
+	 * Metodo  que Mapea "/buses/{placa}/estado/{valor}", RequestMethod es GET, se enlaza al servicio {@link BusService#updateEstadoBusGET(String, String, String)}.
 	 * Metodo no recomendable.
 	 * Registrar el Estado del Bus.
-	 * @deprecated Metodo que sirve de apoyo al Dispositivo Bus para facilitar su envio por ahora, pero el metodo que realmente se deberian usar es: {@link BusController#updateEstadoBus(EstadoBus, String, int)}
+	 * @deprecated Metodo que sirve de apoyo al Dispositivo Bus para facilitar su envio por ahora, pero el metodo que realmente se deberian usar es: {@link BusController#updateEstadoBus(EstadoBus, String, String)}
 	 * @param valor - Cadena Json de los Datos actuales del Estado Bus
 	 * @param placa - Placa del Bus que se desea setear el estado del bus.
 	 * @param linea - Linea de {@link Cooperativa}
 	 * @throws JsonParseException - Errores al Convertir la cadeja Json en el Objeto
 	 * @throws JsonMappingException - Errores al leer la cadena Json
 	 * @throws IOException - Error desconocido
-	 * @see BusService#updateEstadoBusGET(String, int, String) , BusController#getEstadoActualBus(String)
+	 * @see BusService#updateEstadoBusGET(String, String, String) , BusController#getEstadoActualBus(String)
 	 */
 	@GetMapping("/{placa}/estado/{linea}/{valor}")
 	@ResponseStatus(value=HttpStatus.OK, reason="Estado de Bus Guardado con exito.")
@@ -221,10 +222,10 @@ public class BusController {
 	}
 	
 	/**
-	 * Metodo  que Mapea "/buses/{placa}/estadoBusAlternative/{valor}", RequestMethod es GET, se enlaza al servicio {@link BusService#updateEstadoBusGET(String, int, String)}.
+	 * Metodo  que Mapea "/buses/{placa}/estadoBusAlternative/{valor}", RequestMethod es GET, se enlaza al servicio {@link BusService#updateEstadoBusGET(String, String, String)}.
 	 * Metodo no recomendable.
 	 * Registrar Estado del Bus
-	 * @deprecated Metodo que sirve de apoyo al Dispositivo Bus para facilitar su envio por ahora, pero el metodo que realmente se deberian usar es: {@link BusController#updateEstadoBus(EstadoBus, String, int)}
+	 * @deprecated Metodo que sirve de apoyo al Dispositivo Bus para facilitar su envio por ahora, pero el metodo que realmente se deberian usar es: {@link BusController#updateEstadoBus(EstadoBus, String, String)}
 	 * @param valor - Datos actuales del Bus.
 	 * @param placa - Placa del Bus que se desea setear el estado del bus.
 	 * @throws JsonParseException - Solo si la cadena String no cumple el Formato Json
@@ -268,7 +269,7 @@ public class BusController {
 	/**
 	 * Metodo que Mapea "/buses/{placa}/physical", RequestMethod es DELETE, se enlaza al servicio {@link BusService#deleteBusPhysical(String)}.
 	 * Eliminar de la base de datos un Bus .
-	 * @param placa - PLACA del bus al que se desea eliminar
+	 * @param id - ID del bus al que se desea eliminar
 	 * @see BusService#deleteBusPhysical(String)
 	 */
 	@DeleteMapping("/{id}/physical")
@@ -291,11 +292,11 @@ public class BusController {
 	}
 	
 	/**
-	 * Metodo que Mapea "/buses/simulado/{linea}/{placa}", RequestMethod es POST, se enlaza al servicio {@link BusService#startSimulator(int, String)}.
+	 * Metodo que Mapea "/buses/simulado/{linea}/{placa}", RequestMethod es POST, se enlaza al servicio {@link BusService#startSimulator(String, String)}.
 	 * Inicial el simulador de un recorrido de un Bus.
 	 * @param linea - linea de cooperativa a la pertenece el Bus.
 	 * @param placa - placa del bus que va a realizar el recorrido.
-	 * @see BusService#startSimulator(int, String)
+	 * @see BusService#startSimulator(String, String)
 	 * @throws InterruptedException - Ejecucion Interrumpida
 	 */
 	@PostMapping("/simulador/{linea}/{placa}")
@@ -321,10 +322,11 @@ public class BusController {
 	/**
 	 * Metodo que Mapea "/buses/traficBus", RequestMethod es GET, se enlaza al servicio {@link BusService#getTraficBus()}.
 	 * Verifica zonas de alto trafico de buses dentro de una zona urbana.
+	 * @return Url de Redirección.
 	 */
 	@GetMapping("/traficBus")
 	@PreAuthorize("hasRole('ADMINISTRATOR')  or hasRole('USER_WEB')")
-	public void getTraficBus(){
-		busService.getTraficBus();
+	public RedirectView getTraficBus(){
+		return busService.getTraficBus();
 	}
 }

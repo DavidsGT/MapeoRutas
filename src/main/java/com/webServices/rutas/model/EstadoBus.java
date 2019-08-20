@@ -4,19 +4,47 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.geo.Point;
 
-
+/**
+ * Representa el estado de un {@link Bus}
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 public class EstadoBus {
 	
+	/**
+	 * Fecha de creacion del estado de Bus.
+	 */
+	@NotNull
 	private Date creationDate;
 	
+	/**
+	 * Velocidad del Bus.
+	 */
+	@NotNull
+	@Max(value = 160,message = "La velocidad no debe exceder los 120 Km/H.")
+	@Min(value = 0, message = "La velocidad no debe ser Menor a o Km/H.")
 	private int velocidad;
 	
+	/**
+	 * Cantidad de usuarios de un Bus.
+	 */
+	@Max(value = 75,message = "Bus excedio el limite Permitido.")
 	private int cantidadUsuarios;
 	
+	/**
+	 * Punto de Ubicació actual del Bus en coordenadas (X,Y)
+	 */
 	private Point posicionActual;
 	
+	/**
+	 * Estado de la Puerta del Bus.
+	 */
 	private Boolean estadoPuerta;
 	
 	public EstadoBus(int velocidad, int cantidadUsuarios, Point posicionActual,Boolean estadoPuerta) {

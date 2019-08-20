@@ -10,16 +10,40 @@ import org.springframework.data.couchbase.repository.CouchbaseRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.webServices.rutas.model.Cooperativa;
-
+/**
+ * Repositorio para Cooperativas
+ * @author Davids Adrian Gonzalez Tigrero
+ *
+ */
 @ViewIndexed(designDoc = "cooperativa", viewName = "all")
 public interface CooperativaRepository extends CouchbaseRepository<Cooperativa, String>{
+	
+	/**
+	 * Buscar {@link Cooperativa} por nombre y con estado activo.
+	 * @param nombre - Nombre de cooperativa
+	 * @return Lista de Cooperativas coincidentes.
+	 */
 	Optional<Iterable<Cooperativa>> findByNombreContainsAndEstadoIsTrue(String nombre);
 	
+	/**
+	 * Buscar {@link Cooperativa}s con estado Activo
+	 * @return Lista de {@link Cooperativa}
+	 */
 	Optional<List<Cooperativa>> findByEstadoIsTrue();
 	
+	/**
+	 * Buscar cooperativas por Id y estado Activo.
+	 * @param id - ID de Cooperativa
+	 * @return {@link Cooperativa}
+	 */
 	@Query("#{#n1ql.selectEntity} WHERE #{#n1ql.filter} AND meta().id = '#{#id}' AND estado=true")
 	Optional<Cooperativa> findByIdAndEstadoIsTrue(@Param("id") String id);
 	
+	/**
+	 * Preguntar si Existe Cooperativa.
+	 * @param nombre - Nombre de Cooperativa
+	 * @return {@link Boolean}
+	 */
 	@Query("SELECT CASE WHEN count(c)> 0 THEN true ELSE false END "
 			+ "FROM #{#n1ql.bucket} as c "
 			+ "WHERE lower(c.nombre) = lower('#{#nombre}') AND c.estado=true AND c.#{#n1ql.filter}")

@@ -48,6 +48,7 @@ public class AsuntoController {
 	/**
 	 * Metodo que Mapea "/asuntos/create", RequestMethod es POST, se enlaza al servicio {@link AsuntoService#createAsunto(Asunto)} 
 	 * @param asunto - Datos del Asunto a Registrar
+	 * @return {@link Asunto}
 	 * @see AsuntoService#createAsunto(Asunto)
 	 */
 	@PostMapping("/create")
@@ -58,8 +59,9 @@ public class AsuntoController {
 	
 	/**
 	 * Metodo que Mapea "/asuntos", RequestMethod es POST, se enlaza al servicio {@link AsuntoService#addAsunto(String)} 
-	 * @param asunto - Datos del Asunto a Registrar
+	 * @param nuevo - Datos del Asunto a Registrar
 	 * @see AsuntoService#addAsunto(String)
+	 * @return {@link Asunto}
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('ADMINISTRATOR') or hasRole('USER_WEB')")
@@ -72,6 +74,7 @@ public class AsuntoController {
 	 * Actualizar asunto. 
 	 * @param despues - nuevo asunto
 	 * @param antes - Asunto a reemplazar
+	 * @return {@link Asunto}
 	 * @see AsuntoService#updateAsunto(String, String)
 	 */
 	@PutMapping
@@ -84,6 +87,7 @@ public class AsuntoController {
 	 * Metodo que Mapea "/asuntos/{id}", RequestMethod es DELETE, se enlaza al servicio {@link AsuntoService#deleteAsunto(String)}.
 	 * Eliminar un Asunto.
 	 * @param asunto - Asunto a eliminar
+	 * @return {@link Asunto}
 	 * @see AsuntoService#deleteAsunto(String)
 	 */
 	@DeleteMapping

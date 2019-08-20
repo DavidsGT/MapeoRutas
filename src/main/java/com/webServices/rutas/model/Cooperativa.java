@@ -1,5 +1,10 @@
 package com.webServices.rutas.model;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
@@ -7,20 +12,54 @@ import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
+
+/**
+ * Representa una Cooperativa
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 @Document
 public class Cooperativa {
+	
 	@IdPrefix
 	private String prefix = "cooperativa";
+	
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
+	
+	/**
+	 * Nombre de la Cooperativa.
+	 */
+	@NotNull(message = "Debe ingresar Nombre de Cooperativa.")
+	@Size(min = 3,max = 100,message = "El nombre debe contener de 3 a 100 caracteres.")
 	@Field
 	private String nombre;
+	
+	/**
+	 * Descripción de la Cooperativa
+	 */
+	@Size(min = 5, message = "La descripción debe ser mayor a 5 caracteres.")
 	@Field
 	private String descripcion;
+	
+	/**
+	 * Dirección de la Cooperativa.
+	 */
+	@Size(min = 5,message = "La direccion debe contener minimo 5 caracteres.")
 	@Field
     private String direccion;
+	
+	/**
+	 * Telefono de la Cooperativa.
+	 */
+	@Pattern(regexp="(^$|[0-9]{10})",message = "Debe ingresar solo Numeros")
 	@Field
     private String telefono;
+	
+	/**
+	 * Email de la Cooperativa.
+	 */
+	@Email(message = "Debe ingresar un Email valido.")
 	@Field
 	private String email;
 	@Field

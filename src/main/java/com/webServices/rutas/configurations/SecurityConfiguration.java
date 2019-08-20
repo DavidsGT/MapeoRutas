@@ -16,7 +16,7 @@ import com.webServices.rutas.services.CustomUserDetailsService;
  * Configuraciones basicas que necesitamos para habilitar la seguridad
  * en los Servicios Web
  * @author Davids Adrian Gonzalez Tigrero
- *
+ * @version 1.0
  */
 @Configuration
 @EnableWebSecurity

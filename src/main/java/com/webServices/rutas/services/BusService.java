@@ -14,6 +14,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.core.JsonParseException;
 import com.couchbase.client.deps.com.fasterxml.jackson.databind.JsonMappingException;
@@ -309,8 +310,8 @@ public class BusService {
 	 * @throws JsonParseException - Objeto no puede ser transformado a Json
 	 * @throws JsonMappingException - El objeto Json no puede ser transformado a la Entidad
 	 * @throws IOException - Errores Internos Desconocidos
-	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, int)}
-	 * @see BusService#updateEstadoBus(EstadoBus, String, int)
+	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, String)}
+	 * @see BusService#updateEstadoBus(EstadoBus, String, String)
 	 */
 	public void updateEstadoBusGET(String valor, String linea, String placa) throws JsonParseException, JsonMappingException, IOException {
         Gson mapper = new Gson();
@@ -322,8 +323,8 @@ public class BusService {
 	 * Añade un nuevo {@link EstadoBus} en un respectivo dia pero entregando valores que representan este pero seguido de comas
 	 * @param valor - datos del {@link EstadoBus} seguido de comas
 	 * @param placa - Placa del {@link Bus}
-	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, int)}
-	 * @see BusService#updateEstadoBus(EstadoBus, String, int)
+	 * @deprecated Metodo no recomendable favor ver {@link BusService#updateEstadoBus(EstadoBus, String, String)}
+	 * @see BusService#updateEstadoBus(EstadoBus, String, String)
 	 */
 	public void updateEstadoBusGETAlternative(String valor, String placa) {
 		String[] attrib = valor.split(",");
@@ -335,10 +336,12 @@ public class BusService {
 		updateEstadoBus(estadoBus, placa, linea);
 	}
 
-	//Obtener trafico de buses online
-	public void getTraficBus() {
-		//String r = rutaRepository.findById("11").get().getRutaGeoJson();
-		//return r;
+	/**
+	 * Retorna link de redireccionamiento y muestra Mapas de Calor de Trafico de Buses en Tiempo Casi real
+	 * @return {@link RedirectView}
+	 */
+	public RedirectView getTraficBus() {
+		return new RedirectView("http://localhost:5601/app/kibana#/dashboard/d5981790-c15b-11e9-8115-5b98daff44e3?_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A5000)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))");
 	}
 	
 	/**
@@ -511,7 +514,7 @@ public class BusService {
 
 	/**
 	 * Elimina de manera permanente de la base de Datos un {@link Bus}
-	 * @param placa - Placa del {@link Bus} a eliminar
+	 * @param id - ID del {@link Bus} a eliminar
 	 */
 	public void deleteBusPhysical(String id) {
 		if(busRepository.existsById(id))

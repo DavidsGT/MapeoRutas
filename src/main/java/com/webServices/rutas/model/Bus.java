@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.couchbase.core.mapping.Document;
@@ -14,25 +15,48 @@ import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
+/**
+ * Representa un {@link Bus}
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 @Document
 public class Bus {
 	@IdPrefix
 	private String prefix = "bus";
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")  
 	private String id;
+	/**
+	 * Placa del Bus
+	 */
+	@NotNull(message = "Es necesario registrar un Numero de Placa.")
 	@Size(max=7, min=6, message = "Debe contener de 6 a 7 Caracteres")
 	@Field @IdAttribute
 	private String placa;
+	/**
+	 * Numero de Disco
+	 */
+	@NotNull(message = "Debe Ingresar el Numero de disco")
 	@Min(value=0,message="El valor minimo es 0")
 	@Max(value=300,message="El valor maximo es 300")
 	@Field
 	private int numeroDisco;
+	/**
+	 * Capacidad de pasajeros en el {@link Bus}
+	 */
+	@NotNull(message = "Debe ingresar el numero de pasajeros.")
 	@Field
-	@Min(value=22,message="El valor minimo es 22")
+	@Min(value=20,message="El valor minimo es 22")
 	@Max(value=45,message="El valor maximo es 45")
 	private int capacidad;
+	/**
+	 * Identificador de {@link Cooperativa} a la que pertenece
+	 */
 	@Field
 	private String idCooperativa;
+	/**
+	 * Identificador del Ultimo estado de Bus.
+	 */
 	@Field
 	private String idEstadoActualTemporal;
 	@Field

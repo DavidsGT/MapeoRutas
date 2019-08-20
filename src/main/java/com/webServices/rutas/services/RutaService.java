@@ -168,7 +168,7 @@ public class RutaService {
 	
 	/**
 	 * Elimina de manera permanente de la base de Datos una {@link Ruta}
-	 * @param linea - Linea del {@link Ruta} a eliminar
+	 * @param id - ID del {@link Ruta} a eliminar
 	 */
 	public void deleteRutaPhysical(String id) {
 		if(rutaRepository.existsById(id)) {

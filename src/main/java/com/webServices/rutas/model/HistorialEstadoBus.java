@@ -3,6 +3,9 @@ package com.webServices.rutas.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
@@ -22,12 +25,26 @@ public class HistorialEstadoBus {
 	private String prefix = "historialEstadoBus";
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
+	
+	/**
+	 * Fecha de creación del Historial de Bus
+	 */
 	@Field
+	@NotNull(message = "Debe ingreasar una fecha.")
 	private Date creadoEn;
+	
+	/**
+	 * Placa del {@link Bus}
+	 */
+	@NotNull(message = "Es necesario registrar un Numero de Placa.")
+	@Size(max=7, min=6, message = "Debe contener de 6 a 7 Caracteres")
 	@Field
 	private String placa;
+	@NotNull(message = "Es necesario registrar un Numero de Linea.")
+	@Size(max=3, min=1, message = "Debe contener de 1 a 3 Caracteres")
 	@Field
 	private String linea;
+	
 	@Field
 	private List<EstadoBus> listaEstados1;
 	@Field

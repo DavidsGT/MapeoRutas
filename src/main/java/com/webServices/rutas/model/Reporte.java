@@ -14,7 +14,7 @@ import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 
 /**
- * 
+ * Representa una Denuncia.
  * @author Davids Adrian Gonzalez Tigrero
  *
  */
@@ -24,21 +24,49 @@ public class Reporte {
 	private String prefix = "denuncia";
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
     private String id;
+	
+	/**
+	 * Identificador de Usuario
+	 */
 	@Field
 	@NotNull
     private String idUsuario;
+	
+	/**
+	 * Asunto de la Denuncia.
+	 */
 	@Field
 	@NotNull
 	private String asunto;
+	
+	/**
+	 * Numero de Disco de Bus
+	 */
 	@Field
 	private String numeroDisco;
+	
+	/**
+	 * Ubicación.
+	 */
 	@Field
 	private String ubicacion;
+	
+	/**
+	 * Fecha de creación.
+	 */
 	@Field
 	private Date fecha;
+	
+	/**
+	 * Identificador de Cooperativa.
+	 */
 	@Field
 	@NotNull
 	private String idCooperativa;
+	
+	/**
+	 * Descripción del suceso.
+	 */
 	@Field
 	private String mensaje;
 	@Field

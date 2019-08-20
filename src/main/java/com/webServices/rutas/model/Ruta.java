@@ -2,6 +2,9 @@ package com.webServices.rutas.model;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.couchbase.core.mapping.Document;
 import org.springframework.data.couchbase.core.mapping.id.GeneratedValue;
 import org.springframework.data.couchbase.core.mapping.id.GenerationStrategy;
@@ -20,12 +23,30 @@ public class Ruta {
 	private String prefix = "ruta";
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
+	
+	/**
+	 * Linea de Cooperativa.
+	 */
+	@NotNull(message = "Es necesario registrar un Numero de Linea.")
+	@Size(max=3, min=1, message = "Debe contener de 1 a 3 Caracteres")
 	@Field
 	private String linea;
+	
+	/**
+	 * Lista de puntos que conforman la Ruta
+	 */
 	@Field
     private List<Point> listasPuntos;
+	
+	/**
+	 * Lista de identificadores de Paradas de la Ruta.
+	 */
 	@Field
     private List<String> listasParadas;
+	
+	/**
+	 * Lugares de Interes en una Ruta.
+	 */
 	@Field
 	private List<String> lugaresInteres;
 	@Field

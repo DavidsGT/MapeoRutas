@@ -38,6 +38,7 @@ public class AsuntoService {
 	/**
 	 * Añade un asunto nuevo para ser usado en {@link Reporte}.
 	 * @param asunto - Asunto a añadir
+	 * @return {@link Asunto}
 	 */
 	public Asunto addAsunto(String asunto) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
@@ -49,6 +50,7 @@ public class AsuntoService {
 	 * Actualiza un Asunto registrado.
 	 * @param before - Asunto a cambiar
 	 * @param after - Asunto nuevo
+	 * @return {@link Asunto}
 	 */
 	public Asunto updateAsunto(String before,String after) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
@@ -59,6 +61,7 @@ public class AsuntoService {
 	/**
 	 * Elimina un Asunto
 	 * @param asunto - Asunto a eliminar
+	 * @return {@link Asunto}
 	 */
 	public Asunto deleteAsunto(String asunto) {
 		Asunto aux = asuntoRepository.findById("Asuntos").get();
@@ -69,6 +72,7 @@ public class AsuntoService {
 	/**
 	 * Crea Asuntos, es utilizado solo la primera vez del registro
 	 * @param asunto - {@link Asunto} a registrar
+	 * @return {@link Asunto}
 	 */
 	public Asunto createAsunto(Asunto asunto) {
 		return asuntoRepository.save(asunto);

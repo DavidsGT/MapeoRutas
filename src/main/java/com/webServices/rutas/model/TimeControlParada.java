@@ -11,14 +11,27 @@ import org.springframework.data.couchbase.core.mapping.id.IdPrefix;
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 
+/**
+ * Representa la lista de calculos de Tiempos de buses en una ruta y entre paradas.
+ * @author Davids Adrian Gonzalez Tigrero
+ *
+ */
 @Document
 public class TimeControlParada {
 	@IdPrefix
 	private String prefix = "timeControlParada";
 	@Id @GeneratedValue(strategy = GenerationStrategy.UNIQUE,delimiter = "::")
 	private String id;
+	
+	/**
+	 * Linea de Cooperativa.
+	 */
 	@Field
 	private String linea;
+	
+	/**
+	 * Lista de Tiempos entre parada.
+	 */
 	@Field
 	private List<BetweenParada> listTime;
 	

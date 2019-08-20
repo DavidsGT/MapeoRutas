@@ -12,12 +12,23 @@ import org.springframework.web.server.ResponseStatusException;
 import com.webServices.rutas.model.SegUsuario;
 import com.webServices.rutas.repository.SegUsuarioRepository;
 
+/**
+ * Representa Servicios adicionales para Spring Security.
+ * @author Davids Adrian Gonzalez Tigrero
+ * @version 1.0
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService{
 	
+	/**
+	 * Instancia a los Repositorios de Usuario
+	 */
 	@Autowired
 	private SegUsuarioRepository segUsuarioRepository;
 	
+	/**
+	 * Cargar Usuario a Spring Security.
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		SegUsuario segUsuario = segUsuarioRepository.findByUsuarioOrEmail(username,username)
@@ -28,7 +39,3 @@ public class CustomUserDetailsService implements UserDetailsService{
                 .roles(segUsuario.getPerfil()).build();
 	}
 }
-
-
-
-
