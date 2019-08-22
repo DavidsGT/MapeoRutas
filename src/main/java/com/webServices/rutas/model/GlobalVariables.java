@@ -27,17 +27,17 @@ public class GlobalVariables {
 	/**
 	 * Hora final del simulador de {@link Bus} (es).
 	 */
-	public static final int horaFinalSimulador = 20;
+	private int horaFinalSimulador = 20;
 	
 	/**
 	 * Hora de Inicio del simulador de {@link Bus} (es).
 	 */
-	public static final int horaInicioSimulador = 8;
+	private int horaInicioSimulador = 8;
 	
 	/**
 	 * Tiempo de Persistencia para los {@link EstadoBus} del simulador.
 	 */
-	public static final int secondSimulatorSave = 5;
+	private int secondSimulatorSave = 5;
 	
 	/**
 	 * Tiempo que se lanza el precalculo de {@link TimeControlParada}.
@@ -52,7 +52,7 @@ public class GlobalVariables {
 	/**
 	 * Limite de {@link EstadoBus} * 3 que se guardaran en {@link HistorialEstadoBus}.
 	 */
-	public static final int limitListEstados = 3000;
+	private int limitListEstados = 3000;
 	
 	/**
 	 * Inicio de simulador 1 de buses por dia.
@@ -73,7 +73,12 @@ public class GlobalVariables {
 	 * Validar simulador de {@link Bus} segun el horario especificado.
 	 * En caso de Pruebas colocar en falso
 	 */
-	private static final Boolean validarSimulador = true;
+	private Boolean validarSimulador = true;
+	
+	/**
+	 * Url Kibana para enbeber Tráfico de Buses
+	 */
+	private String urlTraficBus = "http://facsistel.upse.edu.ec:5601/app/kibana#/dashboard/8bba9120-c3a9-11e9-987e-e78c6a5f7065?_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A5000)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))";
 	
 	/**
 	 * Verificar placa de un Bus segun el formato.
@@ -111,7 +116,7 @@ public class GlobalVariables {
 	 * Validar tiempos en el Simulador de {@link Bus}
 	 * @return {@link Boolean}
 	 */
-	public static Boolean validateSimulator() {
+	public Boolean validateSimulator() {
 		if(validarSimulador) {
 			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/Guayaquil"));
 			if(now.get(Calendar.HOUR_OF_DAY) < horaFinalSimulador && now.get(Calendar.HOUR_OF_DAY) >= horaInicioSimulador) {
@@ -122,4 +127,53 @@ public class GlobalVariables {
 			}
 		}else return true;
 	}
+
+	public int getHoraFinalSimulador() {
+		return horaFinalSimulador;
+	}
+
+	public void setHoraFinalSimulador(int horaFinalSimulador) {
+		this.horaFinalSimulador = horaFinalSimulador;
+	}
+
+	public int getHoraInicioSimulador() {
+		return horaInicioSimulador;
+	}
+
+	public void setHoraInicioSimulador(int horaInicioSimulador) {
+		this.horaInicioSimulador = horaInicioSimulador;
+	}
+
+	public int getSecondSimulatorSave() {
+		return secondSimulatorSave;
+	}
+
+	public void setSecondSimulatorSave(int secondSimulatorSave) {
+		this.secondSimulatorSave = secondSimulatorSave;
+	}
+
+	public Boolean getValidarSimulador() {
+		return validarSimulador;
+	}
+
+	public void setValidarSimulador(Boolean validarSimulador) {
+		this.validarSimulador = validarSimulador;
+	}
+
+	public String getUrlTraficBus() {
+		return urlTraficBus;
+	}
+
+	public void setUrlTraficBus(String urlTraficBus) {
+		this.urlTraficBus = urlTraficBus;
+	}
+
+	public int getLimitListEstados() {
+		return limitListEstados;
+	}
+
+	public void setLimitListEstados(int limitListEstados) {
+		this.limitListEstados = limitListEstados;
+	}
+	
 }

@@ -88,6 +88,8 @@ public class BusService {
 	@Autowired
 	private EstadoBusTemporalRepository estadoBusTemporalRepository;
 	
+	@Autowired
+	private ConfigService configService;
 	/**
 	 * Obtener datos de un {@link Bus} entregando su respectiva placa.
 	 * @param placa - Placa del {@link Bus} que desee obtener los datos
@@ -270,13 +272,13 @@ public class BusService {
 				Date now = GlobalVariables.getFechaDMA();
 				if(historialEstadoBusRepository.existsByPlacaAndCreadoEn(placa,now.getTime())) {
 					h = historialEstadoBusRepository.findByCreadoEnAndPlaca(now,placa).get();
-					if(h.getListaEstados1().size()<GlobalVariables.limitListEstados) {
+					if(h.getListaEstados1().size()<configService.getGlobalVariables().getLimitListEstados()) {
 		        		h.getListaEstados1().add(estadoBus);
 		        	}else {
-		    			if(h.getListaEstados2().size()<GlobalVariables.limitListEstados) {
+		    			if(h.getListaEstados2().size()<configService.getGlobalVariables().getLimitListEstados()) {
 		        			h.getListaEstados2().add(estadoBus);
 		        		}else {
-		        			if(h.getListaEstados3().size()<GlobalVariables.limitListEstados) {
+		        			if(h.getListaEstados3().size()<configService.getGlobalVariables().getLimitListEstados()) {
 		        				h.getListaEstados3().add(estadoBus);
 		        			}else {
 		        				throw new ResponseStatusException(
@@ -341,7 +343,11 @@ public class BusService {
 	 * @return {@link RedirectView}
 	 */
 	public RedirectView getTraficBus() {
-		return new RedirectView("http://localhost:5601/app/kibana#/dashboard/d5981790-c15b-11e9-8115-5b98daff44e3?_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A5000)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))");
+		if(!configService.getGlobalVariables().getUrlTraficBus().equals("")) {
+			return new RedirectView(configService.getGlobalVariables().getUrlTraficBus());
+		}else
+			throw new ResponseStatusException(
+				       HttpStatus.NOT_FOUND, "No existe URL para Tráfico de Buses.");
 	}
 	
 	/**
@@ -357,8 +363,8 @@ public class BusService {
 		int count = alea1.nextInt(1, 4);
 		boolean ban = true;
 		while(ban) {
-			ban = GlobalVariables.validateSimulator();
-			Thread.sleep(GlobalVariables.secondSimulatorSave*1000);
+			ban = configService.getGlobalVariables().validateSimulator();
+			Thread.sleep(configService.getGlobalVariables().getSecondSimulatorSave()*1000);
 			EstadoBus b = new EstadoBus(alea1.nextInt(1, 4), alea1.nextInt(1, 4), rs.getListasPuntos().get(count), Math.random() < 0.5); 
 			updateEstadoBus(b, placa,linea);
 			count = count + alea1.nextInt(1, 4);

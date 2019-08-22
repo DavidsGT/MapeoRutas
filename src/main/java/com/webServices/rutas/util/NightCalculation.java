@@ -27,6 +27,7 @@ import com.webServices.rutas.repository.HistorialEstadoBusRepository;
 import com.webServices.rutas.repository.ParadaRepository;
 import com.webServices.rutas.repository.TimeControlParadaRepository;
 import com.webServices.rutas.services.BusService;
+import com.webServices.rutas.services.ConfigService;
 
 /**
  * Calculo de Tiempos entre paradas.
@@ -66,6 +67,9 @@ public class NightCalculation {
 	@Autowired
 	private BusService busService;
 	
+	@Autowired
+	private ConfigService configService;
+	
 	/**
 	 * Calculo de Tiempos entre paradas.
 	 * @throws IOException - Error en tiempo de Ejecución.
@@ -95,7 +99,7 @@ public class NightCalculation {
         			List<EstadoBusTemporal> list = findBusesCercanos(p, op.getId(),"listaEstados"+String.valueOf(t));
         			if(t>1) {
         				int it=t-1;
-        				list.forEach(s -> s.setIdx(s.getIdx()+(GlobalVariables.limitListEstados*it)));
+        				list.forEach(s -> s.setIdx(s.getIdx()+(configService.getGlobalVariables().getLimitListEstados()*it)));
         			}
         			busesCercanos.addAll(list);
         		}
